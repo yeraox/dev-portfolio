@@ -1,0 +1,233 @@
+.page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 16px 96px;
+}
+
+.intro h1 {
+  margin: 0 0 8px;
+  color: var(--gold-3);
+  font-size: 1.75rem;
+}
+
+.intro p,
+.note {
+  margin: 0;
+  color: var(--text-dim);
+  line-height: 1.5;
+  max-width: 70ch;
+}
+
+.section {
+  margin-top: 56px;
+}
+
+.section h2 {
+  margin: 0 0 12px;
+  font-size: 1.25rem;
+}
+
+/* 1. Resolution */
+.resolutions {
+  display: grid;
+  gap: 24px;
+  margin-top: 16px;
+}
+
+
+.sceneBox {
+  margin: 0;
+  min-width: 0;
+}
+
+.sceneBox canvas {
+  display: block;
+  max-width: 100%;
+  margin-bottom: 8px;
+}
+
+/* 2. Title candidates */
+.titleSample {
+  margin: 16px 0 0;
+  padding: 32px 16px 24px;
+  background: var(--night-0);
+  border: 1px solid var(--night-2);
+  text-align: center;
+}
+
+.title {
+  margin: 0;
+  font-size: 40px;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  color: var(--gold-3);
+  /* Banded gold, like 16-bit title lettering (hard color steps, no smooth gradient) */
+  background: linear-gradient(
+    to bottom,
+    var(--gold-4) 0 24%,
+    var(--gold-3) 24% 60%,
+    var(--gold-2) 60% 100%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  /* Stacked zero-blur drop-shadows = pixel extrusion */
+  filter: drop-shadow(0 2px 0 var(--gold-1)) drop-shadow(0 2px 0 var(--gold-0))
+    drop-shadow(2px 2px 0 var(--ink));
+}
+
+.pressStart {
+  margin: 24px 0 16px;
+  font-size: 20px;
+  letter-spacing: 0.08em;
+  color: var(--text);
+}
+
+@media (min-width: 768px) {
+  .title {
+    font-size: 80px;
+    filter: drop-shadow(0 4px 0 var(--gold-1)) drop-shadow(0 4px 0 var(--gold-0))
+      drop-shadow(4px 4px 0 var(--ink));
+  }
+}
+
+/* 3. Body candidates */
+.bodyGrid {
+  display: grid;
+  gap: 24px;
+}
+
+.bodyGrid {
+  max-width: 640px;
+}
+
+.bodySample {
+  margin: 0;
+  min-width: 0;
+}
+
+.panel {
+  padding: 16px;
+  margin-bottom: 8px;
+  background: var(--stone-1);
+  color: var(--text);
+  font-size: 20px;
+  line-height: 1.35;
+  /* Provisional bevel; the real stone window comes in phase 1 */
+  box-shadow:
+    inset 2px 2px 0 var(--stone-3),
+    inset -2px -2px 0 var(--stone-0),
+    0 0 0 2px var(--ink);
+}
+
+.panelHeading {
+  margin: 0 0 8px;
+  color: var(--gold-3);
+}
+
+.rows {
+  margin: 0;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.row dt {
+  color: var(--text-dim);
+}
+
+.row dd {
+  margin: 0;
+  text-align: right;
+}
+
+.divider {
+  border: 0;
+  border-top: 2px solid var(--stone-0);
+  border-bottom: 2px solid var(--stone-2);
+  margin: 12px 0;
+}
+
+.bio {
+  margin: 0;
+}
+
+.credit {
+  margin: 12px 0 0;
+  font-size: 16px;
+  color: var(--text-dim);
+}
+
+/* 4. Palette */
+.paletteBlock h3 {
+  margin: 24px 0 8px;
+  font-size: 1rem;
+  color: var(--text-dim);
+}
+
+.swatches {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 8px;
+}
+
+.swatches li {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  column-gap: 8px;
+  font-size: 0.8125rem;
+}
+
+.swatch {
+  grid-row: span 2;
+  width: 28px;
+  height: 28px;
+  outline: 1px solid var(--stone-2);
+}
+
+.swatchHex {
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+/* 5. Contrast */
+.contrast {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.contrast th,
+.contrast td {
+  text-align: left;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--night-2);
+}
+
+.chip {
+  display: inline-block;
+  padding: 2px 6px;
+  white-space: nowrap;
+}
+
+.pass {
+  color: var(--green-1);
+}
+
+.fail {
+  color: var(--red-1);
+}
+
+@media (max-width: 600px) {
+  .contrast th:nth-child(1),
+  .contrast td:nth-child(1) {
+    display: none;
+  }
+}
