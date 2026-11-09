@@ -1,0 +1,227 @@
+.page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 16px 96px;
+}
+
+.intro h1 {
+  margin: 0 0 8px;
+  font-size: 1.75rem;
+  color: var(--gold-3);
+}
+
+.intro p {
+  margin: 0;
+  max-width: 70ch;
+  line-height: 1.5;
+  color: var(--text-dim);
+}
+
+.replay {
+  margin-top: 16px;
+  padding: 8px 14px;
+  font: inherit;
+  color: var(--text);
+  background: var(--night-2);
+  border: 1px solid var(--blue-3);
+  cursor: pointer;
+}
+
+.replay:hover {
+  background: var(--blue-0);
+}
+
+.stage {
+  display: grid;
+  gap: calc(4 * var(--u));
+  margin-top: 32px;
+}
+
+/* ---- STATS sheet (becomes StatsWindow in phase 4) ---- */
+.sheet {
+  display: grid;
+  gap: calc(8 * var(--u));
+}
+
+@media (min-width: 1024px) {
+  .sheet {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+
+.column {
+  min-width: 0;
+}
+
+/* Stacked (mobile/tablet): engraved line between the two columns. */
+.column + .column {
+  padding-top: calc(6 * var(--u));
+  border-top: var(--u) solid var(--ink);
+  box-shadow: inset 0 var(--u) 0 var(--stone-3);
+}
+
+@media (min-width: 1024px) {
+  .column + .column {
+    padding-top: 0;
+    border-top: 0;
+    box-shadow: none;
+  }
+}
+
+.profile {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: calc(5 * var(--u));
+  align-items: center;
+  margin-bottom: calc(5 * var(--u));
+}
+
+.identity p {
+  margin: 0;
+}
+
+.role {
+  font-weight: 700;
+}
+
+.base {
+  color: var(--text-dim);
+}
+
+/* Placeholder until the 48×48 portrait sprite exists (phase 2): ×3 at most. */
+.portrait {
+  display: grid;
+  place-content: center;
+  width: calc(48 * min(var(--u), 3px));
+  height: calc(48 * min(var(--u), 3px));
+  min-width: 72px;
+  min-height: 72px;
+  font-size: var(--text-small);
+  line-height: 1.2;
+  text-align: center;
+  color: var(--text-dim);
+  background: var(--stone-0);
+  box-shadow:
+    inset var(--u) var(--u) 0 var(--ink),
+    inset calc(-1 * var(--u)) calc(-1 * var(--u)) 0 var(--stone-3);
+}
+
+.rows {
+  margin: 0;
+  display: grid;
+  gap: calc(2 * var(--u));
+}
+
+.row {
+  display: grid;
+  gap: 0 calc(4 * var(--u));
+}
+
+@media (min-width: 480px) {
+  .row {
+    grid-template-columns: 7em minmax(0, 1fr);
+  }
+}
+
+.row dt {
+  color: var(--text-dim);
+}
+
+.row dd {
+  margin: 0;
+}
+
+.bio {
+  margin: 0;
+  max-width: 65ch;
+}
+
+.heading {
+  margin: 0 0 calc(3 * var(--u));
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--display-size);
+  line-height: 1;
+  letter-spacing: 0.04em;
+  color: var(--gold-3);
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: calc(4 * var(--u));
+}
+
+.entry p {
+  margin: 0;
+}
+
+.entryTitle {
+  font-weight: 700;
+}
+
+.entryMeta {
+  font-size: var(--text-small);
+  color: var(--text-dim);
+}
+
+.years {
+  font-variant-numeric: tabular-nums;
+}
+
+.inProgress {
+  color: var(--green-1);
+}
+
+.tasks {
+  margin: calc(2 * var(--u)) 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: var(--u);
+}
+
+/* Pixel bullet: a 2u gold square */
+.tasks li {
+  position: relative;
+  padding-left: calc(6 * var(--u));
+}
+
+.tasks li::before {
+  content: '';
+  position: absolute;
+  left: var(--u);
+  top: 0.55em;
+  width: calc(2 * var(--u));
+  height: calc(2 * var(--u));
+  background: var(--gold-2);
+  box-shadow: var(--u) var(--u) 0 var(--gold-0);
+}
+
+/* ---- Catalog ---- */
+.catalog {
+  margin-top: 64px;
+}
+
+.catalog h2 {
+  margin: 0 0 8px;
+  font-size: 1.25rem;
+}
+
+.catalog h3 {
+  margin: 32px 0 12px;
+  font-size: 1rem;
+  color: var(--text-dim);
+}
+
+.bars {
+  display: grid;
+  gap: calc(4 * var(--u));
+  max-width: 640px;
+}
+
+.plain {
+  margin: 0;
+}
