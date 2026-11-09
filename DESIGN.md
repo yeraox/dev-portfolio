@@ -66,18 +66,25 @@ bands (title lettering).
 - Self-hosted with `@fontsource`, Latin subset only; preload the two files used on the first
   screen to protect LCP and CLS.
 
-## 5. Window system (built in phase 1)
-Measures in `--u` (UI pixels).
+## 5. Window system (built in phase 1 — `src/components/`)
+Measures in `--u` (UI pixel: 2px by default, 3px at ≥ 960×540, 4px at ≥ 1280×720; JS-driven
+from phase 3). Textures are generated from the palette as tiny SVGs in `src/assets/textures.ts`.
 
 | Component | Spec |
 |---|---|
-| **Window** | Fill: stone texture tile (32×32, `stone-0`/`stone-1` + sparse `stone-2` speckles never under text). Bevel: 1u `stone-3` top-left inner highlight, 1u `stone-0` bottom-right inner shadow, 1u `ink` outer outline. Padding 6u. No radius, no blur. |
-| **BannerWindow** | Full-width top bar. Fill: `blue-1`/`blue-2` checker dither fading to `blue-0` at the edges. Frame: gold rope pattern (8×8 tile, `gold-1..4` + `ink`) via `border-image`, 4u thick. Title text `text`, left-aligned. |
-| **Divider** | 1u `stone-0` line over 1u `stone-2` line (engraved). |
-| **StatBar** | Track: `ink`, 4u tall. Fill: `red-1` with 1u `red-0` bottom shade. Width ∝ real value only — never decorative fake values. |
-| **HelpBar** | Bottom line inside the window: `text-dim`, one sentence, keys named for the active input (keyboard vs touch). |
-| **KeyHint** | Top-right: "ENTER SELECT · ESC EXIT" (touch: "TAP SELECT · ✕ EXIT" with drawn icons, not emoji). |
-| **Selection brackets** | Four `blue-3` corner brackets (3u arms, 1u stroke, `ink` outline) around the focused item. Also the keyboard focus style. |
+| **Window** | Fill: 32×32 granite tile (2-px value-noise grain: mostly `stone-0`, `stone-1` flecks, rare `ink` pits — a test locks these colors). Bevel: 1u `stone-3` top-left, 1u `ink` bottom-right, 1u `ink` outer outline. Engraved groove 3u inside the edge (`ink` top-left, `stone-3` bottom-right). Padding 7u. Optional title (Jersey 10, `gold-3`), top-right hint slot, bottom help slot. Opens with a top-to-bottom `clip-path` wipe: 18 frames (0.3 s) in 9 steps. |
+| **BannerWindow** | Gold rope nine-slice (18×18 image, 6-px cells: knot corners, twisted rope edges in `gold-1..4` + `ink`), drawn 6u thick with `border-image-repeat: round`. Fill: `blue-1`/`blue-2` 2×2 checker dither, 1u `blue-0` inner lines top and bottom. Title: Jersey 10, `text`, 1u `ink` hard shadow. |
+| **Divider** | 1u `ink` over 1u `stone-3` (engraved). 5u margin above and below. |
+| **StatBar** | Label (`text-dim`) · value (tabular) · gauge. Track `ink`, 4u tall with 1u padding; fill `red-1` with 1u `red-0` bottom shade. `role="meter"` with min/max/now/valuetext. Real values only. |
+| **HelpBar** | Engraved top line, `text-dim`, small size. |
+| **KeyHint** | Jersey 10, letter-spacing 0.08em. Keys are `<kbd>` caps: `gold-3` on `ink` with a 1u `stone-2` bottom edge. |
+| **Selection brackets** | (phase 3) Four `blue-3` corner brackets around the focused item; also the keyboard focus style. |
+
+Window content patterns (from the STATS sheet): section headings Jersey 10 `gold-3`; entry
+titles Pixelify Sans 700; meta lines small `text-dim`; "in progress" status `green-1`; bullets
+are 2u `gold-2` squares with a `gold-0` pixel shadow; label/value rows use a 7em label column
+from 480px up and stack below it. Two columns from 1024px, separated by an engraved line when
+stacked. Portraits inside windows render at most ×3 (144px).
 
 ## 6. Ring menu (phase 3)
 - Icons (16×16 scene px) on an ellipse centered on the avatar: rx 62, ry 42 at 320×180.
@@ -94,8 +101,8 @@ All motion is stepped; 1 frame = 1/60 s.
 
 | Moment | Frames | Notes |
 |---|---|---|
-| Window open | 6–8 | Vertical wipe (clip-path in `steps()`) |
-| Window close | 4–6 | Reverse wipe |
+| Window open | 18 (9 steps × 2) | Vertical wipe (clip-path in `steps(9)`). 7 frames was too fast to notice |
+| Window close | 10 (5 steps × 2) | Reverse wipe, a bit faster than opening |
 | Ring rotate | 8 | Per slot step |
 | Walk cycle | 4 frames at 8–12 fps | Avatar and Null |
 | PRESS START blink | 32 on / 16 off | Hard on/off, never a fade |
