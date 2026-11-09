@@ -1,0 +1,9 @@
+.help {
+  position: relative;
+  margin: calc(5 * var(--u)) 0 0;
+  padding-top: calc(3 * var(--u));
+  border-top: var(--u) solid var(--ink);
+  box-shadow: inset 0 var(--u) 0 var(--stone-3);
+  font-size: var(--text-small);
+  color: var(--text-dim);
+}

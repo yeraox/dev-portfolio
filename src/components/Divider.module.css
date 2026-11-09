@@ -1,0 +1,7 @@
+.divider {
+  height: calc(2 * var(--u));
+  margin: calc(5 * var(--u)) 0;
+  border: 0;
+  border-top: var(--u) solid var(--ink);
+  border-bottom: var(--u) solid var(--stone-3);
+}

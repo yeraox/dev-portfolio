@@ -1,0 +1,61 @@
+.window {
+  position: relative;
+  padding: calc(7 * var(--u));
+  color: var(--text);
+  font-family: var(--font-text);
+  font-size: var(--text-size);
+  line-height: var(--line);
+  background-color: var(--stone-0);
+  background-size: calc(32 * var(--u)) calc(32 * var(--u));
+  image-rendering: pixelated;
+  /* Bevel: light top-left, dark bottom-right, then a 1u ink outline. */
+  box-shadow:
+    inset var(--u) var(--u) 0 var(--stone-3),
+    inset calc(-1 * var(--u)) calc(-1 * var(--u)) 0 var(--ink),
+    0 0 0 var(--u) var(--ink);
+  /* 18 frames (0.3 s) in 9 visible steps of 2 frames each: noticeable but still stepped. */
+  animation: open calc(18 * var(--frame)) steps(9) both;
+}
+
+/* Engraved inner groove (dark line over light line), 3u inside the edge. */
+.window::before {
+  content: '';
+  position: absolute;
+  inset: calc(3 * var(--u));
+  border: var(--u) solid;
+  border-color: var(--ink) var(--stone-3) var(--stone-3) var(--ink);
+  pointer-events: none;
+}
+
+/* Vertical wipe, top to bottom, in whole frames. */
+@keyframes open {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0);
+  }
+}
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: calc(2 * var(--u)) calc(6 * var(--u));
+  margin-bottom: calc(4 * var(--u));
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--display-size);
+  line-height: 1;
+  letter-spacing: 0.04em;
+  color: var(--gold-3);
+}
+
+.body {
+  position: relative;
+}
