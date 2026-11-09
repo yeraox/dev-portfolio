@@ -1,0 +1,53 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+}
+
+body {
+  min-height: 100dvh;
+  background: var(--night-0);
+  color: var(--text);
+  font-family: system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Browser surfaces carry the palette too */
+::selection {
+  background: var(--blue-2);
+  color: var(--text);
+}
+
+:focus-visible {
+  outline: 2px solid var(--blue-3);
+  outline-offset: 2px;
+}
+
+html {
+  scrollbar-color: var(--stone-2) var(--night-1);
+}
+
+a {
+  color: var(--gold-3);
+  text-underline-offset: 0.2em;
+}
+
+canvas,
+img.pixel {
+  image-rendering: pixelated;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

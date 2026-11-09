@@ -1,0 +1,42 @@
+/* Design tokens. Colors mirror src/styles/palette.ts exactly (a test enforces it).
+   Measures, fonts and motion tokens are added in phase 1. */
+:root {
+  --ink: #0b0b1a;
+
+  --night-0: #070912;
+  --night-1: #0e1328;
+  --night-2: #18203f;
+  --horizon: #2f4a8a;
+  --horizon-hi: #5b7fc7;
+
+  --blue-0: #121a52;
+  --blue-1: #1f2d8a;
+  --blue-2: #2f45b8;
+  --blue-3: #5d74e0;
+
+  --stone-0: #2a2a2e;
+  --stone-1: #45454b;
+  --stone-2: #5f5f66;
+  --stone-3: #7c7c84;
+  --stone-4: #a3a3ab;
+
+  --gold-0: #4a2c08;
+  --gold-1: #8a5a12;
+  --gold-2: #d19a22;
+  --gold-3: #f2c84b;
+  --gold-4: #fff0a8;
+
+  --text: #f2f0e6;
+  --text-dim: #c9c5b6;
+
+  --green-0: #2a7a2a;
+  --green-1: #6fdc5a;
+  --red-0: #8a1a1a;
+  --red-1: #d8483f;
+  --fire: #e8742a;
+
+  --forest-0: #0f2418;
+  --forest-1: #1e3a24;
+  --forest-2: #355a32;
+  --earth-0: #2a1d14;
+}
