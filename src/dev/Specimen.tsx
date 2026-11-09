@@ -1,8 +1,5 @@
 // Dev-only page: /dev/specimen. Never shipped (see main.tsx).
 // Purpose: show the phase 0 decisions (resolution, fonts, palette, contrast) in one place.
-import '@fontsource/jersey-10';
-import '@fontsource/pixelify-sans/400.css';
-import '@fontsource/pixelify-sans/700.css';
 import { useEffect, useRef, useState } from 'react';
 import { CONTRAST_PAIRS, ratioFor } from '../styles/contrast';
 import { AVATAR_PALETTE, NULL_PALETTE, UI_PALETTE, type Palette } from '../styles/palette';

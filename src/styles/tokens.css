@@ -1,5 +1,4 @@
-/* Design tokens. Colors mirror src/styles/palette.ts exactly (a test enforces it).
-   Measures, fonts and motion tokens are added in phase 1. */
+/* Design tokens. Colors mirror src/styles/palette.ts exactly (a test enforces it). */
 :root {
   --ink: #0b0b1a;
 
@@ -39,4 +38,43 @@
   --forest-1: #1e3a24;
   --forest-2: #355a32;
   --earth-0: #2a1d14;
+}
+
+/* ---- Measures ----------------------------------------------------------------------
+   --u = one "UI pixel": the size of one art pixel in frames, bevels and gaps.
+   It follows the scene's integer zoom (DESIGN.md §2), clamped to 2–4 CSS px.
+   Phase 3 sets it from JavaScript; until then these breakpoints approximate it. */
+:root {
+  --u: 2px;
+
+  --font-display: 'Jersey 10', system-ui, sans-serif;
+  --font-text: 'Pixelify Sans', system-ui, sans-serif;
+
+  --text-size: 16px;
+  --text-small: 14px;
+  --display-size: 20px;
+  --line: 1.35;
+
+  /* Motion: one frame at 60 fps */
+  --frame: calc(1s / 60);
+}
+
+@media (min-width: 960px) and (min-height: 540px) {
+  :root {
+    --u: 3px;
+  }
+}
+
+@media (min-width: 1280px) and (min-height: 720px) {
+  :root {
+    --u: 4px;
+  }
+}
+
+@media (min-width: 768px) {
+  :root {
+    --text-size: 20px;
+    --text-small: 16px;
+    --display-size: 30px;
+  }
 }
