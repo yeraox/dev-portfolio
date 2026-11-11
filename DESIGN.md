@@ -12,15 +12,20 @@ pixels. Never a copy of any existing game's assets.
 
 ## 2. Internal resolution and scaling
 - **Scenes** (title, cave, camp, characters) are drawn on a `<canvas>` at a fixed internal
-  resolution: **320×180** (confirmed; 16:9, fills modern screens without side bars).
-- **Scale** = the largest whole number that fits the viewport (`floor(min(vw/320, vh/180))`,
+  resolution: **640×360** (changed from 320×180 in phase 2: the sprites extracted from Yeray's
+  references need ~80 px of height for the glasses, mustache and goatee to read). 16:9; ×2 on
+  1280×720 / 1440×900, ×3 on 1920×1080, ×4 on 2560×1440.
+- **Scale** = the largest whole number that fits the viewport (`floor(min(vw/640, vh/360))`,
   min 1). The canvas is centered and letterboxed with `--night-0`.
 - On portrait phones with devicePixelRatio ≥ 2, the scene may fit the viewport width with a
   non-integer CSS scale (pixel unevenness stays ≤ 1 device pixel). Windows then open as
   full-width sheets over the scene.
 - **UI pixel (`--u`)**: the interface's own pixel unit for frames, bevels and gaps =
   the scene scale clamped to 2–4 CSS px, so frames line up with the scene's pixel grid.
-- Characters: avatar 32×40, Null 24×20, portraits 48×48, ring icons 16×16 (scene pixels).
+- Characters: Yeray's reference cut-outs (all poses 110 image px tall: walk canvases front 46×113, side 65×110), Null 36×36 canvas (sit 36 tall, trot 28 tall),
+  portraits 43×64 (Yeray) and 60×56 (Null), ring icons 16×16.
+- **UI pixel (`--u`)** keeps its phase-1 values (2/3/4 px) for now; how it relates to the 640×360
+  scene scale is decided in phase 3 when windows sit over the scene.
 
 ## 3. Color
 Source of truth: `src/styles/palette.ts` (mirrored in `src/styles/tokens.css`, enforced by
@@ -104,7 +109,7 @@ All motion is stepped; 1 frame = 1/60 s.
 | Window open | 18 (9 steps × 2) | Vertical wipe (clip-path in `steps(9)`). 7 frames was too fast to notice |
 | Window close | 10 (5 steps × 2) | Reverse wipe, a bit faster than opening |
 | Ring rotate | 8 | Per slot step |
-| Walk cycle | 4 frames at 8–12 fps | Avatar and Null |
+| Walk cycle | Yeray 8 frames × 120 ms (body bob 0/1/2 px); Null trot 6 × 110 ms, front 4 × 160 ms | `docs/animacion-caminar.md` |
 | PRESS START blink | 32 on / 16 off | Hard on/off, never a fade |
 | Scene transition | 12–20 | Mosaic or palette-step fade to black |
 | Campfire / steam | 2–3 frames at ~6 fps | Ambient |
@@ -115,6 +120,40 @@ fallback to 30 fps when frames run long.
 ## 9. Iconography (16×16, phase 2)
 EQUIP vest · ALCHEMY flask · STATS scroll · BUFFS dumbbell · CRAFT paella pan · COMMS letter.
 Drawn as sprites on the shared palette. No emoji or unicode glyphs as icons anywhere.
+
+## 9b. Characters (phase 2 — Yeray's references as they are)
+- **Source of truth:** Yeray's big references in `references/grandes/` (private). `npm run
+  characters` (`scripts/sprites/cutout.mjs`, shared code in `scripts/sprites/lib.mjs`) rebuilds
+  each figure on its **native pixel grid** — one pixel per pseudo-pixel the image was drawn with,
+  original colours — removing only the background, the light "sticker" fringe, JPEG noise and
+  tiny islands. Output: transparent PNGs in `src/assets/characters/` (≈ 96 KB for all) plus
+  `characters.gen.ts` (sizes, ground row, row inside the png). Never edited by hand.
+- **Walk cycles — the "sello"** (`scripts/sprites/walk.mjs`, approved 2026-11-11): Yeray's walk
+  sheets (`front_walk_animation.png`, `sidewalk_animation.png`) have no regular pixel grid, so
+  snapped frames drift (10–27 % of the face changed per frame). Instead every frame shares one
+  fixed canvas, symmetric around the head; the reference frame's head (hair, glasses, eyes,
+  moustache, goatee) is stamped pixel for pixel on all of them; the body bobs by whole pixels
+  (everything above the waist plus the arms, whole, moves down 0/1/2 px; legs stay planted);
+  the front step with the right leg is the left step mirrored (head not mirrored). The 6
+  drawings of each direction are stacked in one png (43 KB for both instead of 108). The
+  script checks every image: head identical, bob as specified, no background-tinted pixels or
+  loose specks, feet on the ground row — and fails otherwise.
+- **Poses** live in `src/assets/characters/characters.ts`: which images form each pose, the time
+  per frame, and `pixelSize` (relative size of one image pixel) so every pose of a character is
+  the same height: Yeray idle/side/arms/walks 110 rows ×1; Null sit ×0.5, trot/walk ×1. The idle
+  front and side poses are frame "up" of each walk, so starting or stopping never jumps.
+- **Rendering:** `<PixelSprite pose unit flip>` (`src/components/`) draws a pose as a background
+  (several frames can share one png) with `image-rendering: pixelated` at a whole number of CSS
+  px per image pixel
+  (`round(pixelSize × unit)`), cycles multi-frame poses and gives single-drawing poses a 2 px
+  stepped bob (off with reduced motion). On a 1440 px screen (unit 2) Yeray is ~220 CSS px tall.
+- Character colours come from the references and are not limited to the UI palette.
+- Hand-drawn sprites and the grid extractor were tried and rejected in phase 2
+  (likeness); the grid engine in `src/engine/` remains only for the 16×16 ring icons.
+- Yeray walks in 8 frames toward the camera and sideways (flip for left); arms crossed and the
+  portrait are single drawings. Null has a 6-frame trot and a 3-frame front walk.
+- Known limits of the walks: the "passing" frames have both feet on the ground (the sheets have
+  no lifted-leg drawing); the backpack moves with the body (no 1-frame lag yet).
 
 ## 10. Media inside windows
 Project screenshots and the Capyroad video are **not** pixelated: they sit crisp inside a

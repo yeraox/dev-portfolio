@@ -34,20 +34,27 @@ Genre vocabulary to reinterpret:
 
 Rendering rules:
 - Scenes (title backdrop, cave, camp, characters) render on <canvas> at a fixed low internal
-  resolution of **320×180** (confirmed), integer-scaled, `image-rendering: pixelated`,
+  resolution of **640×360** (320×180 in phase 0, raised in phase 2 so the sprites extracted from my references keep their detail), integer-scaled, `image-rendering: pixelated`,
   letterboxed.
 - Windows and all text are real DOM (selectable, accessible, indexable). Pixel-font sizes are
   integer multiples of the font's grid.
 - Limited palette (~32 colors) as CSS custom properties in one `tokens.css`. Dithering instead of
   smooth gradients. Hard 1–2px offset shadows, no blur, no border-radius.
-- Motion is stepped: `steps()` / frame counts at 60fps. Walk cycles 4–6 frames at ~8–12fps.
+- Motion is stepped: `steps()` / frame counts at 60fps. Yeray's walk cycles: 8 frames × 120 ms;
+  Null's trot ~9 fps.
   Window open = vertical wipe in ~6–8 frames. Scene transitions = mosaic/pixelate or
   fade-to-black in palette steps.
 
 ## Assets
-I have no sprites. Generate all pixel art in code: sprites/icons as small character-grid maps
-(one char = one palette index) in `src/assets/sprites/*.ts`, drawn by a tiny sprite renderer.
-They must be swappable later for PNG sprite sheets in `public/sprites/` without touching components.
+Characters are my large pixel-art references USED AS THEY ARE (option A, chosen in phase 2):
+`npm run characters` rebuilds each one on its native pixel grid as a transparent PNG in
+`src/assets/characters/`, shown with `<PixelSprite>` at whole-number zooms. Hand-drawn sprites
+and grid conversions were tried in phase 2 and rejected (likeness). Ring icons stay hand-drawn
+(16×16 grids drawn by `src/engine/`).
+Walk cycles (approved 2026-11-11, `docs/animacion-caminar.md`) come from my walk sheets through
+the "sello": one head stamped pixel for pixel on every frame, a 0/1/2 px body bob by whole
+pixels, and the front step with the other leg mirrored. Nothing is painted. The idle front and
+side poses are frames of those sheets, so starting to walk never changes the drawing.
 
 Reference photos (git-ignored, never published, never shipped in the build):
 - `references/yeray.jpg` — me. Use for the avatar and portrait.
@@ -106,8 +113,8 @@ markings stay readable; confirm against the internal resolution in DESIGN.md.
 
 | Sprite | Size (px) | Frames |
 |---|---|---|
-| Avatar walk down (toward camera) | 32×40 | 4 |
-| Avatar walk side (mirror for the other side) | 32×40 | 4 |
+| Avatar walk down (toward camera) | 46×113 canvas (figure 110 tall) | 8 |
+| Avatar walk side (mirror for the other side) | 65×110 canvas | 8 |
 | Avatar idle front | 32×40 | 2 (breathing) |
 | Avatar arms-crossed idle | 32×40 | 1–2 |
 | Avatar portrait (HUD left, STATS window header) | 48×48 | 1 (+1 blink) |
@@ -218,7 +225,7 @@ Human-readable explanation of every phase: `docs/plan-de-fases.md` (keep both in
 
 0. Foundations: Vite + React + TS (strict), oxlint, Vitest, Playwright Chromium (dev), folder structure;
    write CLAUDE.md, PRODUCT.md, DESIGN.md (palette, fonts, frame/window specs, motion specs,
-   internal resolution 320×180 — confirmed); `/dev/specimen` page with palette + chosen fonts.
+   internal resolution 640×360 since phase 2); `/dev/specimen` page with palette + chosen fonts.
 1. Window look: tokens + fonts + `Window`, `BannerWindow`, `StatBar`, `Divider`, `HelpBar`,
    `KeyHint`; the STATS window rendered statically on `/dev/windows`.
 2. Characters: sprite renderer (with horizontal flip) + avatar + Null + portraits + ring icons.

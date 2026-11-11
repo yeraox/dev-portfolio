@@ -32,6 +32,13 @@ intro → camp hub with a ring menu → SNES-style windows with real CV content)
   only its three CV sentences. The phone number never appears on the web (PDF only).
 - **Original art only.** Nothing copied from any existing game (logo, lettering, sprites,
   fonts, music, character names or outfits).
+- **Characters are Yeray's references as they are** (`npm run characters` →
+  `src/assets/characters/`, poses in `characters.ts`, drawn with `<PixelSprite>`). Never redraw,
+  repaint or resample them; never hand-edit the generated PNGs. Review them against the
+  references with real page screenshots at the same scale.
+- **Walk cycles use the approved "sello"** (`scripts/sprites/walk.mjs`, `docs/animacion-caminar.md`):
+  one head stamped on every frame, whole-pixel body bob, mirrored front step. Composing frames
+  this way is allowed; painting pixels is not. Keep the generator's quality checks passing.
 - `references/` is private (git-ignored): never import it from production code. `/dev/*`
   pages exist only behind `import.meta.env.DEV`.
 
@@ -44,7 +51,7 @@ intro → camp hub with a ring menu → SNES-style windows with real CV content)
 
 ## Styling
 - CSS Modules + `src/styles/tokens.css`. No CSS frameworks, UI kits, animation libs or engines.
-- Colors come only from the palette: `src/styles/palette.ts` is the source of truth;
+- UI colors come only from the palette (characters keep their references' colours): `src/styles/palette.ts` is the source of truth;
   `tokens.css` mirrors it and `palette.test.ts` fails on drift. Add a color in both, never a
   raw hex in a component.
 - Every text/background combination used must be listed in `CONTRAST_PAIRS`
@@ -60,6 +67,7 @@ intro → camp hub with a ring menu → SNES-style windows with real CV content)
 | `npm run lint` | oxlint |
 | `npm test` | Vitest (palette, contrast; later reducer and ring math) |
 | `npm run build` | Typecheck + production build (check gzip sizes against the budget) |
+| `npm run characters` | Rebuild the character PNGs from `references/grandes/` on their native pixel grid, walk cycles included, and run their quality checks (needs ffmpeg) |
 | `npm run shots -- <url> <name>` | Playwright screenshots at 390/768/1440 into `.screenshots/` + overflow and console-error check |
 
 ## Skills
