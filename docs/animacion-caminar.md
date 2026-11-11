@@ -49,7 +49,7 @@ Para seguir necesito que respondas a las preguntas de la sección 6.
 | Archivo | Contenido | Tamaño del personaje (px del juego) | Uso hoy |
 |---|---|---|---|
 | `frente_yeray.jpg` | De pie, de frente | 42×110 | ✅ Pose `idle` aprobada |
-| `brazos_cruzados_yeray.jpg` | Brazos cruzados | 43×111 | ✅ Pose aprobada |
+| `brazos_cruzados_yeray.jpg` | Brazos cruzados | 43×111 | ❌ Descartada el 11-11-2026 (no convencía) |
 | `camina_grande_yeray.jpg` | Un paso de lado | 33×73 (dibujado ×1,5) | ✅ Pose `side` aprobada |
 | `retrato_yeray.jpg` | Retrato | 64×94 | ✅ Retrato aprobado |
 | `caminado_frente_yeray.jpg`, `caminando_yeray.jpg` | Hojas antiguas de caminar | 73 de alto: otra escala | ❌ Descartadas en la fase 2 |
@@ -439,5 +439,4 @@ Si alguna falla, el script se detiene con error.
 - La mochila no lleva el retraso de un fotograma.
 - Quedan algunos píxeles del contorno algo azulados (mezcla de contorno y fondo con más de un
   60 % de contorno). Son contorno de verdad: quitarlos abriría huecos.
-- La pose de brazos cruzados sigue saliendo de su referencia. Su piel es algo más clara que la
-  de las hojas nuevas.
+- ~~La pose de brazos cruzados sigue saliendo de su referencia.~~ Descartada el 11-11-2026.

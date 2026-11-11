@@ -39,6 +39,9 @@ intro → camp hub with a ring menu → SNES-style windows with real CV content)
 - **Walk cycles use the approved "sello"** (`scripts/sprites/walk.mjs`, `docs/animacion-caminar.md`):
   one head stamped on every frame, whole-pixel body bob, mirrored front step. Composing frames
   this way is allowed; painting pixels is not. Keep the generator's quality checks passing.
+- **Scene backgrounds are Yeray's generated images as they are** (`npm run scenes`): only
+  re-encoded, never snapped to a grid (it blurred their half-pixel details), repainted or
+  redrawn. Ambient animation may only re-tone the image's own pixels (the campfire flicker).
 - `references/` is private (git-ignored): never import it from production code. `/dev/*`
   pages exist only behind `import.meta.env.DEV`.
 
@@ -68,6 +71,7 @@ intro → camp hub with a ring menu → SNES-style windows with real CV content)
 | `npm test` | Vitest (palette, contrast, textures, characters, state machine, ring maths, stage layout) |
 | `npm run build` | Typecheck + production build (check gzip sizes against the budget) |
 | `npm run characters` | Rebuild the character PNGs from `references/grandes/` on their native pixel grid, walk cycles included, and run their quality checks (needs ffmpeg) |
+| `npm run scenes` | Re-encode Yeray's scene backgrounds (`references/grandes/campamento.jpg`) as WebP into `src/assets/scenes/`, as they are, and report their pixel grid (needs ffmpeg) |
 | `npm run shots -- <url> <name>` | Playwright screenshots at 390/768/1440 (phone and tablet as touch devices) into `.screenshots/` + overflow and console-error check |
 | `npm run check:camp -- [url]` | Camp walkthrough: keyboard only (1440) and touch only (phone), ✓/✗ per check + screenshots |
 | `npm run fps -- [url]` | Frames per second while the ring turns, CPU ×1 and ×4, plus the slowest answer to a key/click (run against `npx vite preview`) |

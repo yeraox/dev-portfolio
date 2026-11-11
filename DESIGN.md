@@ -29,7 +29,7 @@ pixels. Never a copy of any existing game's assets.
   with half-size pixels (Null sitting, `pixelSize` 0.5) stay crisp wherever the screen has the
   pixels for them.
 - Characters: Yeray's reference cut-outs (all poses 110 image px tall: walk canvases front 46×113,
-  side 65×110; arms crossed 43×111), Null (sit 55×93 drawn at ½, trot ~50×38, front ~24×38),
+  side 65×110), Null (sit 55×93 drawn at ½, trot ~50×38, front ~24×38),
   portraits 64×94 (Yeray) and 50×47 (Null), ring icons 16×16 drawn at 2 scene px per pixel.
 
 ## 3. Color
@@ -50,7 +50,8 @@ Source of truth: `src/styles/palette.ts` (mirrored in `src/styles/tokens.css`, e
 
 ### Characters
 Since phase 2 the characters keep their references' own colours (no character palettes). The
-UI palette above covers the interface and the provisional camp background.
+UI palette above covers the interface. Scene backgrounds (Yeray's generated images) also keep
+their own colours.
 
 ### Contrast
 Every allowed text/background pair is listed in `CONTRAST_PAIRS` (`src/styles/contrast.ts`) and
@@ -99,7 +100,7 @@ stacked. Portraits inside windows render at most ×3 (144px).
 
 ## 6. Ring menu (phase 3 — `src/components/RingMenu.tsx`, geometry in `src/game/ring.ts`)
 - Icons: 16×16 grids drawn at 2 scene px per icon pixel (32×32 scene px), on an ellipse of
-  **rx 124, ry 84** around Yeray's middle (scene 320, 241).
+  **rx 124, ry 84** around Yeray's middle (scene 320, 255).
 - Slots spread evenly over 360° for the *visible* slot count (4–6). Active slot at the top,
   inside the selection brackets; its label above in Jersey 10, `green-1` on an `ink` plate.
 - Rotation: 8 whole frames (~133 ms), all icons advance together, the short way round. Banner
@@ -109,11 +110,23 @@ stacked. Portraits inside windows render at most ×3 (144px).
   the scene turns the ring. ARIA `menu` pattern with roving focus on the active slot.
 
 ## 6b. Camp scene (phase 3 — `src/scenes/camp/`)
-- Layout (scene px): Yeray at x 320 with his feet on y 296; Null sitting at x 376, y 298; both on
-  a dithered `ink` shadow ellipse (half the pixels, no transparency).
-- Background: 320×180 pixels drawn at 2 scene px each. **Provisional** (code-drawn from the
-  palette) until Yeray's generated camp image arrives (`docs/fondo-campamento.md`).
-- Yeray crosses his arms after 3 s without menu input (`YERAY.armsCrossed`); any input resets.
+- Layout (scene px): Yeray at x 320 with his feet on y 310 (the clearing's lower edge, where the
+  path starts — low enough for the ring's left icon to pass under the campfire); Null sitting at
+  x 376, y 312; both on a dithered `ink` shadow ellipse (half the pixels, no transparency).
+- Background: **Yeray's generated camp image as it is** (`references/grandes/campamento.jpg`,
+  1376×768) — `npm run scenes` only re-encodes it as WebP q85 (564 → 64 KB, indistinguishable at
+  2× zoom) into `src/assets/scenes/`. It fills the scene's height (0.469 scene px per image px)
+  and overhangs 2.5 px left and right. Its art pixels measure 5.74 image px (grid score 0.64, a
+  240×134 grid), but it also draws details at half a pixel (outlines, highlights, the tripod's
+  legs, the tent's rope): snapped to its grid those turned into blobs and dotted lines, so the
+  image is drawn unsnapped, nearest-neighbour (smoothed only below 0.75×).
+- Campfire: the image's still flame flickers by palette steps — 3 variants where random whole art
+  pixels of the flame burn dimmer, shown every 110 ms in a restless order
+  (`src/scenes/camp/fireFlicker.ts`); still with reduced motion. Nothing else in the image changes.
+- With 6 sections (drafts shown in dev), the ring's upper-left slot sits over the paella pan; with
+  the 4 live sections the left slot passes under the fire. Revisit when BUFFS/CRAFT are ready.
+- Yeray stands in his front pose, breathing. (The arms-crossed idle was dropped on 2026-11-11;
+  Yeray may add poses in the final touches.)
 - The canvas redraws only when a pose, a breath or the size changes.
 
 ## 7. HUD (phase 3 — `src/components/Hud.tsx`)
@@ -131,7 +144,6 @@ All motion is stepped; 1 frame = 1/60 s.
 | Window open | 18 (9 steps × 2) | Vertical wipe (clip-path in `steps(9)`). 7 frames was too fast to notice |
 | Window close | 10 (5 steps × 2) | Reverse wipe, a bit faster than opening (built in phase 3) |
 | Ring rotate | 8 | Per slot step, driven by the shared game loop |
-| Arms crossed | after 180 (3 s) | Yeray's signature idle; any menu input resets it |
 | Walk cycle | Yeray 8 frames × 120 ms (body bob 0/1/2 px); Null trot 6 × 110 ms, front 4 × 160 ms | `docs/animacion-caminar.md` |
 | PRESS START blink | 32 on / 16 off | Hard on/off, never a fade |
 | Scene transition | 12–20 | Mosaic or palette-step fade to black |
@@ -173,8 +185,8 @@ Drawn as sprites on the shared palette. No emoji or unicode glyphs as icons anyw
 - Character colours come from the references and are not limited to the UI palette.
 - Hand-drawn sprites and the grid extractor were tried and rejected in phase 2
   (likeness); the grid engine in `src/engine/` remains only for the 16×16 ring icons.
-- Yeray walks in 8 frames toward the camera and sideways (flip for left); arms crossed and the
-  portrait are single drawings. Null has a 6-frame trot and a 3-frame front walk.
+- Yeray walks in 8 frames toward the camera and sideways (flip for left); his portrait is a
+  single drawing. The arms-crossed pose was dropped (2026-11-11). Null has a 6-frame trot and a 3-frame front walk.
 - Known limits of the walks: the "passing" frames have both feet on the ground (the sheets have
   no lifted-leg drawing); the backpack moves with the body (no 1-frame lag yet).
 

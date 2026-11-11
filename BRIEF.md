@@ -78,7 +78,8 @@ below disagree, the text wins.
   imitate any existing game character's outfit):** olive-green quilted vest over a white
   t-shirt, beige cargo trousers, brown boots, small backpack with crossing straps. No bracers,
   no wristbands.
-- **Signature idle:** arms crossed, relaxed lean — plays after ~3 s standing still.
+- **Idle:** standing front pose, breathing. (The arms-crossed idle was dropped on 2026-11-11: it
+  did not convince me. I may add more poses during the final touches.)
 - **Readability:** use a 1px very dark navy outline (not pure #000) and warm rim-light pixels on
   the side facing the campfire. The dark hair must stay separate from the dark background, so
   give the curls a lighter highlight row.
@@ -116,7 +117,6 @@ markings stay readable; confirm against the internal resolution in DESIGN.md.
 | Avatar walk down (toward camera) | 46×113 canvas (figure 110 tall) | 8 |
 | Avatar walk side (mirror for the other side) | 65×110 canvas | 8 |
 | Avatar idle front | frame "up" of the front walk (46×113) | 1 (+1 px breathing) |
-| Avatar arms-crossed idle | 43×111 | 1 (+1 px breathing) |
 | Avatar portrait (HUD left, STATS window header) | 64×94 (HUD shows the top 64×76) | 1 |
 | Null trot side (mirror for the other side) | ~50×38 | 6 |
 | Null walk down | ~24×38 | 3 (4-step cycle) |
@@ -124,7 +124,7 @@ markings stay readable; confirm against the internal resolution in DESIGN.md.
 | Null begging pose | — | not available yet (needs a reference) |
 | Null portrait (HUD right) | 50×47 | 1 |
 | Ring icons (one per slot) | 16×16, drawn at 2 scene px per pixel | 1 |
-| Camp background | 320×180 at 2 scene px per pixel | 1 (Yeray generates it: `docs/fondo-campamento.md`) |
+| Camp background | Yeray's generated image, 1376×768 (art pixels of 5.74 px), filling the scene's height | 1 + a 3-variant flame flicker |
 
 Back views from the concept sheets are not needed in v1.
 
@@ -234,7 +234,7 @@ Human-readable explanation of every phase: `docs/plan-de-fases.md` (keep both in
 2. Characters: sprite renderer (with horizontal flip) + avatar + Null + portraits + ring icons.
    `/dev/sprites` preview at 1×, 4× and 8× next to the reference photos; iterate on likeness.
 3. Camp + ring menu: HUB scene (characters on a screen-pixel canvas, my generated camp
-   background — provisional until it arrives), HUD, `useGameLoop`, `useInput`, `RingMenu`,
+   background used as it is, flickering campfire), HUD, `useGameLoop`, `useInput`, `RingMenu`,
    HUB ↔ WINDOW state machine with placeholder windows (native `<dialog>`); draft sections hidden
    in production; portrait-screen layout. Vitest for reducer, ring math and stage layout;
    `npm run check:camp` walkthrough; `npm run fps`; Lighthouse.

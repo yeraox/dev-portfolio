@@ -1,17 +1,18 @@
 # Informe · Fase 3 — Campamento y menú circular
 
 **Fecha de cierre:** 11 de noviembre de 2026
-**Estado:** ✅ terminada, pendiente de tu revisión y tu commit. El fondo del campamento es
-**provisional** hasta que generes el tuyo (`docs/fondo-campamento.md`).
+**Estado:** ✅ terminada, pendiente de tu revisión y tu commit. El fondo del campamento es **tu
+imagen** (`references/grandes/campamento.jpg`), integrada el mismo día (sección 3.6).
 
 ## Resumen en tres líneas
-- La página principal ya es el campamento: tú y Null, el menú circular a tu alrededor, el banner
-  y el HUD. Funciona con teclado, ratón y toques, en el ordenador, la tablet y el móvil.
+- La página principal ya es el campamento: tú y Null delante de la cueva, sobre tu fondo, con la
+  hoguera parpadeando, el menú circular a tu alrededor, el banner y el HUD. Funciona con teclado,
+  ratón y toques, en el ordenador, la tablet y el móvil.
 - Antes de construir adapté la fase a los cambios de la fase 2: escena de 640×360, personajes
   desde tus PNG, el píxel de las ventanas atado a la escena y el fondo generado por ti.
 - Rendimiento dentro del presupuesto con margen:
-  - Lighthouse móvil: 100 en rendimiento y 100 en accesibilidad.
-  - JS inicial de 77,8 KB y 144 KB en total.
+  - Lighthouse móvil: 99 en rendimiento y 100 en accesibilidad.
+  - JS inicial de 77,9 KB y 208 KB en total con tu fondo.
   - 60 fps también con la CPU frenada ×4.
 
 ---
@@ -20,7 +21,10 @@
 
 | Decisión | Resultado | Quién |
 |---|---|---|
-| Fondo del campamento | **Lo generas tú** con tu generador y lo uso tal cual. Instrucciones exactas en `docs/fondo-campamento.md`; mientras tanto, fondo provisional en código | Tú |
+| Fondo del campamento | **Lo generas tú** con tu generador y lo uso tal cual (instrucciones en `docs/fondo-campamento.md`) | Tú |
+| Cómo usar tu fondo | **Tal cual, sin encajarlo en su rejilla**: encajado perdía los detalles a medio píxel. Solo se convierte a WebP (564 → 64 KB) | Yo (ver 3.6) |
+| Dónde estáis tú y Null | Pies en la línea 310, el borde inferior del claro: el icono izquierdo del anillo pasa bajo la hoguera, no encima | Yo |
+| Hoguera animada | Sin hoja de llamas: la llama parpadea apagando por turnos algunos de sus propios píxeles | Yo (lo proponían las instrucciones del fondo) |
 | Personajes en la escena | En el **canvas**, desde sus PNG de la fase 2, apoyados por la fila del suelo | Yo |
 | Resolución del canvas | **Píxeles reales de la pantalla**, para que Null sentado (píxeles a mitad de tamaño) salga nítido | Yo |
 | Tamaño de la escena | Número entero de píxeles de pantalla por píxel de escena; si pierde más del 20 %, ajuste exacto | Yo |
@@ -46,7 +50,7 @@ Lo que decía el plan original y cómo ha quedado:
 | Retratos de 48×48 | Tus retratos de referencia (64×94 y 50×47) en un marco de 64×76 |
 | Personajes como rejillas en el canvas | Tus PNG de la fase 2, colocados por `ground` |
 | Escena en móvil a ×1 (pequeña) | Se ve el centro de la escena, más grande |
-| Fondo dibujado por mí | Generado por ti; provisional en código hasta entonces |
+| Fondo dibujado por mí | Generado por ti y usado tal cual |
 
 También actualicé:
 - `docs/plan-de-fases.md`: la sección de la fase 3. Tu hueco de comentarios sigue ahí.
@@ -116,17 +120,61 @@ También actualicé:
   - Dibuja el fondo, las sombras, a ti y a Null.
   - El bucle pregunta en cada fotograma, pero solo redibuja si algo cambió: una pose, una
     respiración o el tamaño.
-- **`provisionalBackground`:** el fondo provisional, de 320×180 píxeles de la paleta: pared de
-  roca con la cueva, masas de árboles, suelo y claro.
-- **`campLayout`:** dónde está cada cosa. A los 3 s sin tocar el menú cruzas los brazos.
+- **`campLayout`:** dónde está cada cosa: el fondo, tus pies, los de Null y el centro del anillo.
+  Estás siempre en tu pose de frente, respirando (ver 3.7).
+- **`fireFlicker`:** el parpadeo de la hoguera (ver 3.6).
+- El fondo provisional dibujado en código, que usé mientras no llegaba el tuyo, ya está borrado.
 
 ### 3.5 Herramientas
+- **`npm run scenes`** (`scripts/sprites/scene.mjs`): convierte tus fondos a WebP, tal cual, y
+  mide su rejilla.
 - **`npm run check:camp`:** un recorrido de 18 comprobaciones solo con teclado (1440) y solo con
   toques (móvil), con capturas.
 - **`npm run fps`:** fotogramas por segundo con el anillo girando sin parar, con la CPU ×1 y ×4,
   y el tiempo de respuesta más lento a una tecla o un clic.
 - **`npm run shots`:** ahora el móvil y la tablet se emulan como táctiles, como los de verdad
   (por ejemplo, no muestran las teclas).
+
+### 3.6 Tu fondo del campamento
+1. **Lo medí:**
+   - 1376×768 px, sin marca de agua y con todos los elementos pedidos.
+   - Sus píxeles miden 5,74 px, con una rejilla bastante regular (0,64 en x y 0,71 en y; tu
+     pose de frente da 0,73). Equivale a un pixel art de unos 240×134.
+2. **Probé a encajarlo en su rejilla**, como a los personajes:
+   - Los detalles finos, más pequeños que un píxel, salían mal: patas del trípode, humo,
+     brillos de las mancuernas y cuerda de la tienda.
+   - Una regla para conservar líneas finas mejoró el trípode, pero las mancuernas seguían siendo
+     manchas y la cuerda desaparecía.
+   - Comparé las dos opciones a tamaño real en 1440, y tu imagen original ganaba con claridad.
+3. **Se usa tal cual:**
+   - `npm run scenes` solo la convierte a WebP con calidad 85: pasa de 564 KB a 64 KB y no se
+     nota la diferencia ni ampliada al doble.
+   - Ocupa todo el alto de la escena. Al ser un poco más ancha que 16:9 sobran 2,5 px a cada
+     lado.
+   - Se dibuja a píxel exacto; solo se suaviza si hubiera que reducirla mucho.
+4. **Escala:** de pie mides justo el 30 % del alto de la imagen, lo que pedían las instrucciones.
+   La tienda queda algo más alta que tú.
+5. **Posiciones:**
+   - Tus pies pasan de la línea 296 a la **310**, el borde inferior del claro donde empieza el
+     camino, y los de Null a la 312.
+   - Con el anillo un poco más abajo, en la versión publicada (4 secciones) la carta de COMMS
+     queda justo debajo de la hoguera, sobre el resplandor, sin tapar la paellera.
+6. **La hoguera:**
+   - Tres variantes de la llama en las que se apagan un poco, por turnos, algunos de sus propios
+     píxeles (píxeles de arte enteros), cada 110 ms en un orden irregular.
+   - Lo comprobé con capturas seguidas: cambian hasta 477 píxeles, todos dentro de la llama.
+   - La paellera y el resto no se tocan, y con "reducir movimiento" la llama se queda quieta.
+   - Se dibuja con la misma transformación que el fondo, para que encaje exacto.
+
+### 3.7 Sin brazos cruzados (tu decisión, 11-11-2026)
+La pose de brazos cruzados no te convencía, así que la he quitado del todo:
+- Ya no se genera `yeray-arms.png`: salió de la lista de `cutout.mjs`. Tu referencia
+  `brazos_cruzados_yeray.jpg` sigue en `references/`, intacta.
+- Ya no existe `YERAY.armsCrossed`, ni el temporizador de 3 s que la activaba en el campamento.
+- Tampoco sale en la página `/dev/personajes` ni en el recorrido automático.
+
+En el campamento estás siempre en tu pose de frente, respirando. Las poses que añadas en los
+retoques finales entrarán por el mismo camino que las demás.
 
 ---
 
@@ -138,7 +186,7 @@ También actualicé:
 | `npm test` | ✅ 111 pruebas (antes 77): máquina de estados, geometría del anillo, ajuste a pantallas, textura de corchetes |
 | `npm run check:camp` en desarrollo (6 secciones) | ✅ 18/18 |
 | `npm run check:camp` en el build de producción (4 secciones), 3 veces seguidas | ✅ 18/18 las tres |
-| Capturas 390 / 768 / 1440 | ✅ Sin desbordamiento ni errores de consola: `.screenshots/fase-3-campamento-*.png`, más `camp-check-*.png` (ventana abierta, brazos cruzados) |
+| Capturas 390 / 768 / 1440 | ✅ Sin desbordamiento ni errores de consola: `.screenshots/fase-3-campamento-*.png`, más `camp-check-*.png` (anillo y ventana abierta) |
 | Página de ventanas de la fase 1 | ✅ Igual que antes |
 
 **Las comprobaciones del recorrido:**
@@ -156,13 +204,17 @@ También actualicé:
 
 | Métrica | Objetivo | Resultado |
 |---|---|---|
-| JavaScript inicial (gzip) | ≤ 100 KB | ✅ **77,8 KB** |
-| Peso total de la primera carga | ≤ 300 KB | ✅ **144 KB** (Lighthouse) |
-| LCP móvil (4G lento + CPU ×4 simulados) | ≤ 2,5 s | ✅ **1,7 s** (escritorio 0,4 s) |
+Medido con tu fondo ya puesto (antes de tenerlo: 144 KB en total y rendimiento 100).
+
+| Métrica | Objetivo | Resultado |
+|---|---|---|
+| JavaScript inicial (gzip) | ≤ 100 KB | ✅ **77,9 KB** |
+| Peso total de la primera carga | ≤ 300 KB | ✅ **208 KB** (Lighthouse), de los que 64 KB son tu fondo |
+| LCP móvil (4G lento + CPU ×4 simulados) | ≤ 2,5 s | ✅ **1,6 s** (escritorio 0,4 s) |
 | CLS | < 0,1 | ✅ **0,001** |
-| Respuesta a teclas y clics (idea del INP) | < 200 ms | ✅ **32 ms** como máximo, también con CPU ×4. El bloqueo total (TBT) en Lighthouse móvil es de 30 ms |
-| Fotogramas por segundo | 60 / ≥ 30 con CPU ×4 | ✅ **60 y 60**: ningún fotograma por encima de 33 ms |
-| Lighthouse móvil | ≥ 95 en rendimiento y accesibilidad | ✅ **100 / 100** (escritorio 100 / 100) |
+| Respuesta a teclas y clics (idea del INP) | < 200 ms | ✅ **32 ms** como máximo, también con CPU ×4. El bloqueo total (TBT) en Lighthouse móvil es de 0 ms |
+| Fotogramas por segundo | 60 / ≥ 30 con CPU ×4 | ✅ **60 y 60**, con la hoguera parpadeando: ningún fotograma por encima de 33 ms |
+| Lighthouse móvil | ≥ 95 en rendimiento y accesibilidad | ✅ **99 / 100** (escritorio 100 / 100) |
 
 **Lighthouse:**
 - Se ejecutó una vez con `npx`. No está instalado en el proyecto.
@@ -190,6 +242,7 @@ También actualicé:
 
 | Problema | Solución |
 |---|---|
+| Encajado en su rejilla, tu fondo perdía los detalles a medio píxel: mancuernas como manchas, cuerda de la tienda borrada, trípode a trozos | Se usa tal cual, solo convertido a WebP. Lo decidí comparando las dos opciones a tamaño real (sección 3.6) |
 | **El JS inicial subió a 102,7 KB** (presupuesto 100): Vite mete en el JS, en base64, las imágenes de menos de 4 KB, que son los 9 fotogramas de Null que la escena ni usa | `assetsInlineLimit: 0` en `vite.config.ts`: cada PNG va aparte y solo se descarga al dibujarse. El JS bajó a **77,8 KB** |
 | Al cerrar la ventana, el foco no volvía al anillo | El `<dialog>` seguía abierto en modo modal y el resto de la página no admite foco. Ahora se cierra antes de devolver el foco |
 | El tabulador salía de la ventana hacia la barra del navegador | Bucle de foco dentro de la ventana (patrón ARIA de diálogo modal) |
@@ -200,11 +253,16 @@ También actualicé:
 ---
 
 ## 7. Observaciones para las próximas fases
-- **Tu fondo:** cuando lo generes, lo integro sin tocar el resto, porque ya ocupa 320×180 a
-  2 píxeles de escena. Si haces la hoja de llamas, animo la hoguera.
-- **Brazos cruzados:** su piel es algo más clara que la de la pose quieta, y al cruzarlos se nota
-  el cambio de color. Si generas esa pose en el estilo de las hojas nuevas, se cambia en un
-  minuto.
+- **Con 6 secciones**, que es como se ve en desarrollo con BUFFS y CRAFT, el icono de arriba a la
+  izquierda cae sobre la paellera. Con las 4 publicadas no pasa. No hay forma del anillo que
+  esquive la hoguera sin salirse de la escena. Cuando esas dos secciones tengan contenido,
+  decidimos: mover tu posición, otro óvalo o aceptarlo.
+- **El banner tapa la parte alta de la boca de la cueva** en el ordenador. Tu imagen la puso algo
+  más arriba de lo pedido. En el móvil y en la intro (fase 6) se ve entera.
+- **Llamas de verdad:** si algún día generas la hoja de llamas, el parpadeo se cambia por una
+  animación dibujada.
+- **Más poses:** cuando añadas poses nuevas en los retoques finales, entran por el mismo camino:
+  `npm run characters`, una entrada en `characters.ts` y su comprobación con capturas.
 - **Fase 4:**
   - Las ventanas provisionales se llenan con tu contenido.
   - La ventana STATS de `/dev/windows` aún tiene el hueco de 48×48 para el retrato; usará tu
@@ -227,13 +285,16 @@ También actualicé:
 | `src/components/Window.*`, `BannerWindow.*` | Cortina de cierre, `titleId` y hueco para las teclas |
 | `src/assets/textures.ts`, `textures.test.ts` | Textura de los corchetes |
 | `src/styles/contrast.ts` | Dos combinaciones nuevas (tecla resaltada y nombres del HUD) |
-| `src/scenes/camp/*` | **Nuevos**: la escena |
+| `src/scenes/camp/*` | **Nuevos**: la escena, su colocación y el parpadeo de la hoguera |
+| `scripts/sprites/scene.mjs` | **Nuevo**: tus fondos a WebP, tal cual (`npm run scenes`) |
+| `src/assets/scenes/camp.webp`, `scenes.gen.ts` | **Nuevos (generados)**: tu fondo (64 KB) y sus medidas |
+| `scripts/sprites/cutout.mjs`, `src/assets/characters/` (`yeray-arms.png` **borrado**, `characters.gen.ts`, `characters.ts`, `characters.test.ts`), `src/dev/CharactersDemo.tsx` | Sin la pose de brazos cruzados (3.7) |
 | `src/App.tsx`, `src/App.module.css` | La portada provisional pasa a ser el campamento (el `.css` se borra) |
 | `vite.config.ts` | Sin imágenes dentro del JS |
 | `scripts/camp-check.mjs`, `scripts/fps.mjs` | **Nuevos**: recorrido y rendimiento |
-| `scripts/screenshot.mjs`, `package.json` | Móvil y tablet táctiles; scripts `check:camp` y `fps` |
+| `scripts/screenshot.mjs`, `package.json` | Móvil y tablet táctiles; scripts `scenes`, `check:camp` y `fps` |
 | `DESIGN.md`, `BRIEF.md`, `CONTENT.md`, `CLAUDE.md`, `docs/plan-de-fases.md` | Ajustes por la fase 2 y lo construido |
-| `docs/fondo-campamento.md` | **Nuevo**: qué necesito para el fondo |
+| `docs/fondo-campamento.md` | **Nuevo**: lo que te pedí para el fondo y cómo se ha usado |
 | `docs/informes/fase-3-campamento.md` | Este informe |
 
 ### Commits recomendados
@@ -241,6 +302,10 @@ Si aún no has hecho los de la fase 2 y su anexo, haz esos primero (están en
 `docs/informes/fase-2-anexo-caminar.md`).
 
 ```bash
+# 0. Drop the arms-crossed pose
+git add scripts/sprites/cutout.mjs src/assets/characters/ src/dev/CharactersDemo.tsx
+git commit -m "refactor(characters): drop the arms-crossed pose"
+
 # 1. Pure logic: state machine, ring geometry, stage layout
 git add src/game/ src/content/
 git commit -m "feat(game): add camp state machine, ring geometry and stage layout"
@@ -253,19 +318,23 @@ git commit -m "feat(engine): add shared game loop, input, screen hooks and chara
 git add src/components/ src/assets/textures.ts src/assets/textures.test.ts src/styles/contrast.ts
 git commit -m "feat(ui): add ring menu, HUD and section dialog with closing wipe"
 
-# 4. The camp scene as the home page
-git add src/scenes/ src/App.tsx src/App.module.css
-git commit -m "feat(camp): add camp hub scene with provisional background"
+# 4. Scene backgrounds: Yeray's camp image as WebP
+git add scripts/sprites/scene.mjs src/assets/scenes/
+git commit -m "feat(scenes): add scene background pipeline with the generated camp image"
 
-# 5. Build: keep images out of the JavaScript
+# 5. The camp scene as the home page
+git add src/scenes/ src/App.tsx src/App.module.css
+git commit -m "feat(camp): add camp hub scene with flickering campfire"
+
+# 6. Build: keep images out of the JavaScript
 git add vite.config.ts
 git commit -m "build: never inline images into the JavaScript bundle"
 
-# 6. Checks: walkthrough, frame rate, touch screenshots
+# 7. Checks: walkthrough, frame rate, touch screenshots (+ the new npm scripts)
 git add scripts/ package.json
 git commit -m "test: add camp walkthrough and frame-rate checks, emulate touch in screenshots"
 
-# 7. Docs
+# 8. Docs
 git add DESIGN.md BRIEF.md CONTENT.md CLAUDE.md docs/
 git commit -m "docs: adapt phase 3 to the 640x360 character system and add camp background brief"
 ```
@@ -275,10 +344,7 @@ Al terminar, `git status` debería decir `nothing to commit, working tree clean`
 ---
 
 ## 9. Siguiente paso
-- **Tú:**
-  - Revisa el campamento en **http://localhost:5173/**.
-  - Genera el fondo siguiendo `docs/fondo-campamento.md` cuando puedas. No bloquea: lo integro
-    en cuanto llegue, en cualquier fase.
+- **Tú:** revisa el campamento en **http://localhost:5173/**, ya con tu fondo.
 - **Fase 4 — Ventanas con tu contenido**, cuando la apruebes:
   - Los diccionarios ES/EN con `useLocale`.
   - Las ventanas EQUIP, ALCHEMY, STATS y COMMS con tus datos reales.

@@ -313,7 +313,8 @@ con ellos.
 - **Las animaciones como datos:** una lista de fotogramas con la duración de cada uno.
 - **Tu avatar (32×40 px):**
   - De pie, respirando (2 fotogramas).
-  - Brazos cruzados: aparece tras unos 3 s quieto.
+  - ~~Brazos cruzados~~: descartada el 11-11-2026; quizá añadas otras poses en los retoques
+    finales.
   - Caminar hacia la cámara (8 fotogramas; ver `docs/animacion-caminar.md`).
   - Caminar de lado (8 fotogramas).
 - **Null (24×20 px):**
@@ -349,7 +350,7 @@ ordenador mientras desarrollamos**: no entran en la web publicada.
 **TypeScript que aprenderás**
 - Describir un sprite con un tipo:
   `type Sprite = { width: number; height: number; frames: string[][] }`.
-- **Tipos unión** para los nombres de animación (`'idle' | 'walk' | 'armsCrossed'`). TypeScript
+- **Tipos unión** para los nombres de animación (`'idle' | 'walkDown' | 'walkSide'`). TypeScript
   te avisa si escribes `'wlak'`.
 - `Record`, para tablas del tipo "nombre de animación → fotogramas".
 
@@ -375,12 +376,13 @@ funcionando con teclado, ratón y pantalla táctil.
 
 **Qué se construye**
 - **La escena del campamento en canvas (640×360):**
-  - Tú de pie, respirando; a los 3 s sin tocar el menú cruzas los brazos. Null, sentado a tu
-    lado. Los dos con una sombra tramada bajo los pies.
-  - **El fondo lo generas tú** (instrucciones en `docs/fondo-campamento.md`):
-    - Debe incluir la boca de la cueva, el claro, los árboles con la barra de dominadas, la
-      hoguera con la paellera, la tienda, las mancuernas y el tarro de aceitunas.
-    - Mientras llega, uso uno provisional dibujado en código con la paleta.
+  - Tú de pie, respirando, en tu pose de frente. Null, sentado a tu lado. Los dos con una sombra
+    tramada bajo los pies.
+  - **El fondo lo has generado tú** (`references/grandes/campamento.jpg`, instrucciones en
+    `docs/fondo-campamento.md`): boca de la cueva, claro, árboles con la barra de dominadas,
+    hoguera con la paellera, tienda, mancuernas, discos y tarro de aceitunas.
+    - Se usa tal cual, solo convertido a WebP (64 KB), ocupando todo el alto de la escena.
+    - La llama de la hoguera parpadea: algunos de sus píxeles se apagan un poco, por turnos.
   - Los personajes se dibujan en el canvas desde sus PNG de la fase 2 y se apoyan por la fila
     del suelo (`ground`).
   - El canvas trabaja en píxeles reales de la pantalla. Así Null sentado, cuya imagen tiene

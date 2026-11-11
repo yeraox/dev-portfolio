@@ -1,7 +1,7 @@
 # Fondo del campamento: qué necesito de ti
 
-> Para la fase 3. Mientras no llegue, la web usa un fondo provisional dibujado en código
-> (`src/scenes/camp/provisionalBackground.ts`), que es solo de relleno.
+> ✅ **Recibido el 11-11-2026** (`references/grandes/campamento.jpg`, 1376×768) e integrado en la
+> fase 3. Al final del documento está cómo se ha usado.
 
 ## Qué es
 **Una imagen** del campamento, sin personajes, que uso **tal cual**: la paso a su rejilla de
@@ -90,3 +90,29 @@ No characters, no people, no animals, no text, no logos, no UI, no border, no wa
 3. Si hay llamas, animo la hoguera a unos 6 dibujos por segundo, parada con "reducir
    movimiento".
 4. Lo reviso con capturas reales a 390, 768 y 1440, contigo y Null encima.
+
+## Cómo se ha usado (11-11-2026)
+- **Cumple lo pedido:**
+  - Tiene la cueva, el claro, los árboles con la barra, la hoguera con el trípode y la paellera
+    humeante, la tienda, las mancuernas, los discos y el tarro sobre la caja.
+  - No lleva marca de agua y las esquinas de abajo son vegetación oscura, perfectas para el HUD.
+- **Su rejilla:**
+  - Los píxeles miden 5,74 px, una rejilla de unos 240×134, bastante regular (0,64).
+  - Pero dibuja muchos detalles a medio píxel: contornos, brillos, las patas del trípode y la
+    cuerda de la tienda.
+  - Encajada en su rejilla, las mancuernas se volvían manchas y la cuerda desaparecía. Por eso se
+    usa **tal cual**, sin encajar, solo convertida a WebP (564 KB → 64 KB, igual a la vista
+    incluso ampliada al doble).
+- **Encaje en la escena:**
+  - Ocupa todo el alto (360 px de escena). Sobran 2,5 px a cada lado, que no se ven.
+  - De pie mides justo el 30 % del alto, como pedían las instrucciones.
+- **Posiciones:**
+  - Tus pies y los de Null bajan a la línea 310: el borde inferior del claro, donde empieza el
+    camino.
+  - Así el icono izquierdo del anillo pasa por debajo de la hoguera en vez de taparla.
+- **Hoguera:** no hay hoja de llamas, así que la llama parpadea apagando por turnos algunos de
+  sus propios píxeles. Con "reducir movimiento" se queda quieta. Si algún día generas las llamas,
+  se cambia por una animación de verdad.
+- **El banner** tapa la parte alta de la boca de la cueva: tu imagen la puso un poco más arriba
+  que el 18 % pedido. En el móvil, con el banner fuera de la escena, la cueva se ve entera; en la
+  intro (fase 6) no habrá banner.
