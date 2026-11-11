@@ -1,0 +1,47 @@
+.sprite {
+  display: block;
+  flex: none;
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+}
+
+.flip {
+  transform: scaleX(-1);
+}
+
+/* Breathing: down 1 unit for half the cycle, in a hard step (no easing). */
+.bob {
+  animation: bob 1.3s steps(1) infinite;
+}
+
+.bob.flip {
+  animation-name: bob-flipped;
+}
+
+@keyframes bob {
+  0%,
+  49% {
+    transform: translateY(0);
+  }
+  50%,
+  100% {
+    transform: translateY(2px);
+  }
+}
+
+@keyframes bob-flipped {
+  0%,
+  49% {
+    transform: scaleX(-1) translateY(0);
+  }
+  50%,
+  100% {
+    transform: scaleX(-1) translateY(2px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bob {
+    animation: none;
+  }
+}
