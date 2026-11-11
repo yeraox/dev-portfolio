@@ -1,8 +1,9 @@
 // Single source of truth for every color in the project.
 // - UI_PALETTE: scenes + interface (max 32 colors). Mirrored as CSS variables in tokens.css;
 //   a test fails if both files drift apart.
-// - AVATAR_PALETTE / NULL_PALETTE: one palette per character, max 15 colors + transparent,
-//   like a real 16-bit sprite palette.
+// - Characters (Yeray, Null, portraits) are NOT drawn with this palette: they are Yeray's
+//   reference images on their native pixel grid (src/assets/characters, made by
+//   scripts/sprites/cutout.mjs) and keep the references' own colours.
 
 // TS concept — `Record<K, V>`: an object whose keys are of type K and values of type V.
 // Here: any string name → a hex color string.
@@ -61,39 +62,4 @@ export const UI_PALETTE = {
 
 export type UiColor = keyof typeof UI_PALETTE;
 
-// Shared by both characters so they read the same against dark scenes.
-const RIM_LIGHT = '#f2a65a'; // warm campfire-side highlight
-
-export const AVATAR_PALETTE = {
-  ink: UI_PALETTE.ink,
-  'hair-0': '#3b2418', // also mustache and darkest boot shade
-  'hair-1': '#5a3a26', // also goatee
-  'hair-2': '#7a5236', // curl highlights, backpack straps
-  'skin-0': '#e8b896',
-  'skin-1': '#c48e6c',
-  'vest-0': '#4f5d2f',
-  'vest-1': '#6b7a3d',
-  'vest-2': '#8a9a52',
-  'tee-0': '#e8e4d8', // also glasses glint
-  'tee-1': '#b8b2a2',
-  'cargo-0': '#b89a6a',
-  'cargo-1': '#8f7650',
-  boots: '#5a3a22',
-  rim: RIM_LIGHT,
-} satisfies Palette;
-
-export const NULL_PALETTE = {
-  ink: UI_PALETTE.ink,
-  'coat-0': '#1e1a1a',
-  'coat-1': '#3a3030',
-  'coat-hi': '#4a5068', // blue-tinted highlight so the black coat never vanishes
-  'tan-0': '#b07a3c',
-  'tan-1': '#d39a55',
-  'eye-white': '#ffffff',
-  'tongue-0': '#e06a8a',
-  'tongue-1': '#a8405e',
-  rim: RIM_LIGHT,
-} satisfies Palette;
-
 export const UI_PALETTE_MAX = 32;
-export const SPRITE_PALETTE_MAX = 15; // + transparent = 16

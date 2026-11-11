@@ -1,13 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { CONTRAST_PAIRS, ratioFor } from './contrast';
-import {
-  AVATAR_PALETTE,
-  NULL_PALETTE,
-  SPRITE_PALETTE_MAX,
-  UI_PALETTE,
-  UI_PALETTE_MAX,
-} from './palette';
+import { UI_PALETTE, UI_PALETTE_MAX } from './palette';
 
 const HEX = /^#[0-9a-f]{6}$/;
 
@@ -16,15 +10,8 @@ describe('palettes', () => {
     expect(Object.keys(UI_PALETTE).length).toBeLessThanOrEqual(UI_PALETTE_MAX);
   });
 
-  it.each([
-    ['avatar', AVATAR_PALETTE],
-    ['Null', NULL_PALETTE],
-  ])('%s sprite palette fits 15 colors + transparent', (_name, palette) => {
-    expect(Object.keys(palette).length).toBeLessThanOrEqual(SPRITE_PALETTE_MAX);
-  });
-
   it('every color is lowercase #rrggbb', () => {
-    const all = [UI_PALETTE, AVATAR_PALETTE, NULL_PALETTE].flatMap((p) => Object.values(p));
+    const all = Object.values(UI_PALETTE);
     for (const hex of all) expect(hex).toMatch(HEX);
   });
 });

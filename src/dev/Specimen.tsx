@@ -2,7 +2,7 @@
 // Purpose: show the phase 0 decisions (resolution, fonts, palette, contrast) in one place.
 import { useEffect, useRef, useState } from 'react';
 import { CONTRAST_PAIRS, ratioFor } from '../styles/contrast';
-import { AVATAR_PALETTE, NULL_PALETTE, UI_PALETTE, type Palette } from '../styles/palette';
+import { UI_PALETTE, type Palette } from '../styles/palette';
 import styles from './Specimen.module.css';
 
 // TS concept — a `type` describing an object: every font candidate has these three fields.
@@ -102,8 +102,6 @@ export default function Specimen() {
       <section className={styles.section}>
         <h2>4. Paleta</h2>
         <PaletteSwatches title={`Interfaz y escenas (${Object.keys(UI_PALETTE).length}/32)`} palette={UI_PALETTE} />
-        <PaletteSwatches title={`Tu sprite (${Object.keys(AVATAR_PALETTE).length}/15)`} palette={AVATAR_PALETTE} />
-        <PaletteSwatches title={`Null (${Object.keys(NULL_PALETTE).length}/15)`} palette={NULL_PALETTE} />
       </section>
 
       <section className={styles.section}>
@@ -236,8 +234,8 @@ function drawTestScene(ctx: CanvasRenderingContext2D, w: number, h: number) {
     fill(c.ink, x, y, rw, rh);
     fill(color, x + 1, y + 1, rw - 2, rh - 2);
   };
-  outlined(AVATAR_PALETTE['vest-1'], cx - 16, feetY - 40, 32, 40);
-  outlined(NULL_PALETTE['coat-1'], cx + 20, feetY - 20, 24, 20);
+  outlined(c['forest-2'], cx - 16, feetY - 40, 32, 40);
+  outlined(c['stone-1'], cx + 20, feetY - 20, 24, 20);
 
   // Ring menu: 6 icon slots (16×16) on an ellipse around the avatar.
   const ringCx = cx;
