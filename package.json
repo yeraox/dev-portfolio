@@ -12,6 +12,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "shots": "node scripts/screenshot.mjs",
+    "check:camp": "node scripts/camp-check.mjs",
+    "fps": "node scripts/fps.mjs",
     "characters": "node scripts/sprites/cutout.mjs"
   },
   "dependencies": {

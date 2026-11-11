@@ -11,16 +11,17 @@ if (!url) {
   process.exit(1);
 }
 
+// Phone and tablet are emulated as touch devices, like the real thing (no hover, coarse pointer).
 const VIEWPORTS = [
-  { width: 390, height: 844, deviceScaleFactor: 2 },
-  { width: 768, height: 1024, deviceScaleFactor: 2 },
-  { width: 1440, height: 900, deviceScaleFactor: 1 },
+  { width: 390, height: 844, deviceScaleFactor: 2, isMobile: true, hasTouch: true },
+  { width: 768, height: 1024, deviceScaleFactor: 2, isMobile: true, hasTouch: true },
+  { width: 1440, height: 900, deviceScaleFactor: 1, isMobile: false, hasTouch: false },
 ];
 
 mkdirSync('.screenshots', { recursive: true });
 const browser = await chromium.launch();
-for (const { width, height, deviceScaleFactor } of VIEWPORTS) {
-  const page = await browser.newPage({ viewport: { width, height }, deviceScaleFactor });
+for (const { width, height, deviceScaleFactor, isMobile, hasTouch } of VIEWPORTS) {
+  const page = await browser.newPage({ viewport: { width, height }, deviceScaleFactor, isMobile, hasTouch });
   const errors = [];
   page.on('console', (msg) => msg.type() === 'error' && errors.push(msg.text()));
   page.on('pageerror', (err) => errors.push(err.message));
