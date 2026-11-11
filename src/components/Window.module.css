@@ -37,6 +37,20 @@
   }
 }
 
+/* Closing: the same wipe backwards, a bit faster (10 frames in 5 steps). */
+.closing {
+  animation: close calc(10 * var(--frame)) steps(5) both;
+}
+
+@keyframes close {
+  from {
+    clip-path: inset(0);
+  }
+  to {
+    clip-path: inset(0 0 100% 0);
+  }
+}
+
 .header {
   display: flex;
   flex-wrap: wrap;

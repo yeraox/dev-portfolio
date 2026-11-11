@@ -121,3 +121,17 @@ export const STONE_TILE = stoneTile();
 export const BANNER_DITHER = ditherTile('blue-1', 'blue-2');
 export const ROPE_FRAME = ropeFrame();
 export const ROPE_SLICE = 6; // art pixels per nine-slice cell
+
+/** Selection brackets: four blue-3 corners of an 8×8 nine-slice (3-px corner cells). */
+function bracketFrame(): Texture {
+  return makeTexture(8, 8, (x, y) => {
+    const edgeX = x === 0 || x === 7;
+    const edgeY = y === 0 || y === 7;
+    const nearCornerX = x < 3 || x > 4;
+    const nearCornerY = y < 3 || y > 4;
+    return (edgeX && nearCornerY) || (edgeY && nearCornerX) ? 'blue-3' : null;
+  });
+}
+
+export const BRACKETS = bracketFrame();
+export const BRACKET_SLICE = 3; // art pixels per nine-slice corner

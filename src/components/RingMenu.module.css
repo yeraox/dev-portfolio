@@ -1,0 +1,51 @@
+.ring {
+  position: absolute;
+  inset: 0;
+  pointer-events: none; /* only the buttons take clicks; swipes reach the stage */
+}
+
+.slot {
+  position: absolute;
+  display: block;
+  padding: 0;
+  margin: 0;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  pointer-events: auto;
+  /* The selection brackets: a nine-slice of four blue corners, 1 UI pixel thick, drawn
+     2 UI pixels outside the icon (border-image only paints when the active slot sets a source). */
+  border-image-slice: 3;
+  border-image-width: calc(3 * var(--u));
+  border-image-outset: calc(2 * var(--u));
+  border-image-repeat: stretch;
+  image-rendering: pixelated;
+}
+
+/* The brackets already mark the focused slot (focus always sits on the active one). */
+.slot:focus-visible {
+  outline: none;
+}
+
+.icon {
+  display: block;
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+}
+
+/* The active slot's name above the ring: green on an ink plate (DESIGN.md §6). */
+.label {
+  position: absolute;
+  margin: 0;
+  padding: var(--u) calc(3 * var(--u)) 0;
+  transform: translate(-50%, calc(-100% - 3 * var(--u)));
+  font-family: var(--font-display);
+  font-size: var(--display-size);
+  line-height: 1;
+  letter-spacing: 0.08em;
+  color: var(--green-1);
+  background: var(--ink);
+  white-space: nowrap;
+  pointer-events: none;
+}

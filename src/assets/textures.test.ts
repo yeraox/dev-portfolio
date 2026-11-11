@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { BANNER_DITHER, ROPE_FRAME, STONE_TILE } from './textures';
+import { BANNER_DITHER, BRACKETS, BRACKET_SLICE, ROPE_FRAME, STONE_TILE } from './textures';
 
 describe('textures', () => {
   it('stone only uses colors that keep window text readable', () => {
@@ -19,6 +19,12 @@ describe('textures', () => {
   it('rope frame is a 3×3 nine-slice of 6 px cells in gold and ink', () => {
     expect(ROPE_FRAME.width).toBe(18);
     expect(ROPE_FRAME.colors.every((c) => c === 'ink' || c.startsWith('gold-'))).toBe(true);
+  });
+
+  it('selection brackets are blue corners that fit their nine-slice cells', () => {
+    expect(BRACKETS.colors).toEqual(['blue-3']);
+    expect(BRACKETS.width).toBe(8);
+    expect(BRACKET_SLICE * 2).toBeLessThan(BRACKETS.width); // the middle stays empty
   });
 
   it('textures are CSS-ready data URLs', () => {

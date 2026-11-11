@@ -30,6 +30,8 @@ export const CONTRAST_PAIRS: ContrastPair[] = [
   { fg: 'gold-3', bg: 'stone-1', min: 4.5, use: 'Window headings' },
   { fg: 'green-1', bg: 'stone-1', min: 4.5, use: 'Status "in progress" in windows' },
   { fg: 'gold-3', bg: 'ink', min: 4.5, use: 'Key caps in KeyHint' },
+  { fg: 'ink', bg: 'gold-3', min: 4.5, use: 'Key cap of the close button, hovered or focused' },
+  { fg: 'gold-3', bg: 'stone-0', min: 4.5, use: 'HUD name plates on stone' },
   { fg: 'text', bg: 'blue-1', min: 4.5, use: 'Banner title' },
   { fg: 'text', bg: 'blue-2', min: 4.5, use: 'Banner title (dither light pixel)' },
   { fg: 'gold-3', bg: 'night-0', min: 4.5, use: 'Title lettering' },

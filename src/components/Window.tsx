@@ -6,16 +6,20 @@ import styles from './Window.module.css';
 // (then its type inside the component is `string | undefined`).
 type WindowProps = {
   title?: string;
+  titleId?: string; // id for the title, when something else (a dialog) needs to point at it
   hint?: ReactNode; // top-right slot, usually <KeyHint />
   help?: ReactNode; // bottom slot, usually <HelpBar />
+  closing?: boolean; // plays the 10-frame closing wipe
   children: ReactNode;
   className?: string;
 };
 
-/** Stone panel with a bevelled frame and an engraved inner groove. Opens with an 18-frame stepped wipe. */
-export function Window({ title, hint, help, children, className }: WindowProps) {
-  const titleId = useId();
-  const classes = [styles.window, className].filter(Boolean).join(' ');
+/** Stone panel with a bevelled frame and an engraved inner groove. Opens with an 18-frame stepped
+ *  wipe and closes with a 10-frame one. */
+export function Window({ title, titleId: givenTitleId, hint, help, closing = false, children, className }: WindowProps) {
+  const ownTitleId = useId();
+  const titleId = givenTitleId ?? ownTitleId;
+  const classes = [styles.window, closing && styles.closing, className].filter(Boolean).join(' ');
 
   return (
     <section

@@ -1,0 +1,62 @@
+.hud {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: calc(4 * var(--u));
+  pointer-events: none;
+}
+
+/* A small stone panel with the window bevel (DESIGN.md §5), no opening wipe. */
+.panel {
+  margin: 0;
+  padding: calc(3 * var(--u));
+  background-color: var(--stone-0);
+  background-size: calc(32 * var(--u)) calc(32 * var(--u));
+  image-rendering: pixelated;
+  box-shadow:
+    inset var(--u) var(--u) 0 var(--stone-3),
+    inset calc(-1 * var(--u)) calc(-1 * var(--u)) 0 var(--ink),
+    0 0 0 var(--u) var(--ink);
+}
+
+/* The portrait sits in an ink "screen" with the engraved edge of the windows. */
+.portrait {
+  position: relative;
+  overflow: hidden;
+  background: var(--night-1);
+  box-shadow:
+    0 0 0 var(--u) var(--ink),
+    0 0 0 calc(2 * var(--u)) var(--stone-3);
+}
+
+.centred {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.name {
+  margin-top: calc(3 * var(--u));
+  font-family: var(--font-display);
+  font-size: var(--display-size);
+  line-height: 1;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--gold-3);
+}
+
+/* Portrait screens: name beside the portrait, so the HUD row stays short. */
+.hud[data-compact='true'] .panel {
+  display: flex;
+  align-items: center;
+  gap: calc(4 * var(--u));
+}
+
+.hud[data-compact='true'] .panel:last-child {
+  flex-direction: row-reverse;
+}
+
+.hud[data-compact='true'] .name {
+  margin-top: 0;
+}
