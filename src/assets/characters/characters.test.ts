@@ -24,9 +24,9 @@ describe.each(POSES)('%s', (_name, pose) => {
 });
 
 describe('Yeray poses share one height', () => {
-  it('front, arms crossed and side stand within 3 image pixels of each other', () => {
+  it('front and side stand within 3 image pixels of each other', () => {
     // ground + 1 = from the top of the image down to the feet (the figure starts on row 0)
-    const heights = [YERAY.idle, YERAY.armsCrossed, YERAY.side].map(
+    const heights = [YERAY.idle, YERAY.side].map(
       (pose) => (CHARACTER_IMAGES[pose.frames[0]].ground + 1) * pose.pixelSize,
     );
     expect(Math.max(...heights) - Math.min(...heights)).toBeLessThanOrEqual(3);

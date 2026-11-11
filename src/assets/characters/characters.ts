@@ -42,7 +42,6 @@ const WALK_SIDE: CharacterImageName[] = [
 
 export const YERAY = {
   idle: { frames: ['yeray-front'], ms: 650, pixelSize: 1, bob: true },
-  armsCrossed: { frames: ['yeray-arms'], ms: 750, pixelSize: 1, bob: true },
   side: { frames: ['yeray-side'], ms: 650, pixelSize: 1, bob: true },
   walkDown: { frames: WALK_DOWN, ms: 120, pixelSize: 1 }, // toward the camera
   walkSide: { frames: WALK_SIDE, ms: 120, pixelSize: 1 }, // facing right; flip for left

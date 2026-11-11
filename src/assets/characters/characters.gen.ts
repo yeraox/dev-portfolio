@@ -2,7 +2,6 @@
 // Option A: the reference images on their native pixel grid. Sizes are in image pixels:
 // ground = the row the feet stand on (the scene anchors each sprite there); y = the row where the
 // image starts inside its png (walk sheets stack several images in one png).
-import yerayArms from './yeray-arms.png';
 import yerayPortrait from './yeray-portrait.png';
 import nullSit from './null-sit.png';
 import nullSide0 from './null-side-0.png';
@@ -21,7 +20,6 @@ import yeraySideWalk from './yeray-side-walk.png';
 export type CharacterImage = { src: string; width: number; height: number; ground: number; y: number };
 
 export const CHARACTER_IMAGES = {
-  'yeray-arms': { src: yerayArms, width: 43, height: 111, ground: 110, y: 0 },
   'yeray-portrait': { src: yerayPortrait, width: 64, height: 94, ground: 93, y: 0 },
   'null-sit': { src: nullSit, width: 55, height: 93, ground: 92, y: 0 },
   'null-side-0': { src: nullSide0, width: 51, height: 38, ground: 37, y: 0 },

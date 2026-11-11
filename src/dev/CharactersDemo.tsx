@@ -3,7 +3,6 @@
 import { Fragment } from 'react';
 import { CHARACTER_IMAGES, NULL_DOG, YERAY, type CharacterImageName, type Pose } from '../assets/characters/characters';
 import { PixelSprite } from '../components/PixelSprite';
-import refArms from '../../references/grandes/brazos_cruzados_yeray.jpg';
 import refFrontWalk from '../../references/grandes/front_walk_animation.png';
 import refPortrait from '../../references/grandes/retrato_yeray.jpg';
 import refSideWalk from '../../references/grandes/sidewalk_animation.png';
@@ -29,7 +28,6 @@ const still = (frame: CharacterImageName): Pose => ({ frames: [frame], ms: 1000,
 type Row = { label: string; reference: string; pose: Pose; unit: number };
 
 const ROWS: Row[] = [
-  { label: 'Brazos cruzados', reference: refArms, pose: YERAY.armsCrossed, unit: 3 },
   { label: 'Retrato', reference: refPortrait, pose: YERAY.portrait, unit: 3 },
   { label: 'Null sentado', reference: refNull, pose: NULL_DOG.sit, unit: 7 },
 ];
@@ -53,7 +51,6 @@ export default function CharactersDemo() {
           <PixelSprite pose={YERAY.walkDown} unit={SCENE_UNIT} />
           <PixelSprite pose={YERAY.walkSide} unit={SCENE_UNIT} />
           <PixelSprite pose={YERAY.walkSide} unit={SCENE_UNIT} flip />
-          <PixelSprite pose={YERAY.armsCrossed} unit={SCENE_UNIT} />
           <PixelSprite pose={NULL_DOG.sit} unit={SCENE_UNIT} />
           <PixelSprite pose={NULL_DOG.trotSide} unit={SCENE_UNIT} />
           <PixelSprite pose={NULL_DOG.walkDown} unit={SCENE_UNIT} />

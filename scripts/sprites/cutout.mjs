@@ -18,7 +18,6 @@ const OUT_DIR = join(ROOT, 'src/assets/characters');
 // size when the automatic detection gets it wrong; `pick` = which figures of a multi-figure sheet
 // to keep.
 const IMAGES = [
-  { name: 'yeray-arms', file: 'grandes/brazos_cruzados_yeray.jpg', pitch: 11.6 },
   { name: 'yeray-portrait', file: 'grandes/retrato_yeray.jpg', pitch: 11.65, crop: [0, 0, 752, 1190] },
   { name: 'null-sit', file: 'grandes/null.jpg', pitch: 10.75 },
   { name: 'null-side', file: 'grandes/null_caminando.jpg' },
