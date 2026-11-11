@@ -1,16 +1,7 @@
-import styles from './App.module.css';
+import { CampScene } from './scenes/camp/CampScene';
 
-// Placeholder until phase 5 builds the real title screen.
+// Phase 3: the camp is the whole site. The title screen (phase 5) and the cave intro (phase 6)
+// will come before it.
 export default function App() {
-  return (
-    <main className={styles.placeholder}>
-      <h1>Yeray Caturla</h1>
-      <p>Backend Developer · Portfolio en construcción.</p>
-      {import.meta.env.DEV && (
-        <p>
-          <a href="/dev/specimen">Abrir la página de muestra (fase 0)</a>
-        </p>
-      )}
-    </main>
-  );
+  return <CampScene />;
 }
