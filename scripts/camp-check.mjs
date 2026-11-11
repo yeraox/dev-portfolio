@@ -63,8 +63,6 @@ const focusIsActiveItem = (page) =>
   check('the ring did not move while the window was open', (await activeLabel(page)) === first);
   check('focus goes back to the ring', await focusIsActiveItem(page));
 
-  await page.waitForTimeout(3300);
-  await page.screenshot({ path: '.screenshots/camp-check-arms-1440.png' });
   check('no console errors', errors.length === 0, errors.join(' | '));
   await page.close();
 }
