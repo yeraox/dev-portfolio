@@ -1,33 +1,44 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { NULL_DOG, YERAY } from '../../assets/characters/characters';
 import { drawPose, drawShadow, poseBob, poseFrame, preloadPoses } from '../../engine/drawCharacter';
 import { useGameLoop } from '../../engine/useGameLoop';
 import type { StageLayout } from '../../game/stage';
 import { UI_PALETTE } from '../../styles/palette';
 import { CAMP } from './campLayout';
-import { BACKGROUND, provisionalBackground } from './provisionalBackground';
+import { FIRE, fireFrame, fireVariants } from './fireFlicker';
 import styles from './CampScene.module.css';
 
 type CampCanvasProps = {
   layout: StageLayout;
-  idleSince: number; // performance.now() of the last menu input
   reducedMotion: boolean;
 };
 
+type Background = { image: HTMLImageElement; fire: HTMLCanvasElement[] };
+
+/** Loads Yeray's camp image and prepares the campfire's flicker variants from it. */
+async function loadBackground(): Promise<Background> {
+  const image = new Image();
+  image.src = CAMP.background.image.src;
+  await image.decode();
+  return { image, fire: fireVariants(image) };
+}
+
 /**
- * The camp's pixels: background, Yeray and Null, on one canvas that works in screen pixels.
- * The game loop asks every frame, but it only redraws when something visible changed (a pose,
- * a breath, the size): most frames cost one string comparison.
+ * The camp's pixels: Yeray's background image, the campfire flicker, the shadows, Yeray and Null,
+ * on one canvas that works in screen pixels. The game loop asks every frame, but it only redraws
+ * when something visible changed (a pose, a breath, the flame, the size).
  */
-export function CampCanvas({ layout, idleSince, reducedMotion }: CampCanvasProps) {
+export function CampCanvas({ layout, reducedMotion }: CampCanvasProps) {
   const ref = useRef<HTMLCanvasElement>(null);
-  const background = useMemo(() => provisionalBackground(), []);
-  const [ready, setReady] = useState(false);
+  // TS concept — a union with null: until the image has loaded there is no background to draw.
+  const [background, setBackground] = useState<Background | null>(null);
+  const [posesReady, setPosesReady] = useState(false);
   const drawn = useRef('');
 
   useEffect(() => {
     let alive = true;
-    preloadPoses([YERAY.idle, YERAY.armsCrossed, NULL_DOG.sit]).then(() => alive && setReady(true));
+    loadBackground().then((loaded) => alive && setBackground(loaded));
+    preloadPoses([YERAY.idle, NULL_DOG.sit]).then(() => alive && setPosesReady(true));
     return () => {
       alive = false;
     };
@@ -40,30 +51,31 @@ export function CampCanvas({ layout, idleSince, reducedMotion }: CampCanvasProps
   useGameLoop((now) => {
     const canvas = ref.current;
     const ctx = canvas?.getContext('2d');
-    if (!canvas || !ctx || !ready) return;
+    if (!canvas || !ctx || !background || !posesReady) return;
 
-    const yeray = now - idleSince > CAMP.armsCrossedAfterMs ? YERAY.armsCrossed : YERAY.idle;
+    const yeray = YERAY.idle;
     const yerayFrame = poseFrame(yeray, now);
     const yerayBob = poseBob(yeray, now, reducedMotion);
     const nullFrame = poseFrame(NULL_DOG.sit, now);
     const nullBob = poseBob(NULL_DOG.sit, now, reducedMotion);
-    const key = `${canvas.width}×${canvas.height} ${camera.x} ${yerayFrame} ${yerayBob} ${nullFrame} ${nullBob}`;
+    const flame = fireFrame(now, reducedMotion);
+    const key = `${canvas.width}×${canvas.height} ${camera.x} ${yerayFrame} ${yerayBob} ${nullFrame} ${nullBob} ${flame}`;
     if (key === drawn.current) return;
     drawn.current = key;
 
     const zoom = canvas.width / camera.width; // canvas pixels per scene pixel
+
+    // The background and the flame share one transform, so the flame lands exactly on its spot.
+    const bg = CAMP.background;
+    const imageZoom = bg.scale * zoom; // canvas pixels per image pixel
+    ctx.setTransform(imageZoom, 0, 0, imageZoom, (bg.x - camera.x) * zoom, (bg.y - camera.y) * zoom);
+    ctx.imageSmoothingEnabled = imageZoom < 0.75; // only a strong shrink is smoothed
+    ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(background.image, 0, 0);
+    if (flame > 0) ctx.drawImage(background.fire[flame - 1], FIRE.x, FIRE.y);
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+
     ctx.imageSmoothingEnabled = false;
-    ctx.drawImage(
-      background,
-      camera.x / BACKGROUND.pixel,
-      camera.y / BACKGROUND.pixel,
-      camera.width / BACKGROUND.pixel,
-      camera.height / BACKGROUND.pixel,
-      0,
-      0,
-      canvas.width,
-      canvas.height,
-    );
     drawShadow(ctx, CAMP.yeray.x, CAMP.yeray.ground - 1, 17, 4, UI_PALETTE.ink, zoom, camera);
     drawShadow(ctx, CAMP.null.x, CAMP.null.ground - 1, 13, 3, UI_PALETTE.ink, zoom, camera);
     drawPose(ctx, yeray, yerayFrame, yerayBob, CAMP.yeray, zoom, camera);

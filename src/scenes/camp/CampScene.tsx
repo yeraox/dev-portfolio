@@ -30,7 +30,6 @@ export function CampScene() {
     ITEMS.map((item) => item.id),
     initialState,
   );
-  const [idleSince, setIdleSince] = useState(() => performance.now());
   const [shownSection, setShownSection] = useState<SectionId | null>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -45,10 +44,7 @@ export function CampScene() {
   const openSection = state.scene === 'WINDOW' ? state.section : null;
   if (openSection && openSection !== shownSection) setShownSection(openSection);
 
-  const wake = () => setIdleSince(performance.now());
-
   useInput(stageRef, (action) => {
-    wake();
     if (state.scene !== 'HUB') return false; // an open window handles its own keys
     if (action === 'LEFT') dispatch({ type: 'ROTATE', step: -1 });
     else if (action === 'RIGHT') dispatch({ type: 'ROTATE', step: 1 });
@@ -89,7 +85,7 @@ export function CampScene() {
         className={styles.stage}
         style={{ width: stageWidth, height: layout.camera.height * layout.scale }}
       >
-        <CampCanvas layout={layout} idleSince={idleSince} reducedMotion={reducedMotion} />
+        <CampCanvas layout={layout} reducedMotion={reducedMotion} />
         <RingMenu
           items={ITEMS}
           active={state.active}
@@ -98,10 +94,7 @@ export function CampScene() {
           label={ES.ring.label}
           reducedMotion={reducedMotion}
           menuRef={menuRef}
-          onPick={(index) => {
-            wake();
-            dispatch({ type: 'PICK', index });
-          }}
+          onPick={(index) => dispatch({ type: 'PICK', index })}
         />
         {wide && <div className={styles.bannerSlot}>{banner}</div>}
         {wide && <div className={styles.hudSlot}>{hud}</div>}
@@ -119,10 +112,7 @@ export function CampScene() {
           open={openSection === shownSection}
           tall={!wide}
           closeLabel={ES.window.close}
-          onRequestClose={() => {
-            wake();
-            dispatch({ type: 'CLOSE' });
-          }}
+          onRequestClose={() => dispatch({ type: 'CLOSE' })}
           onClosed={() => {
             setShownSection(null);
             menuRef.current?.querySelector<HTMLElement>('[data-active="true"]')?.focus();
