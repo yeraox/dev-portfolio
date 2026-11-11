@@ -1,8 +1,28 @@
 # Contenido del portfolio (fuente en español)
 
 Fuente: `references/cv_es_yeray_caturla.pdf` (CV, nov. 2026). Este archivo es la fuente de
-verdad del contenido; en la fase 3 se convierte en `src/content/es.ts` y se traduce a `en.ts`.
+verdad del contenido; en la fase 4 se convierte en `src/content/es.ts` y se traduce a `en.ts`
+(la fase 3 ya creó `es.ts` con lo que necesita el campamento: títulos del banner y nombres).
 `TODO` = falta un dato que solo puede dar Yeray. `PREGUNTA` = pendiente de confirmar.
+
+---
+
+## Campamento (fase 3)
+
+**Títulos del banner** (propuestos por mí a partir de la tabla de `BRIEF.md`; cámbialos si
+quieres). La etiqueta del anillo sigue en inglés (EQUIP, ALCHEMY…).
+
+| Etiqueta | Título del banner |
+|---|---|
+| EQUIP | Equipo — Proyectos |
+| ALCHEMY | Alquimia — Stack técnico |
+| STATS | Estadísticas — Perfil |
+| BUFFS | Estado — Entrenamiento |
+| CRAFT | Artesanía — Cocina |
+| COMMS | Configuración — Contacto |
+
+**HUD:** "Yeray" y "Null". **Encabezado de la página** (solo para lectores de pantalla):
+"Yeray Caturla · Desarrollador Backend Junior".
 
 ---
 

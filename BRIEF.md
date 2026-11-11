@@ -115,15 +115,16 @@ markings stay readable; confirm against the internal resolution in DESIGN.md.
 |---|---|---|
 | Avatar walk down (toward camera) | 46×113 canvas (figure 110 tall) | 8 |
 | Avatar walk side (mirror for the other side) | 65×110 canvas | 8 |
-| Avatar idle front | 32×40 | 2 (breathing) |
-| Avatar arms-crossed idle | 32×40 | 1–2 |
-| Avatar portrait (HUD left, STATS window header) | 48×48 | 1 (+1 blink) |
-| Null trot side (mirror for the other side) | 24×20 | 4 |
-| Null trot down | 24×20 | 4 |
-| Null sit + pant | 24×20 | 2 |
-| Null begging pose | 24×24 | 1–2 |
-| Null portrait (HUD right) | 48×48 | 1 (+1 pant) |
-| Ring icons (one per slot) | 16×16 | 1 |
+| Avatar idle front | frame "up" of the front walk (46×113) | 1 (+1 px breathing) |
+| Avatar arms-crossed idle | 43×111 | 1 (+1 px breathing) |
+| Avatar portrait (HUD left, STATS window header) | 64×94 (HUD shows the top 64×76) | 1 |
+| Null trot side (mirror for the other side) | ~50×38 | 6 |
+| Null walk down | ~24×38 | 3 (4-step cycle) |
+| Null sit | 55×93 drawn at ½ | 1 (+1 px breathing) |
+| Null begging pose | — | not available yet (needs a reference) |
+| Null portrait (HUD right) | 50×47 | 1 |
+| Ring icons (one per slot) | 16×16, drawn at 2 scene px per pixel | 1 |
+| Camp background | 320×180 at 2 scene px per pixel | 1 (Yeray generates it: `docs/fondo-campamento.md`) |
 
 Back views from the concept sheets are not needed in v1.
 
@@ -150,8 +151,10 @@ for all window text. Self-hosted via @fontsource.
 - All content lives in typed data files in `src/content/`. The ring menu is generated from
   that list; nothing is hardcoded in components.
 - Section windows lazy-loaded with `React.lazy`.
-- Folder proposal: `src/scenes`, `src/components` (RingMenu, Window, BannerWindow, StatBar,
-  HelpBar, HudBar), `src/engine` (loop, sprite renderer, input), `src/content`, `src/styles`.
+- Folders: `src/scenes` (camp), `src/components` (RingMenu, Hud, SectionDialog, Window,
+  BannerWindow, StatBar, HelpBar…), `src/engine` (game loop, input, screen hooks, sprite and
+  character drawing), `src/game` (pure logic: state machine, ring maths, stage layout),
+  `src/content`, `src/styles`.
 
 ## Input & accessibility (non-negotiable)
 - Keyboard: ←/→ rotate ring, Enter/Space select, Esc back; Tab order stays sane.
@@ -230,9 +233,11 @@ Human-readable explanation of every phase: `docs/plan-de-fases.md` (keep both in
    `KeyHint`; the STATS window rendered statically on `/dev/windows`.
 2. Characters: sprite renderer (with horizontal flip) + avatar + Null + portraits + ring icons.
    `/dev/sprites` preview at 1×, 4× and 8× next to the reference photos; iterate on likeness.
-3. Camp + ring menu: HUB scene with hobby props, HUD, `useGameLoop`, `useInput`, `RingMenu`,
-   HUB ↔ WINDOW state machine with placeholder windows; draft sections hidden in production.
-   Vitest for reducer and ring math.
+3. Camp + ring menu: HUB scene (characters on a screen-pixel canvas, my generated camp
+   background — provisional until it arrives), HUD, `useGameLoop`, `useInput`, `RingMenu`,
+   HUB ↔ WINDOW state machine with placeholder windows (native `<dialog>`); draft sections hidden
+   in production; portrait-screen layout. Vitest for reducer, ring math and stage layout;
+   `npm run check:camp` walkthrough; `npm run fps`; Lighthouse.
 4. Content windows: typed ES/EN dictionaries + `useLocale`; EQUIP, ALCHEMY, STATS, COMMS;
    optimized media (WebP, trimmed muted video < 2 MB, poster); lazy-loaded windows.
 5. TITLE screen + transition.

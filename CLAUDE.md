@@ -65,10 +65,12 @@ intro → camp hub with a ring menu → SNES-style windows with real CV content)
 | `npm run dev` | Dev server on http://localhost:5173 |
 | `npm run typecheck` | `tsc -b` over app, node and test configs |
 | `npm run lint` | oxlint |
-| `npm test` | Vitest (palette, contrast; later reducer and ring math) |
+| `npm test` | Vitest (palette, contrast, textures, characters, state machine, ring maths, stage layout) |
 | `npm run build` | Typecheck + production build (check gzip sizes against the budget) |
 | `npm run characters` | Rebuild the character PNGs from `references/grandes/` on their native pixel grid, walk cycles included, and run their quality checks (needs ffmpeg) |
-| `npm run shots -- <url> <name>` | Playwright screenshots at 390/768/1440 into `.screenshots/` + overflow and console-error check |
+| `npm run shots -- <url> <name>` | Playwright screenshots at 390/768/1440 (phone and tablet as touch devices) into `.screenshots/` + overflow and console-error check |
+| `npm run check:camp -- [url]` | Camp walkthrough: keyboard only (1440) and touch only (phone), ✓/✗ per check + screenshots |
+| `npm run fps -- [url]` | Frames per second while the ring turns, CPU ×1 and ×4, plus the slowest answer to a key/click (run against `npx vite preview`) |
 
 ## Skills
 - `impeccable` — primary design skill (mode: Experience). `audit` + `polish` in phase 7;

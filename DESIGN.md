@@ -15,17 +15,22 @@ pixels. Never a copy of any existing game's assets.
   resolution: **640×360** (changed from 320×180 in phase 2: the sprites extracted from Yeray's
   references need ~80 px of height for the glasses, mustache and goatee to read). 16:9; ×2 on
   1280×720 / 1440×900, ×3 on 1920×1080, ×4 on 2560×1440.
-- **Scale** = the largest whole number that fits the viewport (`floor(min(vw/640, vh/360))`,
-  min 1). The canvas is centered and letterboxed with `--night-0`.
-- On portrait phones with devicePixelRatio ≥ 2, the scene may fit the viewport width with a
-  non-integer CSS scale (pixel unevenness stays ≤ 1 device pixel). Windows then open as
-  full-width sheets over the scene.
-- **UI pixel (`--u`)**: the interface's own pixel unit for frames, bevels and gaps =
-  the scene scale clamped to 2–4 CSS px, so frames line up with the scene's pixel grid.
-- Characters: Yeray's reference cut-outs (all poses 110 image px tall: walk canvases front 46×113, side 65×110), Null 36×36 canvas (sit 36 tall, trot 28 tall),
-  portraits 43×64 (Yeray) and 60×56 (Null), ring icons 16×16.
-- **UI pixel (`--u`)** keeps its phase-1 values (2/3/4 px) for now; how it relates to the 640×360
-  scene scale is decided in phase 3 when windows sit over the scene.
+- **Scale** (`src/game/stage.ts`, tested): the largest whole number of *screen* pixels per scene
+  pixel that fits (`floor(fit × devicePixelRatio)`), so every pixel is the same size — unless that
+  leaves the scene under 80 % of the exact fit (e.g. 1366×657 laptops), then the exact fit.
+  1440×900 → ×2 (1280×720), 1920×1080 → ×3, 2560×1440 → ×4. Letterboxed with `--night-0`.
+- **Portrait screens (tall mode):** the camera shows the middle 360×360 of the scene (the ring,
+  Yeray and Null fit in 290 px), bigger; the banner goes above the scene, the HUD below it, and
+  windows open as full-width sheets. Phone 390×844 → 360×360 CSS px; tablet 768×1024 → 720×720.
+- **UI pixel (`--u`)** = 2 scene pixels (the 320×180 grid the windows were designed on), clamped
+  to 2–4 CSS px and set on `:root` from JavaScript: 4 px at 1440 (as approved in phase 1), 2 px on
+  phones. The phase-1 media queries remain as the no-JS fallback.
+- **The scene canvas works in screen pixels** (CSS size × devicePixelRatio), so characters drawn
+  with half-size pixels (Null sitting, `pixelSize` 0.5) stay crisp wherever the screen has the
+  pixels for them.
+- Characters: Yeray's reference cut-outs (all poses 110 image px tall: walk canvases front 46×113,
+  side 65×110; arms crossed 43×111), Null (sit 55×93 drawn at ½, trot ~50×38, front ~24×38),
+  portraits 64×94 (Yeray) and 50×47 (Null), ring icons 16×16 drawn at 2 scene px per pixel.
 
 ## 3. Color
 Source of truth: `src/styles/palette.ts` (mirrored in `src/styles/tokens.css`, enforced by
@@ -43,9 +48,9 @@ Source of truth: `src/styles/palette.ts` (mirrored in `src/styles/tokens.css`, e
 | Accents | `green-0/1`, `red-0/1`, `fire` | Ring label (`green-1` on an `ink` plate), stat bars (`red-1` fill in an `ink` track), campfire. |
 | Camp | `forest-0..2`, `earth-0` | Low-contrast scenery so characters and UI dominate. |
 
-### Character palettes (≤ 15 + transparent each)
-`AVATAR_PALETTE` (15) and `NULL_PALETTE` (10). Shared `ink` outline and warm `rim` light on the
-campfire side. Null's black coat gets a blue-tinted highlight (`coat-hi`) so it never vanishes.
+### Characters
+Since phase 2 the characters keep their references' own colours (no character palettes). The
+UI palette above covers the interface and the provisional camp background.
 
 ### Contrast
 Every allowed text/background pair is listed in `CONTRAST_PAIRS` (`src/styles/contrast.ts`) and
@@ -83,7 +88,8 @@ from phase 3). Textures are generated from the palette as tiny SVGs in `src/asse
 | **StatBar** | Label (`text-dim`) · value (tabular) · gauge. Track `ink`, 4u tall with 1u padding; fill `red-1` with 1u `red-0` bottom shade. `role="meter"` with min/max/now/valuetext. Real values only. |
 | **HelpBar** | Engraved top line, `text-dim`, small size. |
 | **KeyHint** | Jersey 10, letter-spacing 0.08em. Keys are `<kbd>` caps: `gold-3` on `ink` with a 1u `stone-2` bottom edge. |
-| **Selection brackets** | (phase 3) Four `blue-3` corner brackets around the focused item; also the keyboard focus style. |
+| **Selection brackets** | Four `blue-3` corners: an 8×8 nine-slice texture (`BRACKETS`, 3-px corner cells) drawn as a `border-image`, 1u thick, 2u outside the active ring icon; it is also that icon's focus style. |
+| **Section window (phase 3)** | A native modal `<dialog>` holding a `Window` (`SectionDialog`): Tab wraps inside it, Esc and a `[ESC] EXIT` button (also for touch) close it with a 10-frame reverse wipe (5 steps), then focus returns to the ring. No backdrop dimming (SNES style). Portrait screens: full-width sheet. |
 
 Window content patterns (from the STATS sheet): section headings Jersey 10 `gold-3`; entry
 titles Pixelify Sans 700; meta lines small `text-dim`; "in progress" status `green-1`; bullets
@@ -91,15 +97,31 @@ are 2u `gold-2` squares with a `gold-0` pixel shadow; label/value rows use a 7em
 from 480px up and stack below it. Two columns from 1024px, separated by an engraved line when
 stacked. Portraits inside windows render at most ×3 (144px).
 
-## 6. Ring menu (phase 3)
-- Icons (16×16 scene px) on an ellipse centered on the avatar: rx 62, ry 42 at 320×180.
+## 6. Ring menu (phase 3 — `src/components/RingMenu.tsx`, geometry in `src/game/ring.ts`)
+- Icons: 16×16 grids drawn at 2 scene px per icon pixel (32×32 scene px), on an ellipse of
+  **rx 124, ry 84** around Yeray's middle (scene 320, 241).
 - Slots spread evenly over 360° for the *visible* slot count (4–6). Active slot at the top,
-  inside selection brackets, label above in `green-1` on an `ink` plate.
-- Rotation: 8 frames (~133 ms), all icons advance together. Banner shows the active section.
+  inside the selection brackets; its label above in Jersey 10, `green-1` on an `ink` plate.
+- Rotation: 8 whole frames (~133 ms), all icons advance together, the short way round. Banner
+  shows the active section's title and, on mouse-and-keyboard devices, `[← →] ROTATE · [ENTER]
+  OPEN`.
+- Input: ←/→ turn, Enter/Space open; click or tap opens a slot directly; a sideways swipe on
+  the scene turns the ring. ARIA `menu` pattern with roving focus on the active slot.
 
-## 7. HUD (phase 3)
-Bottom corners: 48×48 portrait (Yeray left, Null right) with name plate. No invented numbers;
-bars only if they show real data.
+## 6b. Camp scene (phase 3 — `src/scenes/camp/`)
+- Layout (scene px): Yeray at x 320 with his feet on y 296; Null sitting at x 376, y 298; both on
+  a dithered `ink` shadow ellipse (half the pixels, no transparency).
+- Background: 320×180 pixels drawn at 2 scene px each. **Provisional** (code-drawn from the
+  palette) until Yeray's generated camp image arrives (`docs/fondo-campamento.md`).
+- Yeray crosses his arms after 3 s without menu input (`YERAY.armsCrossed`); any input resets.
+- The canvas redraws only when a pose, a breath or the size changes.
+
+## 7. HUD (phase 3 — `src/components/Hud.tsx`)
+Bottom corners of the scene: small stone panels (window bevel) with the portrait in an `ink`
+"screen" of 64×76 portrait px — Yeray's head down to the goatee and vest collar (top 76 rows of
+his 64×94 portrait), Null's 50×47 face centred — and the name in Jersey 10 `gold-3` below. Zoom
+= `round(scale / 2)` (1× up to 1440, 2× from 1920). Portrait screens: below the scene, name beside
+the portrait. No bars: there are no real numbers to show.
 
 ## 8. Motion
 All motion is stepped; 1 frame = 1/60 s.
@@ -107,8 +129,9 @@ All motion is stepped; 1 frame = 1/60 s.
 | Moment | Frames | Notes |
 |---|---|---|
 | Window open | 18 (9 steps × 2) | Vertical wipe (clip-path in `steps(9)`). 7 frames was too fast to notice |
-| Window close | 10 (5 steps × 2) | Reverse wipe, a bit faster than opening |
-| Ring rotate | 8 | Per slot step |
+| Window close | 10 (5 steps × 2) | Reverse wipe, a bit faster than opening (built in phase 3) |
+| Ring rotate | 8 | Per slot step, driven by the shared game loop |
+| Arms crossed | after 180 (3 s) | Yeray's signature idle; any menu input resets it |
 | Walk cycle | Yeray 8 frames × 120 ms (body bob 0/1/2 px); Null trot 6 × 110 ms, front 4 × 160 ms | `docs/animacion-caminar.md` |
 | PRESS START blink | 32 on / 16 off | Hard on/off, never a fade |
 | Scene transition | 12–20 | Mosaic or palette-step fade to black |

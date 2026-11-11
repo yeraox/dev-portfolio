@@ -367,56 +367,84 @@ por encargo. Se cambian sin tocar nada más.
 
 ## Fase 3 — Campamento y menú circular
 
+> Actualizada al empezar la fase 3 (11-11-2026) para encajar con la fase 2: escena de 640×360,
+> personajes a partir de tus imágenes y fondo generado por ti.
+
 **Objetivo:** construir el corazón de la web. Tú y Null en el campamento, y el menú circular
 funcionando con teclado, ratón y pantalla táctil.
 
 **Qué se construye**
-- **La escena del campamento en canvas:**
-  - Suelo, árboles y tienda.
-  - Hoguera animada, con una paellera humeante encima.
-  - Mancuernas y discos junto a la tienda, y una barra de dominadas entre dos árboles.
-  - Un tarro de aceitunas sobre una caja.
-
-  Todo con poco contraste, para que no compita con vosotros.
-- **El HUD inferior:** tu retrato abajo a la izquierda y el de Null abajo a la derecha, con su
-  nombre.
-- **El bucle de juego (`useGameLoop`):** un único "reloj" que avanza las animaciones unas 60
-  veces por segundo. Se detiene si cambias de pestaña, para no gastar batería.
-- **La entrada (`useInput`):** traduce teclado, ratón y táctil a cuatro acciones comunes
-  (IZQUIERDA, DERECHA, CONFIRMAR, CANCELAR). Así el menú no necesita saber de dónde viene cada
-  orden.
+- **La escena del campamento en canvas (640×360):**
+  - Tú de pie, respirando; a los 3 s sin tocar el menú cruzas los brazos. Null, sentado a tu
+    lado. Los dos con una sombra tramada bajo los pies.
+  - **El fondo lo generas tú** (instrucciones en `docs/fondo-campamento.md`):
+    - Debe incluir la boca de la cueva, el claro, los árboles con la barra de dominadas, la
+      hoguera con la paellera, la tienda, las mancuernas y el tarro de aceitunas.
+    - Mientras llega, uso uno provisional dibujado en código con la paleta.
+  - Los personajes se dibujan en el canvas desde sus PNG de la fase 2 y se apoyan por la fila
+    del suelo (`ground`).
+  - El canvas trabaja en píxeles reales de la pantalla. Así Null sentado, cuya imagen tiene
+    píxeles de la mitad de tamaño, sale nítido.
+- **El HUD inferior:**
+  - Tu retrato abajo a la izquierda (la cabeza hasta la perilla) y el de Null abajo a la
+    derecha, cada uno con su nombre.
+  - Sin barras ni números inventados.
+- **El bucle de juego (`useGameLoop`):**
+  - Un único reloj compartido por todo lo que se mueve.
+  - Se detiene si cambias de pestaña.
+  - El canvas solo se redibuja cuando cambia algo.
+- **La entrada (`useInput`):** teclado y deslizamientos con el dedo, traducidos a IZQUIERDA,
+  DERECHA, CONFIRMAR y CANCELAR. Los clics y toques en los iconos son botones normales.
 - **El menú circular (`RingMenu`):**
-  - Los iconos se reparten en un óvalo alrededor de tu personaje.
-  - El seleccionado queda arriba, dentro de corchetes azules y con su nombre en verde.
-  - Al girar, el anillo rota en unos 8 fotogramas.
+  - Los iconos de 16×16 se dibujan a 2 píxeles de escena por píxel, en un óvalo de 124×84
+    alrededor de tu centro.
+  - El seleccionado queda arriba, entre corchetes azules y con su nombre en verde sobre una
+    placa oscura.
+  - Gira en 8 fotogramas.
   - El banner superior muestra el nombre de la sección.
-- **La máquina de estados** de CAMPAMENTO ↔ VENTANA, con ventanas provisionales: el contenido
-  real llega en la fase 4.
+- **La máquina de estados** CAMPAMENTO ↔ VENTANA, con ventanas provisionales (el contenido real
+  llega en la fase 4).
 - **Secciones en borrador ocultas:** BUFFS y CRAFT no aparecen en la versión publicada. El menú
   funciona igual con 4, 5 o 6 opciones.
+- **Pantallas en vertical (móvil y tablet):** se ve el centro de la escena (360 px de ancho), más
+  grande, con el banner encima, el HUD debajo y las ventanas a todo lo ancho.
 
 **Cómo se hace**
+- **Tamaño de la escena:**
+  - Se elige el número entero de píxeles de pantalla por píxel de escena que más llene la
+    pantalla, para que todos los píxeles midan lo mismo.
+  - Si eso dejara la escena por debajo del 80 % de lo que cabe, se usa el ajuste exacto: más
+    grande, aunque algún píxel mida uno más que otro.
+- **`--u` (el píxel de las ventanas)** = 2 píxeles de escena, entre 2 y 4 px. En un portátil de
+  1440 vale 4 px, igual que cuando aprobaste las ventanas en la fase 1.
 - **Posición de cada icono:** se reparten los 360° entre las opciones disponibles (con 4
   opciones, una cada 90°). Al girar, todos los ángulos avanzan a la vez hasta que el elegido
   queda arriba.
-- **Los iconos son botones HTML** colocados sobre el canvas, no dibujos dentro de él. Por eso
-  funcionan con el tabulador, con lectores de pantalla y con el clic.
+- **Los iconos son botones HTML** colocados sobre el canvas. Funcionan con el tabulador, con
+  lectores de pantalla, con el clic y con el toque.
+  - Un clic o un toque abre la sección directamente.
+  - El toque se lee del propio dedo: tras un deslizamiento rápido los móviles pueden tragarse el
+    "clic".
 - **Accesibilidad:**
-  - El menú usa el patrón estándar de "menú" de ARIA (las etiquetas que explican a un lector de
-    pantalla qué es cada cosa). Las flechas cambian de opción y Enter abre.
-  - El foco visible tiene la forma de los corchetes azules.
-  - Con una ventana abierta, el tabulador no se escapa de ella.
-  - Esc cierra la ventana y devuelve el foco al menú.
-- **Móvil:** toque en un icono para elegir y deslizar el dedo para girar el anillo.
+  - El menú usa el patrón "menu" de ARIA: cada icono es una acción que abre una ventana. Las
+    flechas cambian de opción, Enter abre y el foco sigue al icono de arriba.
+  - Las ventanas son `<dialog>` nativos. El tabulador da la vuelta dentro de la ventana y Esc la
+    cierra.
+  - La ventana tiene además un botón [ESC] EXIT para ratón y táctil. Al cerrarse, el foco vuelve
+    al menú.
+- **Móvil:** toque en un icono para abrirlo y deslizar el dedo para girar el anillo.
 
-**Qué verás al terminar:** el campamento funcionando en el navegador. Podrás moverte por el menú
-y abrir y cerrar ventanas con teclado, ratón o el móvil.
+**Qué verás al terminar:** el campamento funcionando en la página principal. Podrás moverte por
+el menú y abrir y cerrar ventanas con teclado, ratón o el móvil.
 
 **Cómo compruebo que funciona**
 - **Pruebas automáticas (Vitest)** de la máquina de estados (que no existan transiciones
-  imposibles) y del cálculo de ángulos.
-- Recorrido completo solo con teclado y solo con táctil.
-- Capturas a los tres tamaños.
+  imposibles), del cálculo de ángulos y del ajuste a cada tamaño de pantalla.
+- **`npm run check:camp`:** un recorrido completo solo con teclado (portátil) y solo con toques
+  (móvil), con capturas.
+- **`npm run fps`:** fotogramas por segundo con la CPU normal y frenada ×4, y tiempo de respuesta
+  a teclas y clics.
+- **Lighthouse** en móvil y escritorio, y capturas a los tres tamaños.
 
 **TypeScript que aprenderás**
 - **Uniones discriminadas**, el concepto más útil del proyecto. Un estado se escribe como
@@ -425,9 +453,11 @@ y abrir y cerrar ventanas con teclado, ratón o el móvil.
 - Tipar un `useReducer`.
 - Crear tus propios hooks con tipos.
 
-**Decisiones que puedes cambiar:** la velocidad de giro, el tamaño del anillo, qué muestra el
-HUD (propongo solo retratos y nombres, sin números inventados) y la disposición de los objetos
-del campamento.
+**Decisiones que puedes cambiar:**
+- La velocidad de giro y el tamaño del anillo.
+- Qué muestra el HUD: retratos y nombres, sin números inventados.
+- Los títulos del banner, que he propuesto yo (están en `CONTENT.md`).
+- La composición del fondo (`docs/fondo-campamento.md`).
 
 **💬 Tus comentarios:**
 
