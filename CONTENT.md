@@ -1,9 +1,25 @@
 # Contenido del portfolio (fuente en español)
 
 Fuente: `references/cv_es_yeray_caturla.pdf` (CV, nov. 2026). Este archivo es la fuente de
-verdad del contenido; en la fase 4 se convierte en `src/content/es.ts` y se traduce a `en.ts`
-(la fase 3 ya creó `es.ts` con lo que necesita el campamento: títulos del banner y nombres).
+verdad del contenido. Desde la fase 4 está en `src/content/es.ts` (español) y `src/content/en.ts`
+(inglés, traducido por mí, pendiente de tu revisión). Los dos idiomas, lado a lado, en
+**`/dev/textos`** (solo en desarrollo). Si cambias algo aquí, cámbialo también en los dos
+archivos (o pídemelo).
 `TODO` = falta un dato que solo puede dar Yeray. `PREGUNTA` = pendiente de confirmar.
+
+---
+
+## Pantalla de título (fase 5)
+
+| Línea | Español | Inglés |
+|---|---|---|
+| Nombre | YERAY CATURLA | YERAY CATURLA |
+| Créditos | DESARROLLADOR BACKEND · NODE.JS · EXPRESS · JAVA · DOCKER · AWS | BACKEND DEVELOPER · NODE.JS · EXPRESS · JAVA · DOCKER · AWS |
+| Botones | PRESS START · SKIP INTRO | PRESS START · SKIP INTRO |
+
+La línea de créditos se traduce según el idioma (el brief la daba solo en inglés). La línea del
+centro de estudios se quitó a petición tuya (12-11-2026): no es relevante en el título; PRESS START y
+SKIP INTRO son etiquetas de juego y se quedan en inglés en los dos idiomas.
 
 ---
 
@@ -161,15 +177,19 @@ Teléfono: **no se publica en la web** (sí aparece en el PDF descargable, decis
 
 ## Material visual
 
-Carpeta: `media-src/projects/` (NO está en .gitignore: esto sí se publica). Se optimiza en la
-fase 3 (WebP/AVIF para imágenes, MP4 H.264 + WebM sin audio para vídeo) y va a `public/`.
+Carpeta: `media-src/projects/` (NO está en .gitignore: esto sí se publica, salvo el vídeo en
+bruto). `npm run media` lo optimiza en la fase 4 y lo deja en `src/assets/projects/`:
+capturas en WebP a 640 y 1280 px de ancho (6–28 KB cada una) y el vídeo de Capyroad recortado a
+los segundos 11–25 (14 s: un cruce, el cobro, "¡¡¡Has ganado!!!", una ronda nueva, el atropello y
+"Has perdido :/"), sin audio, a 1280×586, en MP4 (208 KB) y WebM (234 KB), con su portada.
+**El vídeo se recorta a la app:** la grabación original muestra las pestañas, los marcadores y la
+barra lateral del navegador (correo, redes…), que no deben publicarse.
 
 | Archivo | Contenido | Estado |
 |---|---|---|
 | `capyroad.png` | Capyroad, calle 4, 1.74x, riesgo 25 % | ✅ Usar (imagen principal de Capyroad) |
-| `capyroad-raw.mp4` | Partida de Capyroad, 26 s, H.264, ~11 MB | ✅ Recortar a 10–15 s, quitar audio, comprimir (< 2 MB) |
+| `capyroad-raw.mp4` | Partida de Capyroad, 26 s, H.264, ~11 MB | ✅ Hecho: 14 s, sin audio, solo la app, 208 KB |
 | `pakitos-ruleta.png` | Ruleta americana, tablero completo | ✅ Usar |
 | `pakitos-blackjack.png` | Blackjack con mano repartida | ✅ Usar |
 
-Para procesar vídeo hace falta ffmpeg: `sudo apt install ffmpeg` (o `ffmpeg-static` vía npm
-como dependencia de desarrollo).
+ffmpeg ya está instalado (lo usan también los scripts de personajes y escenas).

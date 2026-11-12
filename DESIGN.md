@@ -23,8 +23,14 @@ pixels. Never a copy of any existing game's assets.
   Yeray and Null fit in 290 px), bigger; the banner goes above the scene, the HUD below it, and
   windows open as full-width sheets. Phone 390×844 → 360×360 CSS px; tablet 768×1024 → 720×720.
 - **UI pixel (`--u`)** = 2 scene pixels (the 320×180 grid the windows were designed on), clamped
-  to 2–4 CSS px and set on `:root` from JavaScript: 4 px at 1440 (as approved in phase 1), 2 px on
-  phones. The phase-1 media queries remain as the no-JS fallback.
+  to 2–8 CSS px and set on `:root` from JavaScript: 2 px on phones, 4 px at 1440 (as approved in
+  phase 1), 6 px at 1920, 8 px at 2560 — frames grow with the scene. The phase-1 media queries
+  remain as the no-JS fallback.
+- **Type grows with the scene too** (`src/game/stage.ts`, set on `:root` with `--u`): text =
+  13 scene px (min 16), small = 10.5 scene px (min 14), display = Jersey 10 at 10 × round(1.5 ×
+  scale) (min 20), window title = 10 × round(2 × scale). 1440: 26 / 21 / 30 / 40 px; 1920: 39 /
+  32 / 50 / 60; phone: 16 / 14 / 20 / 20. (Phase 4, round 2: at a fixed 20 px the windows were
+  hard to read, worse on big screens.)
 - **The scene canvas works in screen pixels** (CSS size × devicePixelRatio), so characters drawn
   with half-size pixels (Null sitting, `pixelSize` 0.5) stay crisp wherever the screen has the
   pixels for them.
@@ -69,10 +75,11 @@ bands (title lettering).
 | Text | **Pixelify Sans** (400, 700) | `@fontsource/pixelify-sans` | Everything inside windows: rows, paragraphs, help bar, CV view |
 
 - **Title treatment:** banded gold fill (`gold-4` / `gold-3` / `gold-2`) + stacked zero-blur
-  drop-shadows (`gold-1`, `gold-0`, `ink`) offset by `--u`. 40px mobile, 80px ≥ 768px (×4 / ×8
-  of Jersey 10's 10px grid).
-- **Window text:** 20px desktop, 16px mobile; line-height 1.35; paragraphs ≤ 65ch; headings in
-  Pixelify Sans 700 or Jersey 10 in `gold-3`.
+  drop-shadows (`gold-1`, `gold-0`, `ink`) offset by `--u`. Size (`titleNameSize`, tested):
+  10 × round(6 × scale), capped so the name fills at most 90 % of the width, minimum 40 — 390:
+  60 px, 768 and 1440: 120 px, 1920: 180 px (multiples of Jersey 10's 10px grid).
+- **Window text:** 13 scene px (26 px at 1440, 16 px minimum on phones); line-height 1.35;
+  paragraphs ≤ 65ch; headings in Pixelify Sans 700 or Jersey 10 in `gold-3`.
 - **Game labels:** Jersey 10, uppercase, letter-spacing ≈ 0.08em. Stat numerals tabular.
 - Self-hosted with `@fontsource`, Latin subset only; preload the two files used on the first
   screen to protect LCP and CLS.
@@ -97,6 +104,40 @@ titles Pixelify Sans 700; meta lines small `text-dim`; "in progress" status `gre
 are 2u `gold-2` squares with a `gold-0` pixel shadow; label/value rows use a 7em label column
 from 480px up and stack below it. Two columns from 1024px, separated by an engraved line when
 stacked. Portraits inside windows render at most ×3 (144px).
+
+## 5b. Content windows (phase 4 — `src/windows/`)
+- One lazy chunk per section (`React.lazy`, a few hundred bytes to 2 KB each), all preloaded after
+  the camp is on screen. A window only appears once its content is ready (no fallback state), so
+  opening from a link (`/#equip`) does not shift the layout.
+- **Size:** a window covers the scene, 4 UI pixels in from its edges (`--stage-width/height`); on
+  portrait screens, the whole screen. The frame, title and help line stay put.
+- **Sections** (`WindowSections`, phase 4 round 2): each window's content is split into sections,
+  one on screen at a time, with ARIA tabs on top (←/→/↑/↓, Home, End, click). The **mouse wheel**
+  moves between sections: a section longer than the window is read to its end first (the browser
+  scrolls it), and one flick or spin changes one section only (events closer than 200 ms are one
+  burst; a burst that scrolled content does not also change section; a trackpad must travel 30 px).
+  Going back with the wheel lands at the end of the previous section. **Touch:** a sideways swipe
+  (≥ 60 px, mostly horizontal). A gold pixel arrow blinks (32 on / 16 off frames) at the bottom
+  right while there is more below. Sections lay out by the window's width (container queries).
+  EQUIP = one section per project; STATS = Profile · Education · Quest log; ALCHEMY = one per
+  tier; COMMS = a single section (no tabs). Help line: wheel/keys with a mouse, swipe/tap on touch.
+- Shared patterns (`sheet.module.css`): label/value rows with an 8.5em label column from 480 px;
+  Jersey 10 `gold-3` headings;
+  entry title 700 + `text-dim` meta line; 2u gold square bullets; `tag` badge (Jersey 10 `gold-3`
+  on `ink`: DESTACADO / FEATURED, CLASIFICADO / CLASSIFIED).
+- **Tabs:** the chosen one on an `ink` plate in `gold-3` with the pixel bullet as a cursor; an
+  engraved line under the row.
+- **EQUIP:** wide windows (≥ 820 px) put the pictures on the left (Capyroad: video, caption, still)
+  and the text on the right: name + tag, context, summary, "what I did", facts (stack, notes, repo
+  link, demo). Narrow: stacked. Bosa Digital: text only.
+- **ALCHEMY:** each tier as rows (group → items joined by ·). No levels.
+- **STATS:** Profile = the portrait in an ink "screen" (×round(1.5 × scale), min ×2: ×3 at 1440)
+  with name (Jersey 10 `gold-3`) and role, then rows + bio beside it on wide windows; Education;
+  Quest log.
+- **COMMS:** rows with links (web ones open a new tab, with a hidden "(opens in a new tab)");
+  language as a native radio group with pixel radios (5u ink square, 1u `stone-4` edge, gold
+  centre when chosen).
+
 
 ## 6. Ring menu (phase 3 — `src/components/RingMenu.tsx`, geometry in `src/game/ring.ts`)
 - Icons: 16×16 grids drawn at 2 scene px per icon pixel (32×32 scene px), on an ellipse of
@@ -129,6 +170,20 @@ stacked. Portraits inside windows render at most ×3 (144px).
   Yeray may add poses in the final touches.)
 - The canvas redraws only when a pose, a breath or the size changes.
 
+## 6c. Title screen (phase 5 — `src/scenes/title/`)
+- Landscape drawn in code from the palette (`titleBackground.ts`, 1 art pixel = 2 scene px),
+  filling the whole screen: `night-0` sky with sparse stars, hard bands and checker dithers down
+  to a `horizon` glow line; the cave mountain (`night-1`) with the dark cave arch at its foot; a
+  dense treeline (`night-0`) of pointed firs — one-pixel tips, four stepped branch tiers, bases
+  wider than their spacing so they always overlap (lone round-topped trees read badly) — with a
+  clearing of whole trees in front of the cave.
+- Centre, in the sky above the peak: the gold name (§4), the credits line in Jersey 10 `text`
+  (10 × round(scale), min 20), then PRESS START (`--title-size`).
+- ES/EN top right and SKIP INTRO bottom right: Jersey 10 `text-dim` on `ink` plates with a 1u
+  `stone-2` underside; the active language `ink` on `gold-3`.
+- Any key, click or tap starts, except Tab/modifiers/Escape and the controls themselves. A focused
+  PRESS START never blinks; with reduced motion it doesn't blink and the camp appears at once.
+
 ## 7. HUD (phase 3 — `src/components/Hud.tsx`)
 Bottom corners of the scene: small stone panels (window bevel) with the portrait in an `ink`
 "screen" of 64×76 portrait px — Yeray's head down to the goatee and vest collar (top 76 rows of
@@ -146,7 +201,7 @@ All motion is stepped; 1 frame = 1/60 s.
 | Ring rotate | 8 | Per slot step, driven by the shared game loop |
 | Walk cycle | Yeray 8 frames × 120 ms (body bob 0/1/2 px); Null trot 6 × 110 ms, front 4 × 160 ms | `docs/animacion-caminar.md` |
 | PRESS START blink | 32 on / 16 off | Hard on/off, never a fade |
-| Scene transition | 12–20 | Mosaic or palette-step fade to black |
+| Scene transition | 16 out + 16 in | Dithered palette steps (4×4 Bayer: ¼ → ½ → ¾ → solid `night-0`), 4 frames each; the next scene appears while fully dark (`DitherTransition`) |
 | Campfire / steam | 2–3 frames at ~6 fps | Ambient |
 
 `prefers-reduced-motion`: no intro walk, instant transitions, ambient loops paused. Adaptive
@@ -192,7 +247,10 @@ Drawn as sprites on the shared palette. No emoji or unicode glyphs as icons anyw
 
 ## 10. Media inside windows
 Project screenshots and the Capyroad video are **not** pixelated: they sit crisp inside a
-1u `ink` + 1u `stone-3` inset frame, a "screen within the screen".
+1u `ink` + 1u `stone-3` frame, a "screen within the screen". Screenshots: WebP at 640/1280 px
+(`srcset`), lazy-loaded, with width/height reserved. Video: 14 s, muted, 1280×586, MP4 (208 KB)
+first + WebM (234 KB), poster = first frame; autoplay + loop only without reduced motion (then
+controls, `preload="none"`). Both live in `src/assets/projects/` (`npm run media`).
 
 ## 11. Never
 Copied game assets · border-radius · blurred shadows · smooth gradients · emoji icons · raw hex

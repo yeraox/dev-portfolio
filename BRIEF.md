@@ -171,14 +171,19 @@ for all window text. Self-hosted via @fontsource.
 
 ## User journey
 A. TITLE — "YERAY CATURLA" in the golden embossed treatment. Credit lines:
-   "BACKEND DEVELOPER · NODE.JS · EXPRESS · JAVA · DOCKER · AWS" / "IES POETA PACO MOLLÀ".
+   "BACKEND DEVELOPER · NODE.JS · EXPRESS · JAVA · DOCKER · AWS" (the school line was dropped
+   at Yeray's request in phase 5: not relevant on the title).
    Blinking "PRESS START" (blink in steps, not a fade); any key / click / tap starts.
+   Built in phase 5: the credits line is translated per locale; the night landscape is drawn in
+   code from the palette; the camp downloads while the title is shown; the transition is a
+   dithered palette-step fade (16 frames out, 16 in); any `#hash` link skips the title.
 B. INTRO — pixel transition into a ¾ top-down cave mouth. The avatar walks out toward a small
    base camp (campfire flicker, tent) with the dog trotting behind. ~4–6 s max; skippable.
 C. HUB — the avatar stands at camp with the dog sitting beside him. The ring menu opens around
    him and the banner window shows the active slot. Bottom HUD: my portrait bottom-left, the
    dog's bottom-right; propose what the bars show using real data only, or show portraits alone.
-   Selecting a slot opens its window; Esc returns to the ring.
+   Selecting a slot opens its window; Esc returns to the ring. Every window has its own link
+   (`/#equip`, `/#stats`…) that opens it directly, so it can be shared.
    **Camp props (background, decorative):** hint at my hobbies before any window opens:
    - Gym: a few dumbbells/plates next to the tent and a pull-up bar improvised between two trees
      or tent poles; optionally a kettlebell by the fire.

@@ -467,51 +467,72 @@ el menú y abrir y cerrar ventanas con teclado, ratón o el móvil.
 
 ## Fase 4 — Ventanas con tu contenido
 
+> Actualizada al terminar la fase 4 (11-11-2026) con lo que se construyó.
+
 **Objetivo:** todo tu contenido profesional real, en español e inglés.
 
 **Qué se construye**
 - **Archivos de contenido:**
   - `src/content/types.ts`: la forma que debe tener el contenido.
   - `es.ts`: copiado de `CONTENT.md`.
-  - `en.ts`: lo traduzco yo y lo revisas tú.
+  - `en.ts`: lo traduzco yo y lo revisas tú, con los dos idiomas lado a lado en `/dev/textos`.
 - **El sistema de idioma (`useLocale`):**
   - Detecta el idioma del navegador y recuerda tu elección.
-  - Selector ES/EN.
+  - Selector ES/EN en COMMS.
   - Actualiza el idioma declarado en la página para Google y los lectores de pantalla.
+  - El banner, el anillo y el HUD también cambian de idioma.
 - **Las 4 ventanas profesionales:**
-  - **EQUIP:** lista de proyectos a la izquierda y detalle a la derecha.
-    - **Capyroad ★** va destacado, con su vídeo y su captura.
+  - **EQUIP:** lista de proyectos a la izquierda y detalle a la derecha (patrón de pestañas:
+    ↑/↓).
+    - **Capyroad** va primero, con la etiqueta DESTACADO, su vídeo y su captura.
     - **Pakito's Gambling** muestra tu parte: backend, ruleta, blackjack y Capyroad.
-    - Las herramientas de **Bosa Digital** llevan la etiqueta [CLASIFICADO] y solo las tres
-      frases del CV.
+    - Las herramientas de **Bosa Digital** llevan la etiqueta CLASIFICADO y solo las tres frases
+      del CV.
   - **ALCHEMY:** los dos rangos ("Dominio" y "He trabajado con"), agrupados por categoría.
-  - **STATS:** retrato, ficha (clase, base, idiomas), formación y "registro de misiones".
+  - **STATS:** tu retrato, ficha, formación y "registro de misiones".
   - **COMMS:** GitHub, LinkedIn, email, ubicación, disponibilidad y el selector de idioma.
-- **Los medios optimizados:**
-  - Las capturas, en WebP, un formato más ligero.
-  - El vídeo de Capyroad recortado a 10–15 s, sin audio y por debajo de 2 MB, en dos formatos
-    para que funcione en todos los navegadores.
+- **Los medios optimizados (`npm run media`):**
+  - Las capturas, en WebP, a dos tamaños.
+  - El vídeo de Capyroad recortado a 14 s, sin audio y recortado a la app, en dos formatos.
   - Una imagen fija de portada para el vídeo.
+- **Enlaces directos a cada ventana:** `/#equip`, `/#stats`… abren esa ventana al cargar, y la
+  dirección cambia al abrir y cerrar ventanas, para poder compartirla.
 
 **Cómo se hace**
-- Para el vídeo necesito **ffmpeg**: tendrás que ejecutar `! sudo apt install ffmpeg`. Con él
-  sacaré fotogramas del vídeo para elegir el mejor tramo.
+- ffmpeg ya estaba instalado.
 - **Las capturas y el vídeo NO se pixelan:** se muestran nítidos dentro del marco de la
   ventana, como una "pantalla dentro de la pantalla". La idea es que un reclutador vea tu
   trabajo real con claridad.
-- **El vídeo** solo se reproduce, en bucle y sin sonido, con la ventana abierta. Si el
-  visitante tiene activado "reducir movimiento", solo se ve la imagen fija.
-- **Cada ventana se descarga solo cuando se abre** (*lazy loading*), así la carga inicial es
-  más rápida.
+- **El vídeo** solo se reproduce, en bucle y sin sonido, con la ventana abierta. Con "reducir
+  movimiento" se ve la imagen fija, con controles para reproducirlo si se quiere.
+- **Cada ventana se descarga aparte** (unos 4 KB entre todas):
+  - Se precargan en cuanto el campamento está en pantalla.
+  - Una ventana solo aparece cuando su contenido está listo, así que no "salta".
+- **Ventanas grandes y por secciones** (segunda ronda, a petición tuya):
+  - Cada ventana cubre la escena (en el móvil, la pantalla entera).
+  - El texto crece con la pantalla: 26 px en un portátil de 1440 (antes 20) y 39 px en uno de
+    1920.
+  - Su contenido se divide en secciones con pestañas: proyectos en EQUIP; Perfil, Formación y
+    Registro de misiones en STATS; los dos rangos en ALCHEMY.
+  - **La rueda del ratón cambia de sección.** Si una sección es más larga que la ventana, primero
+    la recorre hasta el final; un giro cambia una sola sección.
+  - En el móvil se desliza a los lados o se toca la pestaña. Una flecha dorada avisa cuando hay
+    más debajo.
 
 **Qué verás al terminar:** las 4 ventanas completas. **Tendrás que leer todos los textos en los
-dos idiomas.**
+dos idiomas** (en `/dev/textos` los tienes juntos).
 
 **Cómo compruebo que funciona**
 - Si falta un texto en `en.ts`, el proyecto no compila: TypeScript lo detecta.
-- Todos los enlaces abren su destino correcto.
-- Medición del peso del vídeo y de las imágenes.
-- Capturas en los dos idiomas a los tres tamaños.
+- Pruebas: los dos idiomas tienen los mismos textos en los mismos sitios y los mismos datos
+  (enlaces, fechas, centros). Ni teléfono ni marcas TODO. Bosa Digital solo con sus tres frases.
+  ALCHEMY sin niveles.
+- **`npm run check:windows`:**
+  - Las 4 ventanas en los dos idiomas a los tres tamaños, con capturas.
+  - Los enlaces, el cambio de idioma y que se recuerde.
+  - Las pestañas de EQUIP y el vídeo (silencio, bucle, "reducir movimiento").
+  - Que nada pesado se descargue antes de abrir una ventana.
+- Peso del vídeo y de las imágenes, Lighthouse y fotogramas.
 
 **TypeScript que aprenderás**
 - Cómo `const en: Content = {...}` obliga a que el inglés tenga exactamente los mismos campos
@@ -519,7 +540,8 @@ dos idiomas.**
 - Arrays de objetos tipados.
 - Context de React con tipos.
 
-**Decisiones que puedes cambiar:** la redacción de cualquier texto y el tramo del vídeo.
+**Decisiones que puedes cambiar:** la redacción de cualquier texto (en los dos idiomas) y el
+tramo del vídeo.
 
 **💬 Tus comentarios:**
 
@@ -530,36 +552,55 @@ dos idiomas.**
 **Objetivo:** que la primera impresión enganche.
 
 **Qué se construye**
-- **Fondo en canvas:**
-  - Cielo azul noche casi negro.
-  - Siluetas del paisaje en el tercio inferior (la montaña de la cueva y el bosque del
-    campamento, para enlazar con lo que viene después).
-  - Una línea fina de brillo azul en el horizonte.
-- **"YERAY CATURLA"** en dorado con relieve.
-- **Líneas de créditos:**
-  - "BACKEND DEVELOPER · NODE.JS · EXPRESS · JAVA · DOCKER · AWS"
-  - "IES POETA PACO MOLLÀ"
-- **"PRESS START"**, que parpadea a saltos y no con un fundido suave.
-- **El selector ES/EN, "SKIP INTRO" y el enlace a la vista CV**, siempre visibles.
-- **La transición:** efecto mosaico (la imagen se pixela cada vez más) o fundido a negro por
-  pasos de la paleta.
+- **Fondo en canvas, dibujado en código con la paleta** (ocupa toda la pantalla):
+  - Cielo azul noche casi negro con estrellas sueltas, que se aclara por bandas y tramas de
+    puntos hasta una línea fina de brillo azul en el horizonte.
+  - La montaña de la cueva, con la boca oscura a sus pies, y un bosque de abetos puntiagudos
+    que se solapan, con un claro delante de la cueva (enlaza con la intro y el campamento).
+- **"YERAY CATURLA"** en dorado con relieve, grande: 120 px en un portátil de 1440, 180 px en
+  uno de 1920 y 60 px en el móvil (nunca más del 90 % del ancho).
+- **Línea de créditos**, que cambia con el idioma: "DESARROLLADOR BACKEND · NODE.JS · EXPRESS ·
+  JAVA · DOCKER · AWS" / "BACKEND DEVELOPER · …". La del instituto se quitó a petición tuya.
+- **"PRESS START"**, que parpadea a saltos (32 fotogramas encendido, 16 apagado), nunca con un
+  fundido suave.
+- **El selector ES/EN** arriba a la derecha y **"SKIP INTRO"** abajo a la derecha.
+  - De momento SKIP INTRO hace lo mismo que empezar, porque la intro llega en la fase 6.
+  - **El enlace a la vista CV se pospone a la fase 7**, cuando exista `/cv/`: un enlace que no
+    lleva a ningún sitio sería peor que no tenerlo.
+- **La transición: fundido a negro por pasos de la paleta con trama de puntos** (¼ → ½ → ¾ →
+  negro; 16 fotogramas en cada sentido, poco más de medio segundo en total). El campamento
+  aparece mientras todo está negro, así que no se ve ningún salto.
 
 **Cómo se hace**
 - **El título es texto real**, no una imagen, para que lo lea Google. El relieve dorado se
-  consigue con varias sombras de texto superpuestas: brillo arriba, dorado, dorado oscuro y
-  contorno. No usamos ninguna tipografía ni logotipo del juego original.
-- **Cualquier tecla, clic o toque arranca la partida.** El enlace a la vista CV no la arranca.
+  consigue con bandas de color duras y sombras superpuestas sin desenfoque. No usamos ninguna
+  tipografía ni logotipo de ningún juego.
+- **Cualquier tecla, clic o toque arranca la partida**, salvo:
+  - Tab (para moverse por los botones), Escape y las teclas modificadoras.
+  - Pulsar los botones ES/EN, que solo cambian el idioma.
+- **El campamento se descarga mientras miras el título**, así que la transición lo descubre ya
+  listo.
+- **Un enlace a una ventana (`/#equip`) se salta el título** y la abre directamente; `/#camp`
+  lleva al campamento (lo usan las comprobaciones).
+- Con **"reducir movimiento"**, PRESS START no parpadea y el campamento aparece al instante.
 
 **Qué verás al terminar:** la pantalla de título y la transición enlazadas con el campamento.
 
-**Cómo compruebo que funciona:** capturas a los tres tamaños, que funcione con teclado, ratón y
-táctil, y que el título se lea bien en el móvil.
+**Cómo compruebo que funciona**
+- **`npm run check:title`:**
+  - Capturas en los dos idiomas a los tres tamaños.
+  - Qué la arranca (tecla, clic, toque, SKIP INTRO) y qué no (Tab, ES/EN).
+  - Los cinco pasos de la transición.
+  - Que el campamento se descargue durante el título.
+  - Los enlaces que se lo saltan y "reducir movimiento".
+- Pruebas del paso de pantallas (`screens.ts`) y del tamaño del título.
+- Repetir `check:camp`, `check:windows`, Lighthouse y fotogramas.
 
 **TypeScript que aprenderás:** los tipos de los eventos del navegador (`KeyboardEvent`,
-`PointerEvent`).
+`MouseEvent`) y una máquina de pantallas con una unión discriminada y `useReducer`.
 
-**Decisiones que puedes cambiar:** el efecto de transición (mosaico o fundido), el texto de los
-créditos y el paisaje del fondo.
+**Decisiones que puedes cambiar:** el efecto de transición, el texto de los créditos (y si se
+traduce) y el paisaje del fondo (podrías generar una imagen como la del campamento).
 
 **💬 Tus comentarios:**
 

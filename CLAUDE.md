@@ -26,8 +26,12 @@ intro → camp hub with a ring menu → SNES-style windows with real CV content)
 - `sudo` cannot prompt for a password from Claude Code (not even with `!`): ask Yeray to run
   sudo commands in a separate WSL terminal.
 - **Talk to Yeray in Spanish.** Code, identifiers and code comments in English.
-- **Content is data:** copy lives in `src/content/` (from `CONTENT.md`); components never
-  hardcode user-facing text. Draft sections (`status: 'draft'`) are hidden in production.
+- **Content is data:** copy lives in `src/content/es.ts` + `en.ts` (typed by `Content` in
+  `types.ts`, from `CONTENT.md`); components read it with `useLocale()` and never hardcode
+  user-facing text. Change a fact in CONTENT.md and both dictionaries together; Yeray reviews
+  English at `/dev/textos`. Draft sections (`status: 'draft'`) are hidden in production.
+- **Project media** (`npm run media`): screenshots/video from `media-src/projects/`; the raw video
+  shows the browser's tabs and bookmarks — always crop to the app.
 - **Never fabricate** metrics, dates, levels or claims. Bosa Digital internship is under NDA:
   only its three CV sentences. The phone number never appears on the web (PDF only).
 - **Original art only.** Nothing copied from any existing game (logo, lettering, sprites,
@@ -63,17 +67,23 @@ intro → camp hub with a ring menu → SNES-style windows with real CV content)
   bands), `image-rendering: pixelated` on scaled pixel art, motion in frame steps.
 
 ## Commands
+The title screen comes first; any `#hash` skips it (`/#camp` goes straight to the camp — the camp,
+window and fps checks use it).
+
 | Command | Does |
 |---|---|
 | `npm run dev` | Dev server on http://localhost:5173 |
 | `npm run typecheck` | `tsc -b` over app, node and test configs |
 | `npm run lint` | oxlint |
-| `npm test` | Vitest (palette, contrast, textures, characters, state machine, ring maths, stage layout) |
+| `npm test` | Vitest (palette, contrast, textures, characters, state machine, ring maths, stage layout, content ES/EN) |
 | `npm run build` | Typecheck + production build (check gzip sizes against the budget) |
 | `npm run characters` | Rebuild the character PNGs from `references/grandes/` on their native pixel grid, walk cycles included, and run their quality checks (needs ffmpeg) |
+| `npm run media` | Project screenshots → WebP 640/1280 and the Capyroad video → 14 s MP4 + WebM + poster in `src/assets/projects/` (fails over 2 MB) |
 | `npm run scenes` | Re-encode Yeray's scene backgrounds (`references/grandes/campamento.jpg`) as WebP into `src/assets/scenes/`, as they are, and report their pixel grid (needs ffmpeg) |
 | `npm run shots -- <url> <name>` | Playwright screenshots at 390/768/1440 (phone and tablet as touch devices) into `.screenshots/` + overflow and console-error check |
 | `npm run check:camp -- [url]` | Camp walkthrough: keyboard only (1440) and touch only (phone), ✓/✗ per check + screenshots |
+| `npm run check:title -- [url]` | Title screen in ES/EN at 390/768/1440 (`.screenshots/fase-5/`) + what starts it (key, click, tap, SKIP INTRO) and what doesn't (Tab, ES/EN), the dithered transition, camp preloading, reduced motion |
+| `npm run check:windows -- [url]` | The 4 content windows in ES/EN at 390/768/1440 (screenshots in `.screenshots/fase-4/`) + links, language switch, EQUIP tabs, video, lazy downloads |
 | `npm run fps -- [url]` | Frames per second while the ring turns, CPU ×1 and ×4, plus the slowest answer to a key/click (run against `npx vite preview`) |
 
 ## Skills
