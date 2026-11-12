@@ -9,7 +9,13 @@ export type StageLayout = {
   camera: Camera;
   scale: number; // CSS px per scene px
   uiUnit: number; // --u: CSS px per UI pixel (window frames, bevels, gaps)
+  // Type sizes in CSS px. They grow with the scene, so a window reads the same on every screen.
+  textSize: number; // window text (Pixelify Sans)
+  textSmall: number; // meta lines, help line
+  displaySize: number; // game labels, banner, headings inside windows (Jersey 10)
+  titleSize: number; // window titles (Jersey 10)
   portraitZoom: number; // CSS px per portrait pixel in the HUD
+  viewport: { width: number; height: number }; // the window, in CSS px
   dpr: number; // screen pixels per CSS px (the canvas draws in screen pixels)
 };
 
@@ -23,7 +29,7 @@ export function tallReservedHeight(uiUnit: number): number {
   return 88 + 44 * uiUnit;
 }
 
-const uiUnitFor = (scale: number) => Math.min(4, Math.max(2, Math.round(2 * scale)));
+const uiUnitFor = (scale: number) => Math.min(8, Math.max(2, Math.round(2 * scale)));
 
 /**
  * CSS px per scene px. Preferred: a whole number of the screen's own pixels per scene pixel
@@ -46,12 +52,30 @@ export function stageLayout(viewportWidth: number, viewportHeight: number, dpr: 
     // A bigger scene means bigger UI pixels, so a taller banner and HUD: fit again with that room.
     scale = fitScale(viewportWidth, viewportHeight - tallReservedHeight(uiUnitFor(scale)), camera, dpr);
   }
-  // One UI pixel = two scene pixels (the 320×180 grid the windows were designed on), 2–4 CSS px.
+  // One UI pixel = two scene pixels (the 320×180 grid the windows were designed on), 2–8 CSS px.
   const uiUnit = uiUnitFor(scale);
+  // Text: 13 scene px (26 px on a 1440 laptop), never under 16 px. Jersey 10 is drawn on a 10 px
+  // grid, so its sizes stay multiples of 10.
+  const textSize = Math.max(16, Math.round(13 * scale));
+  const textSmall = Math.max(14, Math.round(10.5 * scale));
+  const displaySize = 10 * Math.max(2, Math.round(1.5 * scale));
+  const titleSize = 10 * Math.max(2, Math.round(2 * scale));
   // HUD portraits: one portrait pixel per UI pixel's half (1× on most screens, 2× from 1920 px),
   // so they stay a frame in the corner instead of competing with the characters.
   const portraitZoom = Math.max(1, Math.round(scale / 2));
-  return { mode: tall ? 'tall' : 'wide', camera, scale, uiUnit, portraitZoom, dpr };
+  const viewport = { width: viewportWidth, height: viewportHeight };
+  return { mode: tall ? 'tall' : 'wide', camera, scale, uiUnit, textSize, textSmall, displaySize, titleSize, portraitZoom, viewport, dpr };
+}
+
+// "YERAY CATURLA" in Jersey 10 is 5.46 times as wide as its font size.
+const NAME_WIDTH_PER_PX = 5.46;
+
+/** The title screen's name size: 60 scene px (120 px on a 1440 laptop), but never wider than 90 %
+ *  of the screen, and always a multiple of 10 px (Jersey 10's pixel grid), at least 40. */
+export function titleNameSize(layout: StageLayout): number {
+  const byScene = Math.round(6 * layout.scale);
+  const byWidth = Math.floor((0.9 * layout.viewport.width) / NAME_WIDTH_PER_PX / 10);
+  return 10 * Math.max(4, Math.min(byScene, byWidth));
 }
 
 /** A scene position → CSS px inside the stage. */

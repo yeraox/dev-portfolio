@@ -1,0 +1,144 @@
+.title {
+  position: relative;
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: var(--night-0);
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.sky {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  image-rendering: pixelated;
+}
+
+/* The name, credits and PRESS START sit in the sky, above the mountain's peak. */
+.centre {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: calc(2 * var(--u));
+  padding: 0 calc(6 * var(--u));
+  margin-top: -18vh;
+  text-align: center;
+}
+
+/* Golden embossed lettering (DESIGN.md §4): hard gold bands for the fill and stacked zero-blur
+   shadows, 1 UI pixel apart, for the extrusion. Real text, so search engines read it. */
+.name {
+  margin: 0 0 calc(4 * var(--u));
+  font-family: var(--font-display);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  color: var(--gold-3);
+  background: linear-gradient(to bottom, var(--gold-4) 0 24%, var(--gold-3) 24% 60%, var(--gold-2) 60% 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 var(--u) 0 var(--gold-1)) drop-shadow(0 var(--u) 0 var(--gold-0))
+    drop-shadow(var(--u) var(--u) 0 var(--ink));
+}
+
+.credit {
+  margin: 0;
+  font-family: var(--font-display);
+  line-height: 1.1;
+  letter-spacing: 0.08em;
+  color: var(--text);
+}
+
+/* PRESS START blinks in hard steps: 32 frames on, 16 off (DESIGN.md §8). Never a fade. */
+.press {
+  margin-top: calc(10 * var(--u));
+  padding: var(--u) calc(3 * var(--u));
+  font-family: var(--font-display);
+  font-size: var(--title-size);
+  line-height: 1;
+  letter-spacing: 0.08em;
+  color: var(--text);
+  background: none;
+  border: 0;
+  cursor: pointer;
+  animation: blink calc(48 * var(--frame)) steps(1) infinite;
+}
+
+.press:focus-visible {
+  animation: none; /* a focused button never disappears */
+}
+
+@keyframes blink {
+  0%,
+  66% {
+    visibility: visible;
+  }
+  67%,
+  100% {
+    visibility: hidden;
+  }
+}
+
+/* Language buttons (top right) and SKIP INTRO (bottom right): small game labels on ink plates. */
+.languages {
+  position: absolute;
+  top: calc(4 * var(--u));
+  right: calc(4 * var(--u));
+  display: flex;
+  gap: calc(2 * var(--u));
+}
+
+.language,
+.skip {
+  padding: var(--u) calc(3 * var(--u)) 0;
+  font-family: var(--font-display);
+  font-size: var(--display-size);
+  line-height: 1.1;
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+  background: var(--ink);
+  border: 0;
+  box-shadow: inset 0 calc(-1 * var(--u)) 0 var(--stone-2);
+  cursor: pointer;
+}
+
+.language[aria-pressed='true'] {
+  color: var(--ink);
+  background: var(--gold-3);
+}
+
+.language:hover,
+.skip:hover {
+  color: var(--gold-3);
+}
+
+.language[aria-pressed='true']:hover {
+  color: var(--ink);
+}
+
+.skip {
+  position: absolute;
+  right: calc(4 * var(--u));
+  bottom: calc(4 * var(--u));
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .press {
+    animation: none;
+  }
+}

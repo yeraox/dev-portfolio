@@ -36,8 +36,11 @@ export const CONTRAST_PAIRS: ContrastPair[] = [
   { fg: 'text', bg: 'blue-2', min: 4.5, use: 'Banner title (dither light pixel)' },
   { fg: 'gold-3', bg: 'night-0', min: 4.5, use: 'Title lettering' },
   { fg: 'text', bg: 'night-1', min: 4.5, use: 'Credit lines, help bar' },
+  { fg: 'text', bg: 'night-0', min: 4.5, use: 'Title credits and PRESS START over the night sky' },
+  { fg: 'text-dim', bg: 'ink', min: 4.5, use: 'Language buttons and SKIP INTRO on the title' },
   { fg: 'green-1', bg: 'ink', min: 4.5, use: 'Ring label (drawn on an ink plate)' },
   { fg: 'blue-3', bg: 'ink', min: 3, use: 'Selection brackets / focus ring' },
+  { fg: 'stone-4', bg: 'stone-1', min: 3, use: 'Edge of the language radio buttons (COMMS)' },
   { fg: 'red-1', bg: 'ink', min: 3, use: 'Stat bar fill in its ink track' },
 ];
 
