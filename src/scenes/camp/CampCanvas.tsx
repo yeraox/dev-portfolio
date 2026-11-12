@@ -1,27 +1,18 @@
 import { useEffect, useRef, useState } from 'react';
 import { NULL_DOG, YERAY } from '../../assets/characters/characters';
 import { drawPose, drawShadow, poseBob, poseFrame, preloadPoses } from '../../engine/drawCharacter';
+import { CAMP_POSES, loadCampBackground, type CampBackground } from './campAssets';
 import { useGameLoop } from '../../engine/useGameLoop';
 import type { StageLayout } from '../../game/stage';
 import { UI_PALETTE } from '../../styles/palette';
 import { CAMP } from './campLayout';
-import { FIRE, fireFrame, fireVariants } from './fireFlicker';
+import { FIRE, fireFrame } from './fireFlicker';
 import styles from './CampScene.module.css';
 
 type CampCanvasProps = {
   layout: StageLayout;
   reducedMotion: boolean;
 };
-
-type Background = { image: HTMLImageElement; fire: HTMLCanvasElement[] };
-
-/** Loads Yeray's camp image and prepares the campfire's flicker variants from it. */
-async function loadBackground(): Promise<Background> {
-  const image = new Image();
-  image.src = CAMP.background.image.src;
-  await image.decode();
-  return { image, fire: fireVariants(image) };
-}
 
 /**
  * The camp's pixels: Yeray's background image, the campfire flicker, the shadows, Yeray and Null,
@@ -31,14 +22,14 @@ async function loadBackground(): Promise<Background> {
 export function CampCanvas({ layout, reducedMotion }: CampCanvasProps) {
   const ref = useRef<HTMLCanvasElement>(null);
   // TS concept — a union with null: until the image has loaded there is no background to draw.
-  const [background, setBackground] = useState<Background | null>(null);
+  const [background, setBackground] = useState<CampBackground | null>(null);
   const [posesReady, setPosesReady] = useState(false);
   const drawn = useRef('');
 
   useEffect(() => {
     let alive = true;
-    loadBackground().then((loaded) => alive && setBackground(loaded));
-    preloadPoses([YERAY.idle, NULL_DOG.sit]).then(() => alive && setPosesReady(true));
+    loadCampBackground().then((loaded) => alive && setBackground(loaded));
+    preloadPoses(CAMP_POSES).then(() => alive && setPosesReady(true));
     return () => {
       alive = false;
     };

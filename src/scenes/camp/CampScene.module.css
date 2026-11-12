@@ -49,6 +49,21 @@
   max-width: 100%;
 }
 
+/* Help that depends on the pointer: wheel and keys with a mouse, swipes on touch screens. */
+.touchOnly {
+  display: none;
+}
+
+@media (hover: none), (pointer: coarse) {
+  .pointerOnly {
+    display: none;
+  }
+
+  .touchOnly {
+    display: inline;
+  }
+}
+
 /* Key prompts only where there is a keyboard-and-mouse kind of pointer. */
 .keys {
   display: none;
@@ -60,11 +75,6 @@
   }
 }
 
-.placeholder {
-  margin: 0;
-  max-width: 65ch;
-  color: var(--text-dim);
-}
 
 .srOnly {
   position: absolute;

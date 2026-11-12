@@ -1,48 +1,64 @@
-import { useLayoutEffect, useReducer, useRef, useState } from 'react';
+import { Suspense, useEffect, useReducer, useRef, useState } from 'react';
 import { BannerWindow } from '../../components/BannerWindow';
 import { Hud } from '../../components/Hud';
+import { HelpBar } from '../../components/HelpBar';
 import { KeyHint } from '../../components/KeyHint';
 import { RingMenu, type RingItem } from '../../components/RingMenu';
 import { SectionDialog } from '../../components/SectionDialog';
-import { ES } from '../../content/es';
+import { useLocale } from '../../content/useLocale';
 import { visibleSections, type SectionId } from '../../content/sections';
 import { useInput } from '../../engine/useInput';
 import { useReducedMotion, useStageLayout } from '../../engine/useScreen';
-import { gameReducer, initialState } from '../../game/state';
+import { gameReducer, initialState, sectionFromHash } from '../../game/state';
+import { WINDOWS, preloadWindow } from '../../windows';
 import { CampCanvas } from './CampCanvas';
 import { CAMP } from './campLayout';
 import styles from './CampScene.module.css';
 
 // Drafts (BUFFS, CRAFT) only while developing: the live site never shows an empty window.
-const ITEMS: RingItem[] = visibleSections(import.meta.env.DEV).map((section) => ({
-  ...section,
-  title: ES.sections[section.id].title,
-}));
+const SECTIONS = visibleSections(import.meta.env.DEV);
+const RING = SECTIONS.map((section) => section.id);
 
 /** HUB: Yeray and Null at the camp, the ring menu around Yeray, the banner and the HUD. */
 export function CampScene() {
   const layout = useStageLayout();
   const reducedMotion = useReducedMotion();
+  const { t } = useLocale();
+  const items: RingItem[] = SECTIONS.map((section) => ({ ...section, title: t.sections[section.id].title }));
   // TS concept — useReducer(reducer, argument, init): the state's type comes from the reducer, so
   // `state.scene` can only be 'HUB' or 'WINDOW' and `state.section` only exists in 'WINDOW'.
-  const [state, dispatch] = useReducer(
-    gameReducer,
-    ITEMS.map((item) => item.id),
-    initialState,
+  // A link like /#equip opens that window straight away.
+  const [state, dispatch] = useReducer(gameReducer, RING, (ring) =>
+    initialState(ring, sectionFromHash(window.location.hash, ring)),
   );
   const [shownSection, setShownSection] = useState<SectionId | null>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  // --u follows the scene's zoom (DESIGN.md §2): one UI pixel = two scene pixels, 2–4 CSS px.
-  useLayoutEffect(() => {
-    document.documentElement.style.setProperty('--u', `${layout.uiUnit}px`);
-  }, [layout.uiUnit]);
+  const stageWidth = layout.camera.width * layout.scale;
+  const stageHeight = layout.camera.height * layout.scale;
 
   // A window stays on screen while it plays its closing wipe, so the one on screen is tracked
   // apart. When a new one opens, React re-renders straight away with it (no effect needed).
   const openSection = state.scene === 'WINDOW' ? state.section : null;
   if (openSection && openSection !== shownSection) setShownSection(openSection);
+
+  // The address follows the open window (#equip…), so it can be shared or reloaded.
+  useEffect(() => {
+    const hash = openSection ? `#${openSection}` : '';
+    if (window.location.hash !== hash) {
+      window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}${hash}`);
+    }
+  }, [openSection]);
+
+  // Windows are downloaded before they are opened: the one at the top of the ring right away,
+  // the rest a moment after the camp is on screen (a few KB in all).
+  const activeSection = RING[state.active];
+  useEffect(() => preloadWindow(activeSection), [activeSection]);
+  useEffect(() => {
+    const timer = window.setTimeout(() => RING.forEach(preloadWindow), 1500);
+    return () => window.clearTimeout(timer);
+  }, []);
 
   useInput(stageRef, (action) => {
     if (state.scene !== 'HUB') return false; // an open window handles its own keys
@@ -55,7 +71,7 @@ export function CampScene() {
 
   const banner = (
     <BannerWindow
-      title={ITEMS[state.active].title}
+      title={items[state.active].title}
       hint={
         <span className={styles.keys}>
           <KeyHint
@@ -69,12 +85,23 @@ export function CampScene() {
     />
   );
   const wide = layout.mode === 'wide';
-  const hud = <Hud zoom={layout.portraitZoom} names={ES.hud} compact={!wide} />;
-  const stageWidth = layout.camera.width * layout.scale;
+  const hud = <Hud zoom={layout.portraitZoom} names={t.hud} compact={!wide} />;
+
+  // Help line: windows with sections explain the wheel (mouse) or the swipe (touch).
+  const sectionHelp = shownSection === 'equip' ? t.help.projects : t.help.sections;
+  const help =
+    shownSection === 'comms' || shownSection === 'buffs' || shownSection === 'craft' ? (
+      <HelpBar>{t.help.back}</HelpBar>
+    ) : (
+      <HelpBar>
+        <span className={styles.pointerOnly}>{sectionHelp.pointer}</span>
+        <span className={styles.touchOnly}>{sectionHelp.touch}</span>
+      </HelpBar>
+    );
 
   return (
     <main className={styles.camp} data-mode={layout.mode}>
-      <h1 className={styles.srOnly}>{ES.page.heading}</h1>
+      <h1 className={styles.srOnly}>{t.page.heading}</h1>
       {!wide && (
         <div className={styles.row} style={{ width: stageWidth }}>
           {banner}
@@ -83,15 +110,15 @@ export function CampScene() {
       <div
         ref={stageRef}
         className={styles.stage}
-        style={{ width: stageWidth, height: layout.camera.height * layout.scale }}
+        style={{ width: stageWidth, height: stageHeight }}
       >
         <CampCanvas layout={layout} reducedMotion={reducedMotion} />
         <RingMenu
-          items={ITEMS}
+          items={items}
           active={state.active}
           center={CAMP.ringCenter}
           layout={layout}
-          label={ES.ring.label}
+          label={t.ring.label}
           reducedMotion={reducedMotion}
           menuRef={menuRef}
           onPick={(index) => dispatch({ type: 'PICK', index })}
@@ -105,22 +132,33 @@ export function CampScene() {
         </div>
       )}
 
+      {/* The window only appears once its content has downloaded, so it opens at its final size
+          (nothing jumps). Usually it is already there, preloaded. */}
       {shownSection && (
-        <SectionDialog
-          key={shownSection}
-          title={ES.sections[shownSection].title}
-          open={openSection === shownSection}
-          tall={!wide}
-          closeLabel={ES.window.close}
-          onRequestClose={() => dispatch({ type: 'CLOSE' })}
-          onClosed={() => {
-            setShownSection(null);
-            menuRef.current?.querySelector<HTMLElement>('[data-active="true"]')?.focus();
-          }}
-        >
-          <p className={styles.placeholder}>{ES.window.placeholder}</p>
-        </SectionDialog>
+        <Suspense fallback={null}>
+          <SectionDialog
+            key={shownSection}
+            title={t.sections[shownSection].title}
+            open={openSection === shownSection}
+            tall={!wide}
+            closeLabel={t.window.close}
+            help={help}
+            onRequestClose={() => dispatch({ type: 'CLOSE' })}
+            onClosed={() => {
+              setShownSection(null);
+              menuRef.current?.querySelector<HTMLElement>('[data-active="true"]')?.focus();
+            }}
+          >
+            <SectionWindow section={shownSection} />
+          </SectionDialog>
+        </Suspense>
       )}
     </main>
   );
+}
+
+/** The window content of a section (downloaded the first time it opens). */
+function SectionWindow({ section }: { section: SectionId }) {
+  const Window = WINDOWS[section];
+  return <Window />;
 }
