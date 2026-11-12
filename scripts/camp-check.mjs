@@ -4,7 +4,8 @@
 import { mkdirSync } from 'node:fs';
 import { chromium } from 'playwright';
 
-const url = process.argv[2] ?? 'http://localhost:5173/';
+// The title screen comes first; any #hash skips it and goes straight to the camp.
+const url = `${(process.argv[2] ?? 'http://localhost:5173/').replace(/#.*$/, '')}#camp`;
 let failures = 0;
 const check = (name, ok, detail = '') => {
   if (!ok) failures++;
@@ -46,7 +47,7 @@ const focusIsActiveItem = (page) =>
   await page.waitForTimeout(400);
   const dialog = page.getByRole('dialog');
   check('Enter opens the section window', await dialog.isVisible());
-  const title = await dialog.getByRole('heading').textContent();
+  const title = await dialog.getByRole('heading', { level: 2 }).textContent();
   check('the window is named after its section', first?.endsWith(title ?? '—') ?? false, title ?? '');
   await page.screenshot({ path: '.screenshots/camp-check-window-1440.png' });
 

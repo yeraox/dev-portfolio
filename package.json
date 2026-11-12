@@ -13,9 +13,12 @@
     "test:watch": "vitest",
     "shots": "node scripts/screenshot.mjs",
     "check:camp": "node scripts/camp-check.mjs",
+    "check:windows": "node scripts/windows-check.mjs",
+    "check:title": "node scripts/title-check.mjs",
     "fps": "node scripts/fps.mjs",
     "characters": "node scripts/sprites/cutout.mjs",
-    "scenes": "node scripts/sprites/scene.mjs"
+    "scenes": "node scripts/sprites/scene.mjs",
+    "media": "node scripts/media.mjs"
   },
   "dependencies": {
     "@fontsource/jersey-10": "^5.3.0",

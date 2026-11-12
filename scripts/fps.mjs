@@ -5,7 +5,8 @@
 // Usage: npm run fps -- [url]   (best against the production build: npm run build && npx vite preview)
 import { chromium } from 'playwright';
 
-const url = process.argv[2] ?? 'http://localhost:4173/';
+// The title screen comes first; any #hash skips it and goes straight to the camp.
+const url = `${(process.argv[2] ?? 'http://localhost:4173/').replace(/#.*$/, '')}#camp`;
 const SECONDS = 5;
 
 const browser = await chromium.launch();
