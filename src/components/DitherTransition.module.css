@@ -1,0 +1,12 @@
+.cover {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  background-repeat: repeat;
+  background-size: calc(4 * var(--u)) calc(4 * var(--u)); /* one dither pixel = one UI pixel */
+  image-rendering: pixelated;
+}
+
+.cover[data-darkness='4'] {
+  background: var(--night-0);
+}

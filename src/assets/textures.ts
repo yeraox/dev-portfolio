@@ -135,3 +135,16 @@ function bracketFrame(): Texture {
 
 export const BRACKETS = bracketFrame();
 export const BRACKET_SLICE = 3; // art pixels per nine-slice corner
+
+// 4×4 ordered (Bayer) dither: which pixels go dark first in the scene transition.
+const BAYER_4 = [
+  [0, 8, 2, 10],
+  [12, 4, 14, 6],
+  [3, 11, 1, 9],
+  [15, 7, 13, 5],
+];
+
+/** The transition's middle steps: ¼, ½ and ¾ of the pixels in night-0 (step 0 = clear, 4 = solid). */
+export const DARKEN_STEPS = [4, 8, 12].map((level) =>
+  makeTexture(4, 4, (x, y) => (BAYER_4[y][x] < level ? 'night-0' : null)),
+);

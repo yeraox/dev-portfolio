@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { BANNER_DITHER, BRACKETS, BRACKET_SLICE, ROPE_FRAME, STONE_TILE } from './textures';
+import { BANNER_DITHER, BRACKETS, BRACKET_SLICE, DARKEN_STEPS, ROPE_FRAME, STONE_TILE } from './textures';
 
 describe('textures', () => {
   it('stone only uses colors that keep window text readable', () => {
@@ -25,6 +25,11 @@ describe('textures', () => {
     expect(BRACKETS.colors).toEqual(['blue-3']);
     expect(BRACKETS.width).toBe(8);
     expect(BRACKET_SLICE * 2).toBeLessThan(BRACKETS.width); // the middle stays empty
+  });
+
+  it('the transition darkens in three dithered steps, only with night-0', () => {
+    expect(DARKEN_STEPS).toHaveLength(3);
+    for (const step of DARKEN_STEPS) expect(step.colors).toEqual(['night-0']);
   });
 
   it('textures are CSS-ready data URLs', () => {
