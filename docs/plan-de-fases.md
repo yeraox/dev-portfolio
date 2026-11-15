@@ -612,37 +612,55 @@ traduce) y el paisaje del fondo (podrías generar una imagen como la del campame
 
 **Qué se construye**
 - **La escena:**
-  - Boca de la cueva en vista ¾ (desde arriba y un poco de frente).
-  - Sales caminando hacia la cámara y Null trota detrás de ti con un pequeño retraso.
-  - Llegáis al campamento, Null se sienta y se abre el menú.
-  - Dura 4–6 segundos en total.
+  - La cueva es la de tu imagen del campamento, así que **la intro y el campamento son la misma
+    escena** y no hace falta otra transición.
+  - El fundido del título te descubre en la boca de la cueva, con Null un paso detrás, a tu
+    derecha.
+  - Bajas caminando hacia la cámara hasta tu sitio. Null sale un poco después, te sigue unos
+    pasos por detrás, trota hasta su sitio y se sienta.
+  - Al llegar, **el anillo se abre** desplegándose desde tu cintura mientras gira, y aparecen el
+    banner y los retratos.
+  - Dura **4,7 s** en total, con la apertura del anillo.
 - **Las reglas de la intro:**
-  - "SKIP INTRO" siempre visible.
-  - Quien ya ha visitado la web entra directamente al campamento (se recuerda en el
-    navegador).
-  - Quien tiene activado "reducir movimiento" en su sistema se salta la intro entera.
-  - Si cambias de pestaña, la escena se pausa.
+  - "SKIP INTRO" se ve desde el primer fotograma (en el título y en la intro).
+  - **Se salta con** SKIP INTRO, cualquier tecla (también Escape), un clic o un toque.
+  - **Quien ya ha llegado al campamento una vez** entra directamente en él la próxima vez (se
+    recuerda en el navegador). `/#title` enseña siempre el título.
+  - Con **"reducir movimiento"**, PRESS START lleva directo al campamento y el anillo no se
+    despliega.
+  - **Si cambias de pestaña, la escena se pausa** y sigue donde estaba al volver.
 
 **Cómo se hace**
-- **La cueva y el campamento son la misma escena**: el campamento está justo delante de la
-  cueva. Así no hace falta otra transición.
-- **La intro se escribe como un "guion" de datos:** una lista de pasos del tipo "camina hasta
-  (x, y) a esta velocidad", "espera 0,5 s" o "reproduce esta animación". Los tiempos se cambian
-  editando la lista, sin tocar la lógica.
+- **La intro es un "guion" de datos** (`src/scenes/camp/intro.ts`): una lista de pasos como
+  "espera 0,5 s" o "camina hasta (320, 310) a 60 px/s". Los tiempos se cambian editando la lista;
+  el reproductor (`src/game/script.ts`) no se toca.
+- **Velocidades pensadas para que los pies no patinen:** tú, 60 px/s (un ciclo de 0,96 s cada
+  58 px); Null, 68 px/s andando y 90 trotando.
+- **El banner y los retratos ocupan su sitio durante la intro, pero no se ven:** al aparecer no
+  se mueve nada.
+- **Los dibujos de Null andando solo se descargan si hay intro** (27 KB). Quien entra por un
+  enlace o vuelve no los necesita.
 
 **Qué verás al terminar:** el recorrido completo desde el título hasta el menú.
 
 **Cómo compruebo que funciona**
-- La intro no dura más de 6 s.
-- SKIP funciona en cualquier momento.
-- La segunda visita entra directamente al campamento.
-- Con "reducir movimiento" activado no hay paseo.
+- Pruebas del guion (duración, posiciones, que terminen justo donde el campamento os dibuja, que
+  Null vaya detrás), de la máquina de pantallas y de la apertura del anillo.
+- **`npm run check:intro`:**
+  - Capturas a los tres tamaños.
+  - Cuánto dura.
+  - SKIP en cualquier momento y de todas las formas.
+  - El foco en el anillo al terminar.
+  - Que no se mueva nada al aparecer el banner.
+  - La segunda visita, `/#title` y "reducir movimiento".
+  - La pausa al cambiar de pestaña.
+- Fotogramas de la intro con la CPU ×4, Lighthouse y el resto de comprobaciones.
 
 **TypeScript que aprenderás:** otra unión discriminada, ahora para los pasos del guion
-(`{ type: 'walk'; to: Point } | { type: 'wait'; ms: number }`).
+(`{ type: 'walk'; to: Point; … } | { type: 'wait'; ms: number; … }`).
 
-**Decisiones que puedes cambiar:** la duración, el recorrido y si Null hace algo especial al
-llegar (por ejemplo, ponerse a pedir).
+**Decisiones que puedes cambiar:** la duración, el recorrido, si Null hace algo especial al
+llegar (por ejemplo, ponerse a pedir) y si quien vuelve debe ver el título.
 
 **💬 Tus comentarios:**
 

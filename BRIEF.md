@@ -179,6 +179,9 @@ A. TITLE — "YERAY CATURLA" in the golden embossed treatment. Credit lines:
    dithered palette-step fade (16 frames out, 16 in); any `#hash` link skips the title.
 B. INTRO — pixel transition into a ¾ top-down cave mouth. The avatar walks out toward a small
    base camp (campfire flicker, tent) with the dog trotting behind. ~4–6 s max; skippable.
+   Built in phase 6: the camp image's own cave mouth, a data script (`src/scenes/camp/intro.ts`),
+   4.7 s including the ring opening; any key, click or SKIP INTRO skips; `/#title` shows the
+   title even to returning visitors.
 C. HUB — the avatar stands at camp with the dog sitting beside him. The ring menu opens around
    him and the banner window shows the active slot. Bottom HUD: my portrait bottom-left, the
    dog's bottom-right; propose what the bars show using real data only, or show portraits alone.

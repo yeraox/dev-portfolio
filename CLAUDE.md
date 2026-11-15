@@ -67,8 +67,9 @@ intro → camp hub with a ring menu → SNES-style windows with real CV content)
   bands), `image-rendering: pixelated` on scaled pixel art, motion in frame steps.
 
 ## Commands
-The title screen comes first; any `#hash` skips it (`/#camp` goes straight to the camp — the camp,
-window and fps checks use it).
+First visit: title → cave intro → camp. Any `#hash` skips the title (`/#camp` goes straight to the
+camp — the camp, window and fps checks use it), and so does a returning visitor (localStorage
+`visited`); `/#title` always shows the title (reload after typing it).
 
 | Command | Does |
 |---|---|
@@ -83,8 +84,9 @@ window and fps checks use it).
 | `npm run shots -- <url> <name>` | Playwright screenshots at 390/768/1440 (phone and tablet as touch devices) into `.screenshots/` + overflow and console-error check |
 | `npm run check:camp -- [url]` | Camp walkthrough: keyboard only (1440) and touch only (phone), ✓/✗ per check + screenshots |
 | `npm run check:title -- [url]` | Title screen in ES/EN at 390/768/1440 (`.screenshots/fase-5/`) + what starts it (key, click, tap, SKIP INTRO) and what doesn't (Tab, ES/EN), the dithered transition, camp preloading, reduced motion |
+| `npm run check:intro -- [url]` | Cave intro: screenshots at 390/768/1440 (`.screenshots/fase-6/`), 4–6 s long, SKIP at any moment (button, Escape, any key, click, tap), returning visitors, `/#title`, reduced motion, hidden-tab pause |
 | `npm run check:windows -- [url]` | The 4 content windows in ES/EN at 390/768/1440 (screenshots in `.screenshots/fase-4/`) + links, language switch, EQUIP tabs, video, lazy downloads |
-| `npm run fps -- [url]` | Frames per second while the ring turns, CPU ×1 and ×4, plus the slowest answer to a key/click (run against `npx vite preview`) |
+| `npm run fps -- [url]` | Frames per second while the ring turns and during the intro, CPU ×1 and ×4, plus the slowest answer to a key/click (run against `npx vite preview`) |
 
 ## Skills
 - `impeccable` — primary design skill (mode: Experience). `audit` + `polish` in phase 7;

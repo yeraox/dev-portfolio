@@ -116,3 +116,6 @@ No characters, no people, no animals, no text, no logos, no UI, no border, no wa
 - **El banner** tapa la parte alta de la boca de la cueva: tu imagen la puso un poco más arriba
   que el 18 % pedido. En el móvil, con el banner fuera de la escena, la cueva se ve entera; en la
   intro (fase 6) no habrá banner.
+- **La intro (fase 6)** sale de la boca de esta cueva: en la escena va de x 283 a 358 y de y 30
+  a su suelo en y 112. Tú mides más que la abertura, así que empiezas en el umbral, delante de
+  la roca, y Null, oscuro sobre la cueva oscura, aparece en cuanto sale a la luz.

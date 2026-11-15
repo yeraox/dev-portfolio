@@ -184,6 +184,23 @@ stacked. Portraits inside windows render at most ×3 (144px).
 - Any key, click or tap starts, except Tab/modifiers/Escape and the controls themselves. A focused
   PRESS START never blinks; with reduced motion it doesn't blink and the camp appears at once.
 
+## 6d. Cave intro (phase 6 — `src/scenes/camp/intro.ts`, player in `src/game/script.ts`)
+- Same scene as the camp: the cave mouth is in Yeray's camp image (scene x 283–358, y 30–112), so
+  there is no extra transition. The title's dithered fade reveals Yeray at the mouth (feet on its
+  floor, y 112) with Null a step behind him at his right, dark on the dark cave.
+- Script (data, edited without touching the player): Yeray waits 0.5 s, walks down to (320, 310)
+  at 60 px/s with `walkDown` (≈ one 0.96 s cycle per 58 px, so the feet don't slide). Null waits
+  1.1 s (front still = `null-front-0` held), walks down at 68 px/s, trots right to (376, 312) at
+  90 px/s and sits. Positions in whole scene px; the lower character is drawn in front.
+- 0.3 s with both in place, then the hand-over to the camp (4.47 s), and the ring opens: 4.7 s in
+  all (tested: 4–6 s).
+- During the intro the banner and HUD keep their room but are hidden (nothing moves when they
+  appear); SKIP INTRO stays bottom right. Any key (Escape too), a click or a tap skips: both jump
+  to their places and the ring opens. The intro's clock only advances on drawn frames: a hidden
+  tab pauses it. Afterwards the focus lands on the ring's active slot.
+- Returning visitors (localStorage `visited`) and window links start in the camp; `/#title`
+  always shows the title. Reduced motion: no intro.
+
 ## 7. HUD (phase 3 — `src/components/Hud.tsx`)
 Bottom corners of the scene: small stone panels (window bevel) with the portrait in an `ink`
 "screen" of 64×76 portrait px — Yeray's head down to the goatee and vest collar (top 76 rows of
@@ -199,12 +216,15 @@ All motion is stepped; 1 frame = 1/60 s.
 | Window open | 18 (9 steps × 2) | Vertical wipe (clip-path in `steps(9)`). 7 frames was too fast to notice |
 | Window close | 10 (5 steps × 2) | Reverse wipe, a bit faster than opening (built in phase 3) |
 | Ring rotate | 8 | Per slot step, driven by the shared game loop |
+| Ring opening | 12 (6 steps × 2) | After the intro: spreads out from Yeray's middle (1/6 → 1) while turning one slot; the label appears when it is open |
+| Cave intro | ≈ 280 (4.7 s) | Scripted walk out of the cave (§6d) |
 | Walk cycle | Yeray 8 frames × 120 ms (body bob 0/1/2 px); Null trot 6 × 110 ms, front 4 × 160 ms | `docs/animacion-caminar.md` |
 | PRESS START blink | 32 on / 16 off | Hard on/off, never a fade |
 | Scene transition | 16 out + 16 in | Dithered palette steps (4×4 Bayer: ¼ → ½ → ¾ → solid `night-0`), 4 frames each; the next scene appears while fully dark (`DitherTransition`) |
 | Campfire / steam | 2–3 frames at ~6 fps | Ambient |
 
-`prefers-reduced-motion`: no intro walk, instant transitions, ambient loops paused. Adaptive
+`prefers-reduced-motion`: no intro walk (PRESS START goes straight to the camp), no ring opening,
+instant transitions, ambient loops paused. Adaptive
 fallback to 30 fps when frames run long.
 
 ## 9. Iconography (16×16, phase 2)
