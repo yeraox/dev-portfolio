@@ -14,9 +14,17 @@ export type GameAction =
   | { type: 'OPEN' } // Enter / Space: open the slot at the top
   | { type: 'CLOSE' }; // Esc / back button: close the window
 
-/** `ring` = the sections the menu shows, in order. The first one starts at the top. */
-export function initialState(ring: SectionId[]): GameState {
+/** `ring` = the sections the menu shows, in order. The first one starts at the top, unless the
+ *  page was opened on a section's link (`opened`, e.g. /#equip): then that window starts open. */
+export function initialState(ring: SectionId[], opened: SectionId | null = null): GameState {
+  const index = opened ? ring.indexOf(opened) : -1;
+  if (opened && index >= 0) return { scene: 'WINDOW', ring, active: index, section: opened };
   return { scene: 'HUB', ring, active: 0 };
+}
+
+/** The section named by a link's hash (#equip → 'equip'), if the ring shows it. */
+export function sectionFromHash(hash: string, ring: SectionId[]): SectionId | null {
+  return ring.find((section) => `#${section}` === hash) ?? null;
 }
 
 /** Index arithmetic that wraps around the ring: -1 → last, length → 0. */

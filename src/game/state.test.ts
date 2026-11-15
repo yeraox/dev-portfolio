@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { SECTIONS, visibleSections } from '../content/sections';
-import { gameReducer, initialState, wrap, type GameAction, type GameState } from './state';
+import { gameReducer, initialState, sectionFromHash, wrap, type GameAction, type GameState } from './state';
 
 const RING_ALL = visibleSections(true).map((section) => section.id);
 const RING_LIVE = visibleSections(false).map((section) => section.id);
@@ -62,6 +62,14 @@ describe('gameReducer', () => {
         if (state.scene === 'WINDOW') expect(state.section).toBe(ring[state.active]);
       }
     }
+  });
+
+  it('opens the window of a section link (/#comms) when the ring shows it', () => {
+    expect(initialState(RING_LIVE, 'comms')).toEqual({ scene: 'WINDOW', ring: RING_LIVE, active: 3, section: 'comms' });
+    expect(initialState(RING_LIVE, 'buffs')).toEqual(hub); // a draft: not in the live ring
+    expect(sectionFromHash('#stats', RING_LIVE)).toBe('stats');
+    expect(sectionFromHash('#craft', RING_LIVE)).toBeNull();
+    expect(sectionFromHash('', RING_LIVE)).toBeNull();
   });
 
   it('wraps indexes in both directions', () => {
