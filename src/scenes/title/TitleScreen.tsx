@@ -1,24 +1,24 @@
 import { useEffect, useEffectEvent, useRef, type MouseEvent } from 'react';
+import { SkipIntro } from '../../components/SkipIntro';
 import type { Locale } from '../../content/types';
 import { useLocale } from '../../content/useLocale';
+import { isAnyKey, isOnControl } from '../../engine/anyKey';
 import { titleNameSize, type StageLayout } from '../../game/stage';
 import { preloadCamp } from '../camp/campAssets';
 import { drawTitleBackground } from './titleBackground';
 import styles from './TitleScreen.module.css';
 
 const LOCALES: Locale[] = ['es', 'en'];
-// Keys that never start the game: moving between the controls, or holding a modifier.
-const IGNORED_KEYS = new Set(['Tab', 'Shift', 'Control', 'Alt', 'Meta', 'CapsLock', 'Escape']);
-const CONTROLS = 'button, a[href], input';
 
 type TitleScreenProps = {
   layout: StageLayout;
-  onStart: () => void;
+  onStart: () => void; // PRESS START: the intro, then the camp
+  onSkip: () => void; // SKIP INTRO: straight to the camp
 };
 
 /** TITLE: the night landscape, the golden name, the credits and PRESS START. Any key, click or
  *  tap starts — except on the language buttons and SKIP INTRO, which do their own thing. */
-export function TitleScreen({ layout, onStart }: TitleScreenProps) {
+export function TitleScreen({ layout, onStart, onSkip }: TitleScreenProps) {
   const { t, locale, setLocale } = useLocale();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const start = useEffectEvent(onStart);
@@ -31,9 +31,7 @@ export function TitleScreen({ layout, onStart }: TitleScreenProps) {
   // TS concept — the browser's own event types: `KeyboardEvent` has `key`, `repeat`, `altKey`…
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
-      if (event.repeat || event.ctrlKey || event.altKey || event.metaKey || IGNORED_KEYS.has(event.key)) return;
-      const onControl = event.target instanceof Element && event.target.closest(CONTROLS);
-      if (onControl && (event.key === 'Enter' || event.key === ' ')) return; // the control's own click
+      if (!isAnyKey(event)) return;
       event.preventDefault();
       start();
     }
@@ -65,7 +63,7 @@ export function TitleScreen({ layout, onStart }: TitleScreenProps) {
 
   // A click or tap anywhere starts, unless it landed on a control.
   function onClick(event: MouseEvent<HTMLElement>) {
-    if (event.target instanceof Element && event.target.closest(CONTROLS)) return;
+    if (isOnControl(event.target)) return;
     onStart();
   }
 
@@ -105,9 +103,7 @@ export function TitleScreen({ layout, onStart }: TitleScreenProps) {
         </button>
       </div>
 
-      <button type="button" className={styles.skip} onClick={onStart}>
-        {t.title.skip}
-      </button>
+      <SkipIntro label={t.title.skip} onSkip={onSkip} />
     </main>
   );
 }

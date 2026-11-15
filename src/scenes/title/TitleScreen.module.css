@@ -85,7 +85,7 @@
   }
 }
 
-/* Language buttons (top right) and SKIP INTRO (bottom right): small game labels on ink plates. */
+/* Language buttons (top right): small game labels on ink plates, like SKIP INTRO. */
 .languages {
   position: absolute;
   top: calc(4 * var(--u));
@@ -94,8 +94,7 @@
   gap: calc(2 * var(--u));
 }
 
-.language,
-.skip {
+.language {
   padding: var(--u) calc(3 * var(--u)) 0;
   font-family: var(--font-display);
   font-size: var(--display-size);
@@ -113,19 +112,12 @@
   background: var(--gold-3);
 }
 
-.language:hover,
-.skip:hover {
+.language:hover {
   color: var(--gold-3);
 }
 
 .language[aria-pressed='true']:hover {
   color: var(--ink);
-}
-
-.skip {
-  position: absolute;
-  right: calc(4 * var(--u));
-  bottom: calc(4 * var(--u));
 }
 
 .srOnly {
