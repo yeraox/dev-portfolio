@@ -88,6 +88,12 @@ camp — the camp, window and fps checks use it), and so does a returning visito
 | `npm run check:windows -- [url]` | The 4 content windows in ES/EN at 390/768/1440 (screenshots in `.screenshots/fase-4/`) + links, language switch, EQUIP tabs, video, lazy downloads |
 | `npm run fps -- [url]` | Frames per second while the ring turns and during the intro, CPU ×1 and ×4, plus the slowest answer to a key/click (run against `npx vite preview`) |
 
+**Lighthouse** (one-off, not a dependency): run it from the scratchpad, never from the repo — on
+WSL it leaves a throwaway Chromium profile in the current folder, named like
+`C:\Users\…\AppData\Local\lighthouse.XXXX` (ignored by `.gitignore` as `C:*`, but delete any you see):
+`cd <scratchpad> && CHROME_PATH=~/.cache/ms-playwright/chromium-1254/chrome-linux64/chrome npx -y lighthouse@12.8.2 <url> --chrome-flags="--headless=new --no-sandbox"`
+(against `npx vite preview` on port 4173).
+
 ## Skills
 - `impeccable` — primary design skill (mode: Experience). `audit` + `polish` in phase 7;
   regenerate `DESIGN.md` from the built world with `document` at the end.

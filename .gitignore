@@ -38,3 +38,7 @@ media-src/**/*-raw.*
 
 # Personal Claude Code permissions
 .claude/settings.local.json
+
+# Throwaway Chromium profiles Lighthouse leaves behind on WSL (it builds a Windows path such as
+# "C:\Users\…\AppData\Local\lighthouse.XXXX" and creates it as a folder in the current directory)
+C:*
