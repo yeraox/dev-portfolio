@@ -1,8 +1,10 @@
-/* The <dialog> itself is only a positioned box: the Window draws everything. */
+/* The <dialog> itself is only a positioned box: the Window draws everything. It covers the
+   scene (4 UI pixels in from its edges), so the text has room and grows with the screen. */
 .dialog {
-  width: min(calc(100vw - 8 * var(--u)), 880px);
+  width: calc(var(--stage-width, 100vw) - 8 * var(--u));
+  height: calc(var(--stage-height, 100dvh) - 8 * var(--u));
   max-width: none;
-  max-height: calc(100dvh - 8 * var(--u));
+  max-height: none;
   padding: var(--u); /* room for the window's 1u outer outline */
   border: 0;
   overflow: visible;
@@ -15,15 +17,15 @@
   background: none;
 }
 
-/* Portrait screens: a full-width sheet. */
+/* Portrait screens: the whole screen. */
 .dialog[data-tall='true'] {
   width: 100vw;
-  margin-inline: 0;
+  height: 100dvh;
+  margin: 0;
 }
 
 .window {
-  max-height: calc(100dvh - 10 * var(--u));
-  overflow-y: auto;
+  height: 100%;
 }
 
 /* The [ESC] EXIT prompt is also a button, for touch and mouse. */
@@ -52,4 +54,13 @@
 .close:focus-visible .key {
   color: var(--ink);
   background: var(--gold-3);
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }

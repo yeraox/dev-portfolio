@@ -1,0 +1,59 @@
+/* EQUIP: one project per section. Wide windows put the pictures on the left and the text on
+   the right; narrow ones stack them. The width is the window's (container query), not the
+   screen's. */
+.project {
+  display: grid;
+  gap: calc(6 * var(--u));
+}
+
+@container (min-width: 820px) {
+  .project[data-media='true'] {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: start;
+  }
+}
+
+.media,
+.text {
+  min-width: 0;
+}
+
+.context {
+  margin-bottom: calc(4 * var(--u));
+}
+
+.figure {
+  margin: 0 0 calc(4 * var(--u));
+}
+
+.figure > :first-child {
+  margin-bottom: calc(2 * var(--u));
+}
+
+.shots {
+  display: grid;
+}
+
+.subheading {
+  margin: calc(5 * var(--u)) 0 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--text-size);
+  line-height: 1;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gold-3);
+}
+
+.facts {
+  margin-top: calc(5 * var(--u));
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

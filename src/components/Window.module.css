@@ -1,5 +1,7 @@
 .window {
   position: relative;
+  display: flex;
+  flex-direction: column;
   padding: calc(7 * var(--u));
   color: var(--text);
   font-family: var(--font-text);
@@ -64,12 +66,19 @@
   margin: 0;
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: var(--display-size);
+  font-size: var(--title-size);
   line-height: 1;
   letter-spacing: 0.04em;
   color: var(--gold-3);
 }
 
+/* When the window has a height limit, only the body scrolls: the frame, the title and the help
+   line stay put. */
 .body {
   position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-color: var(--stone-3) var(--stone-0);
+  scrollbar-width: thin;
 }

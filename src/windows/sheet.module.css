@@ -1,0 +1,130 @@
+/* Shared window content patterns (DESIGN.md §5b): label/value rows, gold headings, entry lists,
+   pixel bullets, badges and the "screen inside the screen". Born as the phase-1 STATS window. */
+
+.heading {
+  margin: 0 0 calc(3 * var(--u));
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--display-size);
+  line-height: 1;
+  letter-spacing: 0.04em;
+  color: var(--gold-3);
+}
+
+.rows {
+  margin: 0;
+  display: grid;
+  gap: calc(2 * var(--u));
+}
+
+.row {
+  display: grid;
+  gap: 0 calc(4 * var(--u));
+}
+
+@media (min-width: 480px) {
+  .row {
+    grid-template-columns: 8.5em minmax(0, 1fr);
+  }
+}
+
+.row dt {
+  color: var(--text-dim);
+}
+
+.row dd {
+  margin: 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.paragraph {
+  margin: 0;
+  max-width: 65ch;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: calc(4 * var(--u));
+}
+
+.entry p {
+  margin: 0;
+}
+
+.entryTitle {
+  font-weight: 700;
+}
+
+.meta {
+  margin: 0;
+  font-size: var(--text-small);
+  color: var(--text-dim);
+}
+
+.years {
+  font-variant-numeric: tabular-nums;
+}
+
+.inProgress {
+  color: var(--green-1);
+}
+
+/* Bulleted list with a pixel bullet: a 2u gold square with a 1u dark shadow. */
+.bullets {
+  margin: calc(2 * var(--u)) 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: var(--u);
+}
+
+.bullets li {
+  position: relative;
+  padding-left: calc(6 * var(--u));
+}
+
+.bullets li::before {
+  content: '';
+  position: absolute;
+  left: var(--u);
+  top: 0.55em;
+  width: calc(2 * var(--u));
+  height: calc(2 * var(--u));
+  background: var(--gold-2);
+  box-shadow: var(--u) var(--u) 0 var(--gold-0);
+}
+
+/* A screen inside the screen (DESIGN.md §10): real screenshots and video stay crisp (not
+   pixelated) inside a 1u ink + 1u stone-3 frame. */
+.screen {
+  display: block;
+  margin: var(--u) var(--u) calc(4 * var(--u));
+  background: var(--ink);
+  box-shadow:
+    0 0 0 var(--u) var(--ink),
+    0 0 0 calc(2 * var(--u)) var(--stone-3);
+}
+
+.screen img,
+.screen video {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* A small game-label badge: FEATURED, CLASSIFIED… */
+.tag {
+  display: inline-block;
+  padding: var(--u) calc(2 * var(--u)) 0;
+  font-family: var(--font-display);
+  font-size: var(--text-small);
+  line-height: 1;
+  letter-spacing: 0.08em;
+  color: var(--gold-3);
+  background: var(--ink);
+  vertical-align: middle;
+}

@@ -6,7 +6,8 @@ type SectionDialogProps = {
   title: string;
   open: boolean; // false → plays the closing wipe, then calls onClosed
   tall: boolean; // portrait screens: the window becomes a full-width sheet
-  closeLabel: string; // accessible name of the close button
+  closeLabel: string; // said after the visible "ESC EXIT" by screen readers
+  help?: ReactNode; // bottom help line, usually <HelpBar />
   onRequestClose: () => void; // Esc, the close button or a click outside
   onClosed: () => void; // the closing wipe has finished
   children: ReactNode;
@@ -36,7 +37,7 @@ function keepTabInside(event: KeyboardEvent<HTMLDialogElement>, dialog: HTMLDial
  * A section window as a native modal <dialog>: the browser keeps Tab inside it, hides the rest
  * of the page from screen readers and turns Esc into a "cancel" event.
  */
-export function SectionDialog({ title, open, tall, closeLabel, onRequestClose, onClosed, children }: SectionDialogProps) {
+export function SectionDialog({ title, open, tall, closeLabel, help, onRequestClose, onClosed, children }: SectionDialogProps) {
   const ref = useRef<HTMLDialogElement>(null);
   const titleId = useId();
   // Really close the <dialog> first: while it is open the rest of the page is inert and the
@@ -85,9 +86,11 @@ export function SectionDialog({ title, open, tall, closeLabel, onRequestClose, o
         titleId={titleId}
         closing={!open}
         className={styles.window}
+        help={help}
         hint={
-          <button type="button" className={styles.close} aria-label={closeLabel} onClick={onRequestClose}>
-            <kbd className={styles.key}>ESC</kbd> EXIT
+          // The accessible name starts with what is visible (WCAG 2.5.3 "label in name").
+          <button type="button" className={styles.close} onClick={onRequestClose}>
+            <kbd className={styles.key}>ESC</kbd> EXIT<span className={styles.srOnly}> · {closeLabel}</span>
           </button>
         }
       >

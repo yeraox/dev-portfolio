@@ -53,6 +53,7 @@
   --text-size: 16px;
   --text-small: 14px;
   --display-size: 20px;
+  --title-size: 20px; /* window titles */
   --line: 1.35;
 
   /* Motion: one frame at 60 fps */
@@ -76,5 +77,6 @@
     --text-size: 20px;
     --text-small: 16px;
     --display-size: 30px;
+    --title-size: 30px;
   }
 }

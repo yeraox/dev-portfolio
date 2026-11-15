@@ -1,0 +1,51 @@
+/* Profile: the portrait card and the rows + bio side by side when the window is wide. */
+.profile {
+  display: grid;
+  gap: calc(6 * var(--u));
+}
+
+@container (min-width: 820px) {
+  .profile {
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: start;
+  }
+}
+
+.card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: calc(5 * var(--u));
+  align-items: center;
+}
+
+@container (min-width: 820px) {
+  .card {
+    grid-template-columns: auto;
+    justify-items: start;
+  }
+}
+
+/* The portrait in a dark "screen" with the window's engraved edge (like the HUD). */
+.portrait {
+  margin: calc(2 * var(--u));
+  background: var(--night-1);
+  box-shadow:
+    0 0 0 var(--u) var(--ink),
+    0 0 0 calc(2 * var(--u)) var(--stone-3);
+}
+
+.identity p {
+  margin: 0;
+}
+
+.name {
+  font-family: var(--font-display);
+  font-size: var(--display-size);
+  line-height: 1.1;
+  letter-spacing: 0.04em;
+  color: var(--gold-3);
+}
+
+.role {
+  font-weight: 700;
+}

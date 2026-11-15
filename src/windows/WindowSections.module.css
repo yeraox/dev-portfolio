@@ -1,0 +1,106 @@
+/* Fills the window's body: tabs on top, the section below takes the rest and scrolls if needed. */
+.sections {
+  display: flex;
+  flex-direction: column;
+  gap: calc(4 * var(--u));
+  height: 100%;
+  min-height: 0;
+}
+
+.tabs {
+  flex: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--u) calc(2 * var(--u));
+  padding-bottom: calc(3 * var(--u));
+  /* engraved line under the tabs */
+  border-bottom: var(--u) solid var(--ink);
+  box-shadow: 0 var(--u) 0 var(--stone-3);
+}
+
+/* A tab: text on stone; the chosen one sits on an ink plate in gold, with the pixel bullet in
+   front like a menu cursor. */
+.tab {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(2 * var(--u));
+  padding: calc(2 * var(--u)) calc(4 * var(--u));
+  font: inherit;
+  line-height: 1.2;
+  color: var(--text);
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.tab:hover,
+.tab[aria-selected='true'] {
+  color: var(--gold-3);
+  background: var(--ink);
+}
+
+.tab[aria-selected='true']::before {
+  content: '';
+  flex: none;
+  width: calc(2 * var(--u));
+  height: calc(2 * var(--u));
+  background: var(--gold-2);
+  box-shadow: var(--u) var(--u) 0 var(--gold-0);
+}
+
+.tag {
+  font-family: var(--font-display);
+  font-size: var(--text-small);
+  line-height: 1;
+  letter-spacing: 0.08em;
+  color: var(--gold-3);
+}
+
+.frame {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+}
+
+.panel {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain; /* the wheel never scrolls the page behind the window */
+  padding-right: calc(3 * var(--u));
+  scrollbar-color: var(--stone-3) var(--stone-0);
+  scrollbar-width: thin;
+  /* sections lay themselves out by the window's width, not the screen's */
+  container-type: inline-size;
+}
+
+/* "More below": a gold pixel arrow in the bottom-right corner, blinking in hard steps. */
+.more {
+  position: absolute;
+  right: calc(4 * var(--u));
+  bottom: 0;
+  width: calc(6 * var(--u));
+  height: calc(4 * var(--u));
+  background: var(--gold-3);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  animation: blink calc(48 * var(--frame)) steps(1) infinite;
+  pointer-events: none;
+}
+
+@keyframes blink {
+  0%,
+  66% {
+    opacity: 1;
+  }
+  67%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .more {
+    animation: none;
+  }
+}
