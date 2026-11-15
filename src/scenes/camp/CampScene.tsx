@@ -1,12 +1,14 @@
-import { Suspense, useEffect, useReducer, useRef, useState } from 'react';
+import { Suspense, useEffect, useEffectEvent, useReducer, useRef, useState } from 'react';
 import { BannerWindow } from '../../components/BannerWindow';
 import { Hud } from '../../components/Hud';
 import { HelpBar } from '../../components/HelpBar';
 import { KeyHint } from '../../components/KeyHint';
 import { RingMenu, type RingItem } from '../../components/RingMenu';
 import { SectionDialog } from '../../components/SectionDialog';
+import { SkipIntro } from '../../components/SkipIntro';
 import { useLocale } from '../../content/useLocale';
 import { visibleSections, type SectionId } from '../../content/sections';
+import { isAnyKey } from '../../engine/anyKey';
 import { useInput } from '../../engine/useInput';
 import { useReducedMotion, useStageLayout } from '../../engine/useScreen';
 import { gameReducer, initialState, sectionFromHash } from '../../game/state';
@@ -19,8 +21,14 @@ import styles from './CampScene.module.css';
 const SECTIONS = visibleSections(import.meta.env.DEV);
 const RING = SECTIONS.map((section) => section.id);
 
-/** HUB: Yeray and Null at the camp, the ring menu around Yeray, the banner and the HUD. */
-export function CampScene() {
+type CampSceneProps = {
+  intro: boolean; // Yeray and Null are still walking out of the cave: no menu yet
+  onIntroEnd: () => void; // the intro finished, or the visitor skipped it
+};
+
+/** HUB: Yeray and Null at the camp, the ring menu around Yeray, the banner and the HUD. First,
+ *  if `intro`, the two walk out of the cave to their places; then the ring opens. */
+export function CampScene({ intro, onIntroEnd }: CampSceneProps) {
   const layout = useStageLayout();
   const reducedMotion = useReducedMotion();
   const { t } = useLocale();
@@ -34,6 +42,8 @@ export function CampScene() {
   const [shownSection, setShownSection] = useState<SectionId | null>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+  // The ring spreads out when it appears after an intro (with reduced motion there is none).
+  const [afterIntro] = useState(intro);
 
   const stageWidth = layout.camera.width * layout.scale;
   const stageHeight = layout.camera.height * layout.scale;
@@ -60,8 +70,30 @@ export function CampScene() {
     return () => window.clearTimeout(timer);
   }, []);
 
+  // During the intro, any key (Escape too) or a click anywhere skips it.
+  const skip = useEffectEvent(onIntroEnd);
+  useEffect(() => {
+    if (!intro) return;
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key !== 'Escape' && !isAnyKey(event)) return;
+      event.preventDefault();
+      skip();
+    }
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [intro]);
+
+  // When the intro ends, keyboard and screen-reader users land on the ring (unless they had
+  // already moved the focus somewhere themselves).
+  useEffect(() => {
+    if (intro || !afterIntro) return;
+    const focused = document.activeElement;
+    if (focused && focused !== document.body) return;
+    menuRef.current?.querySelector<HTMLElement>('[data-active="true"]')?.focus({ preventScroll: true });
+  }, [intro, afterIntro]);
+
   useInput(stageRef, (action) => {
-    if (state.scene !== 'HUB') return false; // an open window handles its own keys
+    if (intro || state.scene !== 'HUB') return false; // an open window handles its own keys
     if (action === 'LEFT') dispatch({ type: 'ROTATE', step: -1 });
     else if (action === 'RIGHT') dispatch({ type: 'ROTATE', step: 1 });
     else if (action === 'CONFIRM') dispatch({ type: 'OPEN' });
@@ -86,6 +118,8 @@ export function CampScene() {
   );
   const wide = layout.mode === 'wide';
   const hud = <Hud zoom={layout.portraitZoom} names={t.hud} compact={!wide} />;
+  // The banner and the HUD keep their room during the intro (nothing moves when they appear).
+  const waiting = intro ? styles.waiting : undefined;
 
   // Help line: windows with sections explain the wheel (mouse) or the swipe (touch).
   const sectionHelp = shownSection === 'equip' ? t.help.projects : t.help.sections;
@@ -100,10 +134,10 @@ export function CampScene() {
     );
 
   return (
-    <main className={styles.camp} data-mode={layout.mode}>
+    <main className={styles.camp} data-mode={layout.mode} data-scene={intro ? 'intro' : 'hub'} onClick={intro ? onIntroEnd : undefined}>
       <h1 className={styles.srOnly}>{t.page.heading}</h1>
       {!wide && (
-        <div className={styles.row} style={{ width: stageWidth }}>
+        <div className={`${styles.row} ${waiting ?? ''}`} style={{ width: stageWidth }}>
           {banner}
         </div>
       )}
@@ -112,25 +146,29 @@ export function CampScene() {
         className={styles.stage}
         style={{ width: stageWidth, height: stageHeight }}
       >
-        <CampCanvas layout={layout} reducedMotion={reducedMotion} />
-        <RingMenu
-          items={items}
-          active={state.active}
-          center={CAMP.ringCenter}
-          layout={layout}
-          label={t.ring.label}
-          reducedMotion={reducedMotion}
-          menuRef={menuRef}
-          onPick={(index) => dispatch({ type: 'PICK', index })}
-        />
-        {wide && <div className={styles.bannerSlot}>{banner}</div>}
-        {wide && <div className={styles.hudSlot}>{hud}</div>}
+        <CampCanvas layout={layout} reducedMotion={reducedMotion} intro={intro} onIntroEnd={onIntroEnd} />
+        {!intro && (
+          <RingMenu
+            items={items}
+            active={state.active}
+            center={CAMP.ringCenter}
+            layout={layout}
+            label={t.ring.label}
+            reducedMotion={reducedMotion}
+            opening={afterIntro && !reducedMotion}
+            menuRef={menuRef}
+            onPick={(index) => dispatch({ type: 'PICK', index })}
+          />
+        )}
+        {wide && <div className={`${styles.bannerSlot} ${waiting ?? ''}`}>{banner}</div>}
+        {wide && <div className={`${styles.hudSlot} ${waiting ?? ''}`}>{hud}</div>}
       </div>
       {!wide && (
-        <div className={styles.row} style={{ width: stageWidth }}>
+        <div className={`${styles.row} ${waiting ?? ''}`} style={{ width: stageWidth }}>
           {hud}
         </div>
       )}
+      {intro && <SkipIntro label={t.title.skip} onSkip={onIntroEnd} />}
 
       {/* The window only appears once its content has downloaded, so it opens at its final size
           (nothing jumps). Usually it is already there, preloaded. */}

@@ -35,3 +35,20 @@ export function turnAt(from: number, delta: number, frame: number): number {
   const done = Math.min(Math.max(Math.floor(frame), 0), ROTATE_FRAMES);
   return from + (delta * done) / ROTATE_FRAMES;
 }
+
+// Opening (after the intro): the ring spreads out from Yeray's middle in 6 steps of 2 frames
+// (12 frames, 0.2 s), turning one slot as it goes, so the icons swirl into place.
+export const OPEN_FRAMES = 12;
+const OPEN_STEPS = 6;
+
+/** How far the ring has spread (1/6 → 1) `frame` frames after it starts opening. */
+export function openSpread(frame: number): number {
+  const step = Math.min(Math.floor(Math.max(frame, 0) / (OPEN_FRAMES / OPEN_STEPS)) + 1, OPEN_STEPS);
+  return step / OPEN_STEPS;
+}
+
+/** Where slot `index` sits while the ring opens: on a smaller ellipse, one slot behind. */
+export function openingOffset(index: number, turn: number, count: number, spread: number): Point {
+  const offset = slotOffset(index, turn - (1 - spread), count);
+  return { x: offset.x * spread, y: offset.y * spread };
+}

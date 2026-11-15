@@ -44,6 +44,12 @@
   inset: auto calc(5 * var(--u)) calc(5 * var(--u));
 }
 
+/* During the intro the banner and the HUD are there but unseen, so they appear without moving
+   anything (and screen readers skip them until then). */
+.waiting {
+  visibility: hidden;
+}
+
 /* Tall mode: the banner and the HUD, as wide as the scene. */
 .row {
   max-width: 100%;

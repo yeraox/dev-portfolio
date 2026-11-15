@@ -3,7 +3,7 @@ import { ICONS } from '../assets/sprites/icons';
 import { BRACKETS } from '../assets/textures';
 import type { Section } from '../content/sections';
 import { useGameLoop } from '../engine/useGameLoop';
-import { RING, ROTATE_FRAMES, shortestTurn, slotOffset, turnAt, type Point } from '../game/ring';
+import { RING, ROTATE_FRAMES, openSpread, openingOffset, shortestTurn, turnAt, type Point } from '../game/ring';
 import { wrap } from '../game/state';
 import { toStage, type StageLayout } from '../game/stage';
 import { IconCanvas } from './IconCanvas';
@@ -42,6 +42,20 @@ function useRingTurn(active: number, count: number, reducedMotion: boolean): num
   return turn;
 }
 
+/** How far the ring has spread out: 1 at once, or 1/6 → 1 in whole steps when it opens. */
+function useRingOpening(opening: boolean): number {
+  const [spread, setSpread] = useState(opening ? openSpread(0) : 1);
+  const start = useRef<number | null>(null);
+
+  useGameLoop((now) => {
+    start.current ??= now;
+    const next = openSpread((now - start.current) / FRAME_MS);
+    if (next !== spread) setSpread(next);
+  }, spread < 1);
+
+  return spread;
+}
+
 export type RingItem = Section & { title: string };
 
 type RingMenuProps = {
@@ -51,6 +65,7 @@ type RingMenuProps = {
   layout: StageLayout;
   label: string; // accessible name of the menu
   reducedMotion: boolean;
+  opening: boolean; // spread out from Yeray when it appears (after the intro)
   menuRef: RefObject<HTMLDivElement | null>;
   onPick: (index: number) => void;
 };
@@ -60,8 +75,9 @@ type RingMenuProps = {
  * inside blue brackets with its label above. ARIA "menu" pattern: the buttons are menu items
  * (actions that open a window), ←/→ move between them (handled by useInput), Enter opens.
  */
-export function RingMenu({ items, active, center, layout, label, reducedMotion, menuRef, onPick }: RingMenuProps) {
+export function RingMenu({ items, active, center, layout, label, reducedMotion, opening, menuRef, onPick }: RingMenuProps) {
   const turn = useRingTurn(active, items.length, reducedMotion);
+  const spread = useRingOpening(opening);
   const firstRender = useRef(true);
   const touchStart = useRef<{ x: number; y: number } | null>(null);
 
@@ -85,7 +101,7 @@ export function RingMenu({ items, active, center, layout, label, reducedMotion, 
     <>
       <div ref={menuRef} role="menu" aria-label={label} aria-orientation="horizontal" className={styles.ring}>
         {items.map((item, index) => {
-          const offset = slotOffset(index, turn, items.length);
+          const offset = openingOffset(index, turn, items.length, spread);
           const isActive = index === active;
           return (
             <button
@@ -125,9 +141,11 @@ export function RingMenu({ items, active, center, layout, label, reducedMotion, 
           );
         })}
       </div>
-      <p className={styles.label} aria-hidden="true" style={{ left: middle.left, top: labelTop }}>
-        {items[active].label}
-      </p>
+      {spread === 1 && (
+        <p className={styles.label} aria-hidden="true" style={{ left: middle.left, top: labelTop }}>
+          {items[active].label}
+        </p>
+      )}
     </>
   );
 }

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { RING, ROTATE_FRAMES, shortestTurn, slotAngle, slotOffset, turnAt } from './ring';
+import { OPEN_FRAMES, RING, ROTATE_FRAMES, openSpread, openingOffset, shortestTurn, slotAngle, slotOffset, turnAt } from './ring';
 
 describe('ring geometry', () => {
   it('puts the active slot at the top and spreads the rest evenly', () => {
@@ -38,5 +38,24 @@ describe('ring geometry', () => {
     expect(turnAt(2, 1, ROTATE_FRAMES)).toBe(3);
     expect(turnAt(2, 1, 100)).toBe(3);
     expect(turnAt(2, -1, 2)).toBe(1.75);
+  });
+
+  it('opens in 6 whole steps over 12 frames, ending on the normal ring', () => {
+    expect(openSpread(0)).toBeCloseTo(1 / 6);
+    expect(openSpread(1)).toBeCloseTo(1 / 6);
+    expect(openSpread(2)).toBeCloseTo(2 / 6);
+    expect(openSpread(OPEN_FRAMES - 1)).toBe(1);
+    expect(openSpread(100)).toBe(1);
+    for (let index = 0; index < 4; index++) {
+      const open = openingOffset(index, 0, 4, 1);
+      const ring = slotOffset(index, 0, 4);
+      expect(open.x).toBeCloseTo(ring.x);
+      expect(open.y).toBeCloseTo(ring.y);
+    }
+  });
+
+  it('starts the opening close to Yeray', () => {
+    const start = openingOffset(0, 0, 4, openSpread(0));
+    expect(Math.hypot(start.x, start.y)).toBeLessThan(RING.rx / 4);
   });
 });
