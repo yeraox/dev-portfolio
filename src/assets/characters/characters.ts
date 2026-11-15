@@ -50,6 +50,8 @@ export const YERAY = {
 
 export const NULL_DOG = {
   sit: { frames: ['null-sit'], ms: 700, pixelSize: 0.5, bob: true },
+  // Standing still, facing the camera: the front walk's first drawing (legs together), held.
+  stand: { frames: ['null-front-0'], ms: 700, pixelSize: 1 },
   trotSide: {
     frames: ['null-side-0', 'null-side-1', 'null-side-2', 'null-side-3', 'null-side-4', 'null-side-5'],
     ms: 110,
