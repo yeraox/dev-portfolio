@@ -9,6 +9,7 @@ const DEV_PAGES: Record<string, LazyExoticComponent<ComponentType>> = import.met
       '/dev/specimen': lazy(() => import('./dev/Specimen')),
       '/dev/windows': lazy(() => import('./dev/WindowsDemo')),
       '/dev/personajes': lazy(() => import('./dev/CharactersDemo')),
+      '/dev/textos': lazy(() => import('./dev/TextsReview')),
     }
   : {};
 

@@ -1,0 +1,86 @@
+.page {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 32px 16px 96px;
+  line-height: 1.5;
+}
+
+.page h1 {
+  margin: 0 0 8px;
+  font-size: 1.75rem;
+  color: var(--gold-3);
+}
+
+.page header p {
+  max-width: 75ch;
+  margin: 0;
+  color: var(--text-dim);
+}
+
+.group {
+  margin-top: 40px;
+}
+
+.group h2 {
+  margin: 0 0 12px;
+  font-size: 1.25rem;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table {
+  table-layout: fixed;
+}
+
+.table th,
+.table td {
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--night-2);
+  overflow-wrap: anywhere;
+}
+
+.table th {
+  color: var(--text-dim);
+}
+
+.path {
+  width: 16em;
+  font-family: ui-monospace, monospace;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  overflow-wrap: anywhere;
+}
+
+.same td:not(.path) {
+  color: var(--text-dim);
+}
+
+@media (max-width: 860px) {
+  .table thead {
+    display: none;
+  }
+
+  .table tr {
+    display: grid;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--night-2);
+  }
+
+  .table td {
+    border: 0;
+    padding: 2px 0;
+  }
+
+  .path {
+    width: auto;
+  }
+}
+
+.table th:first-child {
+  width: 14em;
+}
