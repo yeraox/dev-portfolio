@@ -1,5 +1,5 @@
 // Phase-5 check of the title screen: screenshots in both languages at the three sizes, and how it
-// starts (key, click, tap, SKIP INTRO), what must NOT start it (Tab, the language buttons), the
+// starts (key, click, tap → the intro; SKIP INTRO → the camp), what must NOT start it (Tab, the language buttons), the
 // dithered transition, the camp preloading, links that skip the title and reduced motion.
 // Usage: npm run check:title -- [url]   (default http://localhost:5173/)
 import { mkdirSync } from 'node:fs';
@@ -41,6 +41,8 @@ const open = async (lang, size, hash = '', extra = {}) => {
 };
 const onTitle = (page) => page.getByRole('heading', { level: 1, name: 'YERAY CATURLA', exact: true }).isVisible();
 const inCamp = async (page) => (await page.getByRole('menu').count()) === 1;
+// Starting plays the cave intro (phase 6); SKIP INTRO goes straight to the camp.
+const inIntro = async (page) => (await page.locator('[data-scene="intro"]').count()) === 1;
 const press = (page) => page.getByRole('button', { name: 'PRESS START' });
 
 // ---------- Screenshots (with PRESS START lit) ----------
@@ -88,7 +90,7 @@ check('6 title screens rendered without console errors', shotErrors === 0, `${sh
   await page.keyboard.press('a');
   await page.waitForTimeout(1200);
   const steps = await page.evaluate(() => [...window.__steps].sort().join(','));
-  check('any other key starts', !(await onTitle(page)) && (await inCamp(page)));
+  check('any other key starts (the intro plays)', !(await onTitle(page)) && (await inIntro(page)));
   check('the transition darkens in dithered steps and clears again', steps === '0,1,2,3,4', steps);
   check('the cover is gone afterwards', (await page.locator('[data-darkness]').count()) === 0);
   check('no console errors', errors.length === 0, errors.join(' | '));
@@ -100,21 +102,21 @@ check('6 title screens rendered without console errors', shotErrors === 0, `${sh
   const { context, page } = await open('es', desktop);
   await page.mouse.click(60, 450); // the sky, away from every control
   await page.waitForTimeout(1200);
-  check('a click anywhere starts', await inCamp(page));
+  check('a click anywhere starts', await inIntro(page));
   await context.close();
 }
 {
   const { context, page } = await open('es', desktop);
   await page.getByRole('button', { name: 'SKIP INTRO' }).click();
   await page.waitForTimeout(1200);
-  check('SKIP INTRO goes to the camp', await inCamp(page));
+  check('SKIP INTRO goes straight to the camp', (await inCamp(page)) && !(await inIntro(page)));
   await context.close();
 }
 {
   const { context, page } = await open('es', SIZES[0]);
   await press(page).tap();
   await page.waitForTimeout(1200);
-  check('a tap on PRESS START starts (phone)', await inCamp(page));
+  check('a tap on PRESS START starts (phone)', await inIntro(page));
   await context.close();
 }
 
@@ -142,7 +144,7 @@ check('6 title screens rendered without console errors', shotErrors === 0, `${sh
   check('reduced motion: PRESS START does not blink', animation === 'none', animation);
   await page.keyboard.press('Enter');
   await page.waitForTimeout(250);
-  check('reduced motion: the camp appears at once', await inCamp(page));
+  check('reduced motion: the camp appears at once, without the intro', (await inCamp(page)) && !(await inIntro(page)));
   await context.close();
 }
 

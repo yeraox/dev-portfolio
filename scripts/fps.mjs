@@ -5,9 +5,36 @@
 // Usage: npm run fps -- [url]   (best against the production build: npm run build && npx vite preview)
 import { chromium } from 'playwright';
 
-// The title screen comes first; any #hash skips it and goes straight to the camp.
-const url = `${(process.argv[2] ?? 'http://localhost:4173/').replace(/#.*$/, '')}#camp`;
+// The title screen comes first; any #hash skips it and goes straight to the camp, and /#title
+// always shows it (to time the intro).
+const base = (process.argv[2] ?? 'http://localhost:4173/').replace(/#.*$/, '');
+const url = `${base}#camp`;
 const SECONDS = 5;
+
+/** Frame times (ms between screen refreshes) recorded in the page for `seconds`. */
+const recordFrames = (page, seconds) =>
+  page.evaluate(
+    (s) =>
+      new Promise((resolve) => {
+        const times = [];
+        const end = performance.now() + s * 1000;
+        const tick = (now) => {
+          times.push(now);
+          if (now < end) requestAnimationFrame(tick);
+          else resolve(times.slice(1).map((t, i) => t - times[i]));
+        };
+        requestAnimationFrame(tick);
+      }),
+    seconds,
+  );
+
+const summary = (frames) => {
+  const sorted = [...frames].sort((a, b) => a - b);
+  const average = frames.reduce((sum, ms) => sum + ms, 0) / frames.length;
+  const p95 = sorted[Math.floor(sorted.length * 0.95)];
+  const slow = frames.filter((ms) => ms > 1000 / 30 + 1).length;
+  return `${(1000 / average).toFixed(1)} fps average · 95 % of frames under ${p95.toFixed(1)} ms · ${slow} of ${frames.length} frames slower than 30 fps`;
+};
 
 const browser = await chromium.launch();
 for (const cpu of [1, 4]) {
@@ -18,30 +45,9 @@ for (const cpu of [1, 4]) {
 
   // Turn the ring every 150 ms (faster than one turn takes) while the page records frame times.
   const turning = setInterval(() => page.keyboard.press('ArrowRight').catch(() => {}), 150);
-  const frames = await page.evaluate(
-    (seconds) =>
-      new Promise((resolve) => {
-        const times = [];
-        const end = performance.now() + seconds * 1000;
-        const tick = (now) => {
-          times.push(now);
-          if (now < end) requestAnimationFrame(tick);
-          else resolve(times.slice(1).map((t, i) => t - times[i]));
-        };
-        requestAnimationFrame(tick);
-      }),
-    SECONDS,
-  );
+  const frames = await recordFrames(page, SECONDS);
   clearInterval(turning);
-
-  const sorted = [...frames].sort((a, b) => a - b);
-  const average = frames.reduce((sum, ms) => sum + ms, 0) / frames.length;
-  const p95 = sorted[Math.floor(sorted.length * 0.95)];
-  const slow = frames.filter((ms) => ms > 1000 / 30 + 1).length;
-  console.log(
-    `CPU ×${cpu}: ${(1000 / average).toFixed(1)} fps average · 95 % of frames under ${p95.toFixed(1)} ms · ` +
-      `${slow} of ${frames.length} frames slower than 30 fps`,
-  );
+  console.log(`CPU ×${cpu}, ring turning: ${summary(frames)}`);
 
   // Response time: from the key or click to the next painted frame (Event Timing API).
   await page.evaluate(() => {
@@ -62,6 +68,18 @@ for (const cpu of [1, 4]) {
   await page.waitForTimeout(400);
   const slowest = await page.evaluate(() => window.__slowest);
   console.log(`CPU ×${cpu}: slowest answer to a key or click ${slowest > 0 ? `${Math.round(slowest)} ms` : 'under 16 ms'}`);
+  await page.close();
+}
+
+// The cave intro: from the key press on the title to the ring opened (transition included).
+for (const cpu of [1, 4]) {
+  const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+  const cdp = await page.context().newCDPSession(page);
+  await page.goto(`${base}#title`, { waitUntil: 'networkidle' });
+  await cdp.send('Emulation.setCPUThrottlingRate', { rate: cpu });
+  const recording = recordFrames(page, 5.5);
+  await page.keyboard.press('a');
+  console.log(`CPU ×${cpu}, intro: ${summary(await recording)}`);
   await page.close();
 }
 await browser.close();
