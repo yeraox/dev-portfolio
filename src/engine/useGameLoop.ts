@@ -1,16 +1,22 @@
 // The game's single clock: ONE requestAnimationFrame loop shared by everything that animates
 // (the scene canvas, the ring turning…). It only runs while someone is subscribed and the tab is
-// visible, so a hidden tab spends no battery.
+// visible, so a hidden tab spends no battery. If the device can't keep 60 fps, it drops to a
+// steady 30 (frameRate.ts) and marks <html data-fps="30">.
 import { useEffect, useEffectEvent } from 'react';
+import { FIRST_FRAME_RATE, onRefresh } from './frameRate';
 
 type FrameCallback = (now: number) => void;
 
 const subscribers = new Set<FrameCallback>();
 let frameId = 0;
+let frameRate = FIRST_FRAME_RATE;
 
 function tick(now: number) {
   frameId = 0;
-  for (const callback of subscribers) callback(now);
+  const step = onRefresh(frameRate, now);
+  if (step.rate.halved && !frameRate.halved) document.documentElement.dataset.fps = '30';
+  frameRate = step.rate;
+  if (step.run) for (const callback of subscribers) callback(now);
   start();
 }
 
