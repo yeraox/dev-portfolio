@@ -14,6 +14,27 @@ const REPO = 'https://github.com/yeraox/pakitos-gambling';
 export const EN: Content = {
   page: {
     heading: 'Yeray Caturla · Junior Backend Developer',
+    title: 'Yeray Caturla — Junior Backend Developer',
+    description:
+      'Portfolio of Yeray Caturla, junior backend developer (Node.js, Express, Java, Python, Docker, AWS), shaped as a 16-bit RPG.',
+    shareImageAlt: 'Title screen of the portfolio: “YERAY CATURLA” in gold letters over a 16-bit night sky.',
+  },
+  cv: {
+    link: 'VIEW CV',
+    title: 'CV · Yeray Caturla — Junior Backend Developer',
+    description:
+      'CV of Yeray Caturla, junior backend developer in Elda (Alicante, Spain): Node.js, Express, Java, Python, Docker and AWS. Projects, experience, education and contact.',
+    download: 'Download CV (PDF, in Spanish)',
+    back: 'Back to the portfolio',
+    otherLanguage: 'Versión en español',
+    headings: {
+      contact: 'Contact',
+      profile: 'Profile',
+      experience: 'Experience',
+      education: 'Education',
+      projects: 'Projects',
+      stack: 'Tech stack',
+    },
   },
   title: {
     name: 'YERAY CATURLA',
@@ -211,6 +232,8 @@ export const EN: Content = {
       { label: 'Email', value: 'yeraoxcaturlax@gmail.com', href: 'mailto:yeraoxcaturlax@gmail.com' },
       { label: 'Location', value: 'Elda (Alicante), Spain' },
       { label: 'Availability', value: 'Available · on-site, hybrid or remote' },
+      { label: 'CV', value: 'Web version', href: '/cv/en/' },
+      { label: 'CV as PDF', value: 'Download (in Spanish)', href: '/cv/yeray-caturla-cv-es.pdf' },
     ],
     language: { legend: 'Language', es: 'Español', en: 'English' },
   },

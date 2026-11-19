@@ -49,8 +49,21 @@ export type Tier = {
   groups: { name: string; items: string[] }[];
 };
 
+/** The plain CV page (/cv/ and /cv/en/), made at build time from this same content. */
+export type CvPage = {
+  link: string; // the "view CV" link shown on every screen of the game
+  title: string; // the CV page's <title>
+  description: string; // its meta description (search results, share previews)
+  download: string; // the PDF download button
+  back: string; // link back to the game
+  otherLanguage: string; // link to the CV in the other language
+  headings: { contact: string; profile: string; experience: string; education: string; projects: string; stack: string };
+};
+
 export type Content = {
-  page: { heading: string };
+  // The game page: heading for screen readers, <title> and meta description.
+  page: { heading: string; title: string; description: string; shareImageAlt: string };
+  cv: CvPage;
   // Title screen. PRESS START and SKIP INTRO are game labels: English in both languages.
   title: { name: string; credits: string; press: string; skip: string };
   ring: { label: string };

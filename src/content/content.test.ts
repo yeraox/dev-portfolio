@@ -19,7 +19,7 @@ describe('Spanish and English', () => {
 
   it('keep the facts that must not change: links, names, dates', () => {
     const facts = (content: Content) => [
-      content.comms.rows.map((row) => row.href),
+      content.comms.rows.map((row) => row.href).filter((href) => !href?.startsWith('/cv/')),
       content.equip.projects.map((project) => [project.id, project.repo, project.stack.length, project.media.kind]),
       content.stats.education.map((item) => [item.school, item.years, item.status]),
       content.stats.quests.map((quest) => [quest.company, quest.tasks.length]),
@@ -39,9 +39,9 @@ describe.each(LOCALES)('%s', (_locale, content) => {
     for (const [path, text] of all) expect(text, path).not.toMatch(/\bTODO\b|PREGUNTA|[Ll]orem ipsum/); // the markers are uppercase: 'todo el ciclo' is fine
   });
 
-  it('links are https or mailto', () => {
+  it('links are https or mailto, or the CV pages and PDF on this site', () => {
     const hrefs = [...content.comms.rows.map((row) => row.href), ...content.equip.projects.map((project) => project.repo)];
-    for (const href of hrefs) if (href) expect(href).toMatch(/^(https:\/\/|mailto:)/);
+    for (const href of hrefs) if (href) expect(href).toMatch(/^(https:\/\/|mailto:|\/cv\/)/);
   });
 
   it('Bosa Digital (NDA) only shows its three CV sentences, with no media', () => {

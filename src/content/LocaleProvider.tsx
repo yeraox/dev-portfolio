@@ -7,9 +7,11 @@ import { LocaleContext } from './useLocale';
 export function LocaleProvider({ children }: { children: ReactNode }) {
   const [locale, setLocaleState] = useState<Locale>(() => pickLocale(readSavedLocale(), navigator.language));
 
-  // Screen readers and search engines read the page's language from <html lang>.
+  // Screen readers and search engines read the page's language from <html lang>; the tab's title
+  // follows the language too.
   useEffect(() => {
     document.documentElement.lang = locale;
+    document.title = DICTIONARIES[locale].page.title;
   }, [locale]);
 
   const setLocale = (next: Locale) => {
