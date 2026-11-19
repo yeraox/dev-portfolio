@@ -84,8 +84,9 @@ for (const [lang, expected] of [
   const links = await page.locator('dialog a').evaluateAll((as) => as.map((a) => [a.getAttribute('href'), a.getAttribute('target'), a.getAttribute('rel')]));
   const hrefs = links.map(([href]) => href);
   check(
-    'contact links point to GitHub, LinkedIn and email',
-    hrefs.join(' ') === 'https://github.com/yeraox https://www.linkedin.com/in/yeraycaturla mailto:yeraoxcaturlax@gmail.com',
+    'contact links point to GitHub, LinkedIn, email and the CV (web and PDF, phase 7)',
+    hrefs.join(' ') ===
+      'https://github.com/yeraox https://www.linkedin.com/in/yeraycaturla mailto:yeraoxcaturlax@gmail.com /cv/ /cv/yeray-caturla-cv-es.pdf',
     hrefs.join(' '),
   );
   check(

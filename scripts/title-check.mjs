@@ -71,6 +71,9 @@ check('6 title screens rendered without console errors', shotErrors === 0, `${sh
   check('Spanish browser: Spanish credits', (await page.locator('main p').first().innerText()).startsWith('DESARROLLADOR BACKEND'));
   await page.keyboard.press('Tab');
   await page.waitForTimeout(300);
+  check('the first Tab stop is the CV link (VER CV), and it does not start', (await onTitle(page)) && (await page.evaluate(() => document.activeElement?.textContent)) === 'VER CV');
+  await page.keyboard.press('Tab');
+  await page.waitForTimeout(300);
   check('Tab moves to the language buttons without starting', (await onTitle(page)) && (await page.evaluate(() => document.activeElement?.textContent))?.startsWith('ES'));
   await page.keyboard.press('Tab');
   await page.keyboard.press('Enter');
