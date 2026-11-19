@@ -48,6 +48,11 @@ intro → camp hub with a ring menu → SNES-style windows with real CV content)
   redrawn. Ambient animation may only re-tone the image's own pixels (the campfire flicker).
 - `references/` is private (git-ignored): never import it from production code. `/dev/*`
   pages exist only behind `import.meta.env.DEV`.
+- **Three pages:** the game (`index.html`) and the CV view (`cv/index.html`, `cv/en/index.html`).
+  Their `<head>` tags and the whole CV are generated at build time from `src/content` by
+  `src/site/html.ts` (Vite plugin in `vite.config.ts`); the CV view has no JavaScript.
+  `SITE_URL` (env, set at publish time) adds canonical URLs, the absolute share image and the
+  sitemap; without it the build warns and leaves them out.
 
 ## TypeScript (Yeray is learning it with this project)
 - Beginner-readable: `type`/`interface`, unions, optional fields, typed props and hooks,
@@ -76,15 +81,18 @@ camp — the camp, window and fps checks use it), and so does a returning visito
 | `npm run dev` | Dev server on http://localhost:5173 |
 | `npm run typecheck` | `tsc -b` over app, node and test configs |
 | `npm run lint` | oxlint |
-| `npm test` | Vitest (palette, contrast, textures, characters, state machine, ring maths, stage layout, content ES/EN) |
+| `npm test` | Vitest (palette, contrast, textures, characters, state machine, screens, ring maths, stage layout, intro script, content ES/EN, CV and head HTML, frame-rate fallback) |
 | `npm run build` | Typecheck + production build (check gzip sizes against the budget) |
 | `npm run characters` | Rebuild the character PNGs from `references/grandes/` on their native pixel grid, walk cycles included, and run their quality checks (needs ffmpeg) |
 | `npm run media` | Project screenshots → WebP 640/1280 and the Capyroad video → 14 s MP4 + WebM + poster in `src/assets/projects/` (fails over 2 MB) |
+| `npm run cv` | Copy Yeray's CV PDF as it is from `references/` to `public/cv/yeray-caturla-cv-es.pdf` |
+| `npm run share -- [url]` | Share image `public/og-image.png` (1200×630 capture of the title, needs `npm run dev`) + favicon and apple-touch-icon from Null's portrait as it is |
 | `npm run scenes` | Re-encode Yeray's scene backgrounds (`references/grandes/campamento.jpg`) as WebP into `src/assets/scenes/`, as they are, and report their pixel grid (needs ffmpeg) |
 | `npm run shots -- <url> <name>` | Playwright screenshots at 390/768/1440 (phone and tablet as touch devices) into `.screenshots/` + overflow and console-error check |
 | `npm run check:camp -- [url]` | Camp walkthrough: keyboard only (1440) and touch only (phone), ✓/✗ per check + screenshots |
 | `npm run check:title -- [url]` | Title screen in ES/EN at 390/768/1440 (`.screenshots/fase-5/`) + what starts it (key, click, tap, SKIP INTRO) and what doesn't (Tab, ES/EN), the dithered transition, camp preloading, reduced motion |
 | `npm run check:intro -- [url]` | Cave intro: screenshots at 390/768/1440 (`.screenshots/fase-6/`), 4–6 s long, SKIP at any moment (button, Escape, any key, click, tap), returning visitors, `/#title`, reduced motion, hidden-tab pause |
+| `npm run check:cv -- [url]` | CV view (`/cv/`, `/cv/en/`) at 390/768/1440 (`.screenshots/fase-7/`): no JS, headings, no phone, PDF, language/back links, print (A4 PDF), VER CV on title/intro/camp without covering anything, COMMS CV rows, head tags and icons |
 | `npm run check:windows -- [url]` | The 4 content windows in ES/EN at 390/768/1440 (screenshots in `.screenshots/fase-4/`) + links, language switch, EQUIP tabs, video, lazy downloads |
 | `npm run fps -- [url]` | Frames per second while the ring turns and during the intro, CPU ×1 and ×4, plus the slowest answer to a key/click (run against `npx vite preview`) |
 

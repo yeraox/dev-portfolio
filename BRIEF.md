@@ -205,7 +205,13 @@ field; `draft` slots are hidden from the ring in production builds and shown in 
 live site never shows an empty window. The ring layout must work with 4, 5 or 6 slots.
 
 **Downloadable CV:** `references/cv_es_yeray_caturla.pdf` (Spanish; includes my phone — OK in
-the PDF, never on the web). Copy it to `public/cv/` at build time; English PDF TODO.
+the PDF, never on the web). Copied as it is to `public/cv/yeray-caturla-cv-es.pdf` with
+`npm run cv` (phase 7); English PDF TODO.
+
+**CV view (built in phase 7):** `/cv/` (ES) and `/cv/en/` (EN), static HTML made at build time
+from `src/content` by `src/site/html.ts` through a Vite plugin — no JavaScript. A VER CV / VIEW
+CV link is on every game screen. Head tags, share image (`npm run share`), favicon (Null's
+portrait as it is), robots.txt; canonical URLs and sitemap need `SITE_URL` (phase 8).
 
 | Ring label | Banner title | Section in CONTENT.md | Window layout |
 |---|---|---|---|

@@ -1,0 +1,147 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-15T22:00:00.000Z",
+  "title": "Design System: Yeray Caturla — 16-bit portfolio",
+  "extensions": {
+    "colorMeta": {
+      "gold-3": { "role": "primary", "displayName": "Campfire Gold", "canonical": "#f2c84b", "tonalRamp": ["#4a2c08", "#8a5a12", "#d19a22", "#f2c84b", "#fff0a8"] },
+      "blue-1": { "role": "secondary", "displayName": "Banner Royal", "canonical": "#1f2d8a", "tonalRamp": ["#121a52", "#1f2d8a", "#2f45b8", "#5d74e0"] },
+      "blue-3": { "role": "secondary", "displayName": "Bracket Blue", "canonical": "#5d74e0" },
+      "green-1": { "role": "tertiary", "displayName": "Lime Label", "canonical": "#6fdc5a", "tonalRamp": ["#2a7a2a", "#6fdc5a"] },
+      "red-1": { "role": "tertiary", "displayName": "Ember Red", "canonical": "#d8483f", "tonalRamp": ["#8a1a1a", "#d8483f"] },
+      "fire": { "role": "tertiary", "displayName": "Campfire Orange", "canonical": "#e8742a" },
+      "ink": { "role": "neutral", "displayName": "Midnight Ink", "canonical": "#0b0b1a" },
+      "night-0": { "role": "neutral", "displayName": "Deep Night", "canonical": "#070912", "tonalRamp": ["#070912", "#0e1328", "#18203f", "#2f4a8a", "#5b7fc7"] },
+      "stone-0": { "role": "neutral", "displayName": "Granite", "canonical": "#2a2a2e", "tonalRamp": ["#2a2a2e", "#45454b", "#5f5f66", "#7c7c84", "#a3a3ab"] },
+      "text": { "role": "neutral", "displayName": "Parchment", "canonical": "#f2f0e6" },
+      "text-dim": { "role": "neutral", "displayName": "Weathered Parchment", "canonical": "#c9c5b6" },
+      "forest-1": { "role": "neutral", "displayName": "Forest", "canonical": "#1e3a24", "tonalRamp": ["#0f2418", "#1e3a24", "#355a32"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Title lettering", "purpose": "\"YERAY CATURLA\" on the title screen only: banded gold fill and zero-blur extrusion." },
+      "headline": { "displayName": "Window title", "purpose": "Window titles and PRESS START." },
+      "title": { "displayName": "Game label", "purpose": "Uppercase game labels, ring label, banner, section headings, HUD names, plates." },
+      "body": { "displayName": "Reading text", "purpose": "Everything inside windows and the CV page." },
+      "body-strong": { "displayName": "Entry title", "purpose": "Project, job and course names inside windows." },
+      "label": { "displayName": "Small text", "purpose": "Meta lines and the help line." }
+    },
+    "shadows": [
+      { "name": "window-bevel", "value": "inset var(--u) var(--u) 0 var(--stone-3), inset calc(-1 * var(--u)) calc(-1 * var(--u)) 0 var(--ink), 0 0 0 var(--u) var(--ink)", "purpose": "Raised stone windows and HUD panels." },
+      { "name": "plate-underside", "value": "inset 0 calc(-1 * var(--u)) 0 var(--stone-2)", "purpose": "Ink plates: key caps, ES/EN, SKIP INTRO, VER CV." },
+      { "name": "key-cap-edge", "value": "0 4px 0 var(--gold-1)", "purpose": "The CV page's PDF button; removed while pressed." },
+      { "name": "title-extrusion", "value": "drop-shadow(0 var(--u) 0 var(--gold-1)) drop-shadow(0 var(--u) 0 var(--gold-0)) drop-shadow(var(--u) var(--u) 0 var(--ink))", "purpose": "The gold title lettering only (a filter, not a box-shadow)." }
+    ],
+    "motion": [
+      { "name": "frame", "value": "calc(1s / 60)", "purpose": "One frame; every duration is a whole number of frames." },
+      { "name": "window-open", "value": "18 frames, steps(9)", "purpose": "Top-to-bottom clip-path wipe." },
+      { "name": "window-close", "value": "10 frames, steps(5)", "purpose": "Reverse wipe." },
+      { "name": "ring-rotate", "value": "8 frames", "purpose": "One slot, the short way round." },
+      { "name": "ring-open", "value": "12 frames, 6 steps", "purpose": "Spreads out from Yeray after the intro." },
+      { "name": "blink", "value": "48 frames, steps(1), visible 0–66 %", "purpose": "PRESS START and the 'more below' arrow." },
+      { "name": "scene-transition", "value": "16 + 16 frames, 4×4 Bayer steps", "purpose": "Title to camp." },
+      { "name": "frame-rate-fallback", "value": "30 fps after 60 frames averaging under 45 fps", "purpose": "Safety net on slow devices." }
+    ],
+    "breakpoints": [
+      { "name": "tall", "value": "viewport width < height", "purpose": "Portrait layout: middle 360×360 of the scene, banner above, HUD below." },
+      { "name": "rows", "value": "480px", "purpose": "Label/value rows side by side inside windows." },
+      { "name": "cv-rows", "value": "560px", "purpose": "Label/value rows side by side on the CV page." },
+      { "name": "equip-wide", "value": "820px (window width)", "purpose": "Pictures beside the text in EQUIP." },
+      { "name": "two-columns", "value": "1024px", "purpose": "Two-column window content." }
+    ]
+  },
+  "components": [
+    {
+      "name": "Stone Window",
+      "kind": "card",
+      "refersTo": "window",
+      "description": "The granite panel every section opens in, with bevel and engraved groove.",
+      "html": "<section class=\"ds-window\"><h2 class=\"ds-window-title\">Estadísticas — Perfil</h2><p class=\"ds-window-text\">Desarrollador backend junior, titulado en DAW.</p></section>",
+      "css": ".ds-window { --u: 4px; padding: calc(7 * var(--u)); background: var(--stone-0, #2a2a2e); color: var(--text, #f2f0e6); border-radius: 0; box-shadow: inset var(--u) var(--u) 0 var(--stone-3, #7c7c84), inset calc(-1 * var(--u)) calc(-1 * var(--u)) 0 var(--ink, #0b0b1a), 0 0 0 var(--u) var(--ink, #0b0b1a); } .ds-window-title { margin: 0 0 12px; font-family: 'Jersey 10', system-ui, sans-serif; font-weight: 400; font-size: 40px; line-height: 1; letter-spacing: 0.04em; color: var(--gold-3, #f2c84b); } .ds-window-text { margin: 0; font-family: 'Pixelify Sans', system-ui, sans-serif; font-size: 26px; line-height: 1.35; }"
+    },
+    {
+      "name": "Gold Rope Banner",
+      "kind": "custom",
+      "refersTo": "banner",
+      "description": "The camp's banner: the active section's title on a dithered blue fill inside a gold frame.",
+      "html": "<div class=\"ds-banner\"><p class=\"ds-banner-title\">Equipo — Proyectos</p></div>",
+      "css": ".ds-banner { --u: 4px; display: inline-block; padding: calc(3 * var(--u)) calc(5 * var(--u)); background: repeating-conic-gradient(var(--blue-1, #1f2d8a) 0 25%, var(--blue-2, #2f45b8) 0 50%) 0 0 / 8px 8px; border: calc(6 * var(--u)) solid var(--gold-2, #d19a22); border-radius: 0; } .ds-banner-title { margin: 0; font-family: 'Jersey 10', system-ui, sans-serif; font-size: 30px; line-height: 1.2; color: var(--text, #f2f0e6); text-shadow: var(--u) var(--u) 0 var(--ink, #0b0b1a); }"
+    },
+    {
+      "name": "Game Label Plate",
+      "kind": "button",
+      "refersTo": "game-label-plate",
+      "description": "ES/EN, SKIP INTRO and VER CV: a Jersey 10 label on an ink plate.",
+      "html": "<a class=\"ds-plate\" href=\"#\">VER CV</a> <button class=\"ds-plate ds-plate-active\" type=\"button\">ES</button>",
+      "css": ".ds-plate { --u: 4px; display: inline-block; padding: var(--u) calc(3 * var(--u)) 0; font-family: 'Jersey 10', system-ui, sans-serif; font-size: 30px; line-height: 1.1; letter-spacing: 0.08em; text-decoration: none; color: var(--text-dim, #c9c5b6); background: var(--ink, #0b0b1a); border: 0; border-radius: 0; box-shadow: inset 0 calc(-1 * var(--u)) 0 var(--stone-2, #5f5f66); cursor: pointer; } .ds-plate:hover { color: var(--gold-3, #f2c84b); } .ds-plate:focus-visible { outline: 2px solid var(--blue-3, #5d74e0); outline-offset: 2px; } .ds-plate-active, .ds-plate-active:hover { color: var(--ink, #0b0b1a); background: var(--gold-3, #f2c84b); }"
+    },
+    {
+      "name": "Key Cap",
+      "kind": "chip",
+      "refersTo": "key-cap",
+      "description": "Keyboard hints: <kbd> caps in gold on ink.",
+      "html": "<span class=\"ds-hint\"><kbd class=\"ds-key\">ENTER</kbd> OPEN</span>",
+      "css": ".ds-hint { --u: 4px; font-family: 'Jersey 10', system-ui, sans-serif; font-size: 26px; letter-spacing: 0.08em; color: var(--text, #f2f0e6); } .ds-key { display: inline-block; padding: var(--u) calc(2 * var(--u)) 0; font-family: inherit; color: var(--gold-3, #f2c84b); background: var(--ink, #0b0b1a); box-shadow: inset 0 calc(-1 * var(--u)) 0 var(--stone-2, #5f5f66); }"
+    },
+    {
+      "name": "Section Tabs",
+      "kind": "nav",
+      "refersTo": "tab-selected",
+      "description": "Tabs on top of a window's sections; the selected one on an ink plate with a pixel bullet.",
+      "html": "<div class=\"ds-tabs\" role=\"tablist\"><button class=\"ds-tab\" role=\"tab\" aria-selected=\"true\">Perfil</button><button class=\"ds-tab\" role=\"tab\" aria-selected=\"false\">Formación</button></div>",
+      "css": ".ds-tabs { --u: 4px; display: flex; gap: var(--u); border-bottom: var(--u) solid var(--ink, #0b0b1a); } .ds-tab { display: inline-flex; align-items: center; gap: calc(2 * var(--u)); padding: calc(2 * var(--u)) calc(4 * var(--u)); font-family: 'Pixelify Sans', system-ui, sans-serif; font-size: 26px; color: var(--text, #f2f0e6); background: none; border: 0; border-radius: 0; cursor: pointer; } .ds-tab:hover, .ds-tab[aria-selected='true'] { color: var(--gold-3, #f2c84b); background: var(--ink, #0b0b1a); } .ds-tab[aria-selected='true']::before { content: ''; width: calc(2 * var(--u)); height: calc(2 * var(--u)); background: var(--gold-2, #d19a22); box-shadow: var(--u) var(--u) 0 var(--gold-0, #4a2c08); } .ds-tab:focus-visible { outline: 2px solid var(--blue-3, #5d74e0); outline-offset: 2px; }"
+    },
+    {
+      "name": "Tag",
+      "kind": "chip",
+      "refersTo": "tag",
+      "description": "Small badges on projects: DESTACADO / FEATURED, CLASIFICADO / CLASSIFIED.",
+      "html": "<span class=\"ds-tag\">DESTACADO</span>",
+      "css": ".ds-tag { display: inline-block; padding: 2px 8px 0; font-family: 'Jersey 10', system-ui, sans-serif; font-size: 22px; letter-spacing: 0.06em; color: var(--gold-3, #f2c84b); background: var(--ink, #0b0b1a); border-radius: 0; }"
+    },
+    {
+      "name": "CV Download Button",
+      "kind": "button",
+      "refersTo": "cv-download",
+      "description": "The CV page's PDF button: a gold key cap with a hard edge underneath.",
+      "html": "<a class=\"ds-download\" href=\"#\" download>Descargar CV (PDF)</a>",
+      "css": ".ds-download { display: inline-block; padding: 6px 16px 4px; font-family: 'Jersey 10', system-ui, sans-serif; font-size: 26px; line-height: 1.1; letter-spacing: 0.06em; text-decoration: none; color: var(--ink, #0b0b1a); background: var(--gold-3, #f2c84b); border-radius: 0; box-shadow: 0 4px 0 var(--gold-1, #8a5a12); } .ds-download:hover { background: var(--gold-4, #fff0a8); } .ds-download:active { transform: translateY(4px); box-shadow: none; } .ds-download:focus-visible { outline: 2px solid var(--blue-3, #5d74e0); outline-offset: 2px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Campfire",
+    "overview": "A quiet night in an original 16-bit action-RPG: a night-blue title with embossed gold lettering, a cave mouth opening onto a small camp, and stone-and-gold windows that hold Yeray's real CV. Warm light appears only where it matters, like a campfire in the dark: the gold of the name, the key caps, the selected tab, the PDF button. Everything else is night, stone and crisp pixels. The interface is part of the world, not a website laid over a game, and the world invites you to sit for a while, but never makes you play: the plain CV is always one click away.\n\nDensity is low and deliberate: one scene, one ring of six icons, one window at a time. Content inside the world is plain, factual and fast to scan; the game frames it and never distorts it (no invented levels, stats or percentages). Motion is stepped in whole frames, never eased; depth is bevels and hard pixel edges, never blur. Never a copy of any existing game's assets.",
+    "keyCharacteristics": [
+      "Fixed 640×360 scene scaled by whole screen pixels; a UI pixel (`--u`) that grows with it.",
+      "Night palette of 31 colours; gold is the only warm accent in the interface.",
+      "Two self-hosted pixel faces: Jersey 10 for game labels, Pixelify Sans for reading.",
+      "Stone windows with engraved bevels, a gold-rope banner, blue selection brackets.",
+      "Stepped motion in frames; dithered fades; reduced motion honoured everywhere.",
+      "Characters and backgrounds are Yeray's own images, shown as they are."
+    ],
+    "rules": [
+      { "name": "The One Warm Light Rule", "body": "Gold is the only warm colour in the interface. If something new needs emphasis, it gets gold or nothing; never a new hue.", "section": "colors" },
+      { "name": "The Listed Pairs Rule", "body": "Every text/background combination in use is listed in `CONTRAST_PAIRS` (`src/styles/contrast.ts`) and tested: 4.5:1 for text, 3:1 for brackets, bars and focus rings. Lowest text pair: `text-dim` on `stone-1`. Printed CV: `ink` and `stone-1` on paper.", "section": "colors" },
+      { "name": "The Dither Rule", "body": "No smooth gradients. Transitions between colours are 2-colour checker dithers (sky, banner), 4×4 Bayer steps (scene fades) or hard bands (title lettering).", "section": "colors" },
+      { "name": "The Two Voices Rule", "body": "Jersey 10 speaks for the game (labels, titles, buttons); Pixelify Sans speaks for Yeray (facts to read). Never set a paragraph in Jersey 10 or a game label in Pixelify.", "section": "typography" },
+      { "name": "The English Labels Rule", "body": "Game labels stay English in both languages (EQUIP, ALCHEMY, STATS, BUFFS, CRAFT, COMMS, PRESS START, SKIP INTRO); titles, help and content are translated.", "section": "typography" },
+      { "name": "The Zero-Blur Rule", "body": "Every shadow has a blur of 0 and a whole-pixel offset. A soft shadow is a different era.", "section": "elevation" },
+      { "name": "The Square Pixel Rule", "body": "If it isn't a whole number of pixels, square, it doesn't belong.", "section": "shapes" }
+    ],
+    "dos": [
+      "Do measure every frame, gap and padding in `--u` (2–8 CSS px) and every scene position in whole scene pixels.",
+      "Do take colours only from `palette.ts` / `tokens.css` and list every new text/background pair in `CONTRAST_PAIRS`.",
+      "Do keep gold as the single warm accent (The One Warm Light Rule).",
+      "Do animate in whole frames with `steps()` or the game loop, and give reduced motion an instant equivalent that keeps the same state change.",
+      "Do keep the CV reachable from every screen in one click (VER CV) and the facts plain.",
+      "Do show Yeray's characters and backgrounds exactly as he made them."
+    ],
+    "donts": [
+      "Don't use border-radius, blurred shadows, transparency for shading or smooth gradients.",
+      "Don't put text on `stone-2`, `stone-3` or `stone-4`.",
+      "Don't use emoji or unicode glyphs as icons.",
+      "Don't write raw hex outside the palette files.",
+      "Don't invent stats, levels or percentages, or show the phone number on the web.",
+      "Don't copy any existing game's logo, lettering, sprites, fonts, music, names or outfits."
+    ]
+  }
+}

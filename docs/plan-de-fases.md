@@ -49,7 +49,8 @@ el TypeScript usado y la lista de archivos para tu commit.
    y 4).
 3. **Al final lo espectacular**: el título y la intro (fases 5 y 6). Son lo más vistoso, pero si
    faltaran, la web seguiría siendo útil.
-4. **Cierre**: accesibilidad, vista CV y publicación (fases 7 y 8).
+4. **Cierre**: accesibilidad y vista CV (fase 7), mejoras tras tu revisión (fase 8), repaso y
+   limpieza del código (fase 9) y publicación (fase 10).
 
 Si el proyecto se parase a mitad, lo que ya existiera seguiría sirviendo.
 
@@ -65,7 +66,9 @@ Si el proyecto se parase a mitad, lo que ya existiera seguiría sirviendo.
 | 5 | Pantalla de título | YERAY CATURLA en dorado, PRESS START y transición |
 | 6 | Intro: salida de la cueva | Tú y Null salís de la cueva y llegáis al campamento |
 | 7 | Vista CV, calidad y accesibilidad | Página CV en texto, auditorías y pruebas finales |
-| 8 | Publicación | La web en internet con despliegue automático |
+| 8 | Mejoras del portfolio | CV en inglés, rueda con nombres reales, iconos nuevos, CV e idioma; retratos y favicon nuevos, piel más clara, Null caminando bien; iconos del stack, animaciones en reposo; fuera BUFFS, CRAFT y la vista CV web |
+| 9 | Revisión, refactor y limpieza | El mismo resultado con menos código, menos archivos y nada de ruido |
+| 10 | Publicación | La web en internet con despliegue automático |
 
 ---
 
@@ -169,7 +172,8 @@ Si una métrica se sale del objetivo, se arregla antes de pasar a la siguiente f
 - **Si un dispositivo no llega a 60 fps,** las animaciones bajan solas a 30 fps. A esa
   velocidad sigue pareciendo un juego de 16 bits.
 - **Con "reducir movimiento" activado en el sistema,** no hay intro ni animaciones grandes.
-- **La vista `/cv/`** es una página de texto ultraligera que funciona en cualquier caso.
+- **La vista `/cv/`** es una página de texto ultraligera que funciona en cualquier caso. (Se
+  quita en la fase 8, a petición tuya. Sin JavaScript queda un aviso con los enlaces a los PDF.)
 
 ---
 
@@ -671,47 +675,605 @@ llegar (por ejemplo, ponerse a pedir) y si quien vuelve debe ver el título.
 **Objetivo:** que la web funcione para todo el mundo, también para quien tiene prisa.
 
 **Qué se construye**
-- **La página CV** (`/cv/`):
-  - Tu CV en texto limpio, en ES y EN, sacado de los mismos archivos de contenido. Así nunca
-    puede quedar desactualizada respecto al juego.
-  - Se puede imprimir bien.
-  - Botón para descargar el PDF.
-  - Es una página aparte y ligera, que carga al instante y que Google indexa bien.
-- **Un enlace "Ver CV"** siempre visible desde cualquier pantalla del juego.
-- **Lo que se ve al compartir el enlace:**
-  - El título y la descripción de la página.
-  - La imagen de vista previa para LinkedIn y WhatsApp (una captura de la pantalla de título).
-  - Un icono de pestaña en pixel art (la cara de Null).
-- **Los archivos para buscadores:** `robots.txt` y `sitemap`.
+- **La página CV** (`/cv/` en español y `/cv/en/` en inglés):
+  - Tu CV en texto limpio, generado al compilar con los mismos archivos de contenido que el
+    juego. Así nunca puede quedar desactualizado respecto a él.
+  - Es **HTML sin nada de JavaScript**: pesa 39 KB, aparece en 1,2 s y Google la lee tal cual.
+  - Contacto, perfil, experiencia, formación, proyectos y stack.
+  - Botón para descargar el PDF, enlace al otro idioma y enlace para volver al juego.
+  - **Se imprime bien**: tinta sobre papel, sin botones, en 3 hojas A4.
+  - El PDF es el tuyo tal cual (`npm run cv` lo copia). Solo existe en español, y la versión
+    inglesa lo dice en el botón.
+- **"VER CV" / "VIEW CV" siempre visible** en el título, la intro y el campamento:
+  - Arriba a la izquierda, y es la primera parada al tabular.
+  - En el móvil y la tablet en vertical, el campamento lo pone entre los dos retratos, donde no
+    lo tapa el banner y llega el pulgar.
+  - Además, **COMMS tiene dos filas nuevas**: el CV en versión web y el PDF para descargar.
+- **Lo que se ve al compartir el enlace**, generado desde el contenido:
+  - El título y la descripción de cada página, en su idioma.
+  - La imagen de vista previa: una captura de la pantalla de título, 1200×630, hecha con
+    `npm run share`.
+  - El icono de la pestaña: la cara de Null tal cual, sin redibujar.
+- **Los archivos para buscadores:**
+  - `robots.txt` siempre.
+  - El `sitemap.xml`, la dirección canónica y la URL completa de la imagen al compartir llegan
+    cuando se fije **`SITE_URL`**, la dirección final, en la fase 10 (Cloudflare Pages + tu
+    dominio .dev).
+- **La red de seguridad de los 30 fps:** si un dispositivo no aguanta 60 fps, el juego pasa a
+  30 constantes en lugar de dar tirones.
 
 **Cómo se hace**
-- La skill **impeccable** pasa una auditoría técnica (`audit`) y un repaso final de detalles
-  (`polish`).
-- **Lighthouse**, la herramienta de Google que puntúa una web, con objetivo de 95 o más en
-  accesibilidad y rendimiento.
-- Recorrido completo solo con teclado, solo con táctil y con lector de pantalla.
+- **La skill impeccable:**
+  - una auditoría técnica (`audit`): 17/20;
+  - un repaso de detalles (`polish`): zonas táctiles de 44 px en el móvil, puntos de referencia
+    para lectores de pantalla y sin palabras sueltas al final de los párrafos;
+  - DESIGN.md reorganizado desde lo construido (`document`), con la idea central "La hoguera del
+    campamento".
+- **Lighthouse** en el título, el campamento, EQUIP y las dos vistas CV: entre 98 y 100 en todo.
+- **Recorridos completos:** solo con teclado, solo con táctil y revisando el árbol que leen los
+  lectores de pantalla.
 
 **Qué verás al terminar:**
 - La web completa.
-- El informe de Lighthouse.
-- La lista final de los TODOs que queden: BUFFS, CRAFT y el CV en inglés.
+- Los informes de Lighthouse, en `.screenshots/fase-7/lighthouse/`.
+- La lista final de TODOs: BUFFS, CRAFT, el PDF en inglés y `SITE_URL`.
 
 **Cómo compruebo que funciona**
 - Ningún error en la consola.
 - Sin desplazamiento horizontal a ningún tamaño.
-- Contraste AA en todos los textos.
-- Todas las pruebas automáticas en verde.
+- Contraste AA en todos los textos, también en la vista CV y al imprimir.
+- Todas las pruebas y comprobaciones en verde, con una nueva: **`npm run check:cv`**.
 
-**TypeScript que aprenderás:** nada nuevo. Es una fase de repaso: te señalo dónde se usa cada
-concepto aprendido.
+**TypeScript que aprenderás:** nada nuevo. Es una fase de repaso: el informe señala dónde se usa
+cada concepto aprendido.
 
-**Decisiones que puedes cambiar:** el diseño de la vista CV (sobria o con algún detalle retro).
+**Decisiones que puedes cambiar:**
+- El diseño de la vista CV: ahora es sobria con detalles retro (el nombre dorado, los títulos con
+  la letra del juego y las viñetas cuadradas).
+- Dónde va "VER CV".
+- Los textos de compartir.
 
 **💬 Tus comentarios:**
 
 ---
 
-## Fase 8 — Publicación
+## Fase 8 — Mejoras del portfolio
+
+> Fase añadida el 17/11/2026, tras revisar la fase 7. Lista de cambios que pediste.
+
+**Objetivo:** pulir lo que ya funciona con tus cambios: la rueda más clara, tus retratos nuevos y
+los personajes como tú quieres, antes de repasar el código y publicar.
+
+**Cambios en las secciones (17/11/2026):**
+- **BUFFS y CRAFT desaparecen** del todo: de la rueda y del código (bloque H).
+- **Llega una sección nueva, "Sobre mí".** Su icono ya está, pero cómo se organiza queda
+  pendiente y no es prioritario. No entra en esta fase.
+
+### Lo que necesito de ti
+
+| Qué | Dónde dejarlo | Para qué bloque | Estado |
+|---|---|---|---|
+| Las referencias de los iconos | `references/icons/` | C | ✅ Ya están (las 8) |
+| Las referencias nuevas de Null caminando de frente | `references/grandes/null_front_walk_animation.jpg` | G | ✅ Ya está (8 fotogramas, 19/11) |
+| De lado: solo si el diagnóstico dice que también falla | `references/grandes/` | G | Según diagnóstico |
+| Las 6 acciones en reposo elegidas, una hoja de fotogramas por acción | `references/grandes/reposo/` | K | Pendiente |
+
+Ya están en `references/`:
+- el CV en inglés (`cv_en_yeray_caturla.pdf`);
+- los retratos nuevos (`portraits/portrait_yeray.jpg` y `portraits/portrait_null.jpg`);
+- los 8 iconos (`icons/`).
+
+### Orden de trabajo
+
+Todo menos K se puede hacer ya. K empieza en cuanto me pases las hojas de fotogramas. Si llegan
+tarde, te enseño la fase en dos rondas.
+
+### A. El CV en inglés
+
+**Qué se construye**
+- `npm run cv` copia también `references/cv_en_yeray_caturla.pdf`, tal cual, a
+  `public/cv/yeray-caturla-cv-en.pdf`.
+- **Cada idioma descarga su PDF:**
+  - la fila "CV en PDF" de COMMS;
+  - el icono del CV en la rueda (bloque C).
+- Desaparece el aviso de que el PDF solo existe en español.
+
+**A tener en cuenta:** pesa 3,1 MB, como el español, por la foto.
+
+### B. La rueda: el intercambio y los nombres reales
+
+**1. El intercambio**
+- **EQUIP** (el equipamiento) pasa a ser tu **stack técnico**.
+- **ALCHEMY** (la alquimia) pasa a ser tus **proyectos**.
+- El contenido de las ventanas no cambia; solo cambia qué sección es cuál.
+- Los títulos de las ventanas quedan así: "Equipo — Stack técnico" y "Alquimia — Proyectos".
+
+**2. Los nombres reales**
+- Los seis elementos de la rueda (las cuatro secciones, más el CV y el idioma del bloque C)
+  llevan su nombre real:
+
+  | | Español | Inglés |
+  |---|---|---|
+  | Proyectos | PROYECTOS | PROJECTS |
+  | Stack | STACK | STACK |
+  | Perfil | PERFIL | PROFILE |
+  | Contacto | CONTACTO | CONTACT |
+  | CV | CV | CV |
+  | Idioma | IDIOMA | LANGUAGE |
+
+- Como ahora dependen del idioma, esos nombres pasan a los archivos de contenido (`es.ts` y
+  `en.ts`).
+- El nombre de juego (EQUIP, ALCHEMY, STATS, COMMS) sigue en el título de la ventana.
+- **Orden propuesto:** Proyectos, Stack, Perfil, Contacto, CV, Idioma. Proyectos va primero
+  porque es lo que más mira un reclutador, y las dos acciones van juntas al final.
+
+**3. Siempre visibles**
+- Hoy solo se ve el nombre del icono activo, encima de la rueda.
+- Ahora **cada icono lleva su nombre debajo todo el rato**, también mientras gira.
+- El activo sigue destacado con los corchetes azules y su nombre más brillante. Los demás, en un
+  tono más apagado, pero con contraste AA (un par nuevo en `CONTRAST_PAIRS`).
+- **El riesgo es el móvil.** A 390 px, seis nombres alrededor de ti podrían tocarse o tapar la
+  hoguera. Además, en la fase 3 vimos que con seis huecos el icono de arriba a la izquierda tapa
+  la paellera del fondo. Ajusto el tamaño de los iconos y la letra, y la forma de la rueda, hasta
+  que no pase. Las capturas a los tres tamaños lo demuestran.
+
+**4. El código**
+- Los identificadores internos pasan a decir lo que son: `projects`, `stack`, `profile` y
+  `contact`, en lugar de `equip`, `alchemy`, `stats` y `comms`.
+- Los enlaces directos cambian igual: `/#projects`, `/#stack`… La web aún no está publicada,
+  así que nadie tiene guardados los antiguos.
+- Actualizo con ello `CONTENT.md`, `BRIEF.md`, `DESIGN.md`, `CLAUDE.md` y los scripts de
+  comprobación.
+
+### C. Iconos nuevos, todos dentro de la rueda
+
+**Tus referencias** (`references/icons/`, 1024×1024 cada una, pixel art):
+
+| Archivo | Elemento de la rueda |
+|---|---|
+| `alchemy_icon.jpg` (el frasco azul) | Proyectos |
+| `equip_icon.jpg` (el chaleco) | Stack |
+| `stats_icon.jpg` (la silueta) | Perfil |
+| `contact_icon.jpg` (el teléfono) | Contacto |
+| `cv_icon.jpg` (el pergamino) | CV |
+| `spain_icon.jpg` y `uk_icon.jpg` | Idioma |
+| `aboutme_icon.jpg` (el libro) | Sobre mí, cuando llegue. Lo dejo preparado |
+
+**Cómo los uso**
+- Como son pixel art, los trato igual que a tus personajes. Un script nuevo, `npm run icons`, los
+  pasa a su rejilla nativa, les quita el fondo y los guarda tal cual, sin redibujar.
+- Sustituyen a los iconos de 16×16 que dibujé yo en `icons.ts`, que desaparecen.
+- **A tener en cuenta:**
+  - cada imagen puede estar dibujada a una rejilla distinta. Las mido y las muestro a un mismo
+    tamaño en la rueda, escalando siempre por números enteros si se puede;
+  - el chaleco trae un cuadro de fondo propio que hay que quitar con cuidado;
+  - los iconos conservan sus colores, como los personajes. `CLAUDE.md` lo dirá.
+
+**CV**
+- Al elegirlo, se abre una **ventana de confirmación** con el estilo del juego: "¿Descargar el
+  CV en PDF?", con **SÍ** y **NO** (en inglés, "Download the CV as a PDF?", **YES** y **NO**).
+- La ventana dice también el idioma y el peso del archivo (PDF · 3,1 MB). Así nadie se lleva
+  una sorpresa con los datos del móvil.
+- **SÍ** descarga el PDF del idioma en el que estés (bloque A) y cierra la ventana. **NO**,
+  Escape o tocar fuera la cierran sin descargar.
+- **Cómo se maneja:**
+  - con teclado: ←/→ para elegir, Enter para confirmar. Empieza marcado SÍ;
+  - con ratón o dedo: un clic o un toque en el botón.
+- Al cerrarse, la rueda recupera el foco en el icono del CV, como al cerrar cualquier ventana.
+- Usa la misma ventana que el resto de secciones (`Window`), así que no hay estilos nuevos.
+- **Es un único componente** (`CvDownloadDialog`), que usan la rueda y el pergamino del título
+  (bloque I). Los dos se comportan exactamente igual.
+
+**Idioma**
+- Muestra la bandera del idioma actual: España en español y Reino Unido en inglés.
+- Al elegirlo, cambia al otro idioma al momento. Tampoco abre ventana.
+- Su nombre para lectores de pantalla dice el idioma con palabras ("Cambiar a English"). Así no
+  depende solo de la bandera, que no todo el mundo asocia a un idioma.
+
+**Por qué en la rueda:** todo se hace desde el mismo menú del juego, sin botones sueltos que
+rompan la experiencia. Se manejan como el resto: flechas y Enter, ratón o dedo.
+
+### D. Retratos nuevos
+
+**Qué se construye**
+- `portrait_yeray.jpg` y `portrait_null.jpg` sustituyen a los retratos actuales del HUD.
+- Pasan por `npm run characters`: rejilla nativa y tal cual, sin redibujar.
+
+**A tener en cuenta**
+- Los nuevos son cuadrados y traen su propio marco dorado y fondo azul oscuro.
+- El HUD ya pone un marco de piedra alrededor.
+- Propongo usarlos **tal cual, con su marco dorado**, y quitar el marco de piedra del retrato
+  para no tener dos marcos. El HUD cambia su medida a la de los retratos nuevos.
+- Tu retrato lleva también el tono de piel nuevo (bloque F).
+
+### E. Favicon con tu cara
+
+- `npm run share` hace el icono de la pestaña (`favicon.png`) y el de iPhone
+  (`apple-touch-icon.png`) con **tu cara**, sacada del retrato nuevo.
+- Hasta ahora era la de Null.
+- A 32 px solo cabe la cabeza, así que recorto del pelo a la barbilla y la amplío por un número
+  entero, sin suavizar.
+- Lleva el mismo tono de piel que elijas en el bloque F.
+- La imagen para compartir (`og-image.png`) no cambia.
+
+### F. Tu tono de piel, más claro
+
+**Qué cambia**
+- **Solo el color de los píxeles de piel**: cara, cuello, brazos y manos.
+- Afecta a todos tus dibujos: quieto, caminar de frente y de lado, y el retrato.
+- La forma, los fotogramas y la animación quedan exactamente igual.
+
+**Cómo se hace**
+- Lo hace el propio generador (`npm run characters`), nunca a mano sobre los PNG. Así se puede
+  repetir siempre igual.
+- Después de pasar tu referencia a su rejilla nativa, aplica una **tabla de colores**: "tono de
+  piel actual → tono nuevo".
+- Los tonos de piel son pocos: luz, medio, sombra y contorno. Cada uno se cambia por uno nuevo
+  del mismo orden de claro a oscuro, así las sombras siguen donde estaban.
+- **El sello del caminar no se toca.** La cabeza estampada en cada fotograma recibe el mismo
+  cambio, así que sigue siendo idéntica en todos.
+- **Cuidado con los marrones parecidos.** La barba, las cejas, el pelo, el chaleco y la mochila
+  tienen tonos cercanos a la piel. La tabla solo se aplica dentro de las zonas de piel y una
+  comprobación lo vigila.
+
+**Cómo eliges el tono:** te enseño tres tonos en `/dev/personajes`, junto a la referencia, a la
+misma escala que en la web. Eliges uno.
+
+**Comprobaciones automáticas**
+- Mismas medidas y mismos píxeles opacos que antes.
+- Los únicos píxeles que cambian son los de la tabla de piel.
+- Las comprobaciones de calidad del caminar siguen pasando.
+
+**Regla del proyecto:** hasta ahora era "nunca repintar". Pasa a tener una excepción escrita en
+`CLAUDE.md`: el color de piel, con una tabla fija y desde el generador.
+
+### G. El caminar de Null
+
+**Cómo está hoy**
+- **De lado:** 6 dibujos de `null_caminando.jpg`, a 110 ms cada uno.
+- **De frente:** 3 dibujos de `null_frente.jpg`, en ida y vuelta (0-1-2-1), a 160 ms cada uno.
+
+**Primero, el diagnóstico.** Antes de cambiar nada, escribo qué falla exactamente en
+`docs/animacion-caminar.md` (una sección nueva para Null). Puede ser:
+- el orden de los fotogramas;
+- dibujos de distinto tamaño, que hacen que el perro dé saltitos;
+- patas que patinan porque su velocidad de avance no cuadra con el paso;
+- el ritmo.
+
+Te lo enseño en `/dev/personajes`, con la tira de fotogramas.
+
+**Después, con tus referencias nuevas** (`null_front_walk_animation.jpg`: 8 fotogramas de
+frente, en dos filas de 4)
+- Uso el mismo método que con tu caminar: hojas de fotogramas en su rejilla nativa, el sello si
+  sirve para un perro, y sus comprobaciones de calidad.
+- Ajusto su velocidad en la intro y el campamento para que las patas no patinen.
+- Miraré también `null_camina_frente.jpg` y `null_camina_lado.jpg`, que ya están en
+  `references/grandes/` y no se usan.
+
+### H. Fuera BUFFS y CRAFT
+
+- Se borra todo lo suyo: las secciones, sus textos en `es.ts`, `en.ts` y `CONTENT.md`, sus
+  iconos y sus menciones en `BRIEF.md`, `DESIGN.md` y las pruebas.
+- Sus objetos siguen en el fondo del campamento, porque son parte de tu imagen.
+- El mecanismo de "borrador" (secciones que solo se ven mientras desarrollamos) se queda: lo
+  usará "Sobre mí" hasta que tenga contenido.
+
+### I. Fuera la vista CV web
+
+**Qué se quita**
+- Las páginas `/cv/` y `/cv/en/`, con su estilo (`src/cv/cv.css`) y sus archivos de entrada
+  (`cv/index.html` y `cv/en/index.html`).
+- La parte de `src/site/html.ts` que genera el CV. **Se queda** la que genera las etiquetas
+  `<head>` de la página del juego: título, descripción e imagen al compartir.
+- El enlace **"VER CV" / "VIEW CV"** de la intro y del campamento (`CvLink`). En el título se
+  cambia por el pergamino del CV (abajo).
+- La fila **"CV — Versión web"** de COMMS. Se queda la del PDF.
+- La comprobación `npm run check:cv`. Lo que sigue teniendo sentido (los PDF, las etiquetas
+  `<head>` y los iconos) pasa a otra comprobación.
+- Las menciones en `BRIEF.md`, `PRODUCT.md`, `DESIGN.md`, `CLAUDE.md` y en este plan.
+
+**Lo que cambia para el visitante**
+- **El CV en la pantalla de título (tu decisión, 17/11/2026).** Donde estaba "VER CV", arriba a
+  la izquierda, va el **pergamino del CV** con su nombre ("CV"):
+  - al pulsarlo se abre **la misma ventana de confirmación que en la rueda** (bloque C);
+  - **no empieza el juego.** Hoy cualquier tecla, clic o toque en el título empieza. El
+    pergamino y todo lo que pase dentro de la ventana quedan fuera de eso, como ya pasa con
+    Tab y con ES/EN;
+  - con teclado, es la primera parada al tabular, como lo era "VER CV";
+  - zona táctil de 44 px;
+  - al cerrar la ventana, el título sigue como estaba, esperando a que empieces.
+- **Dónde está el CV en cada pantalla:**
+  - **Título:** el pergamino, arriba a la izquierda.
+  - **Intro:** sin acceso. Dura 4–6 s y SKIP INTRO lleva al campamento.
+  - **Campamento:** el CV de la rueda.
+  - **Quien vuelve** entra directo al campamento, con la rueda.
+
+  Así el CV está a un paso nada más llegar, como pide la idea de "el juego invita, nunca
+  bloquea".
+- **Sin JavaScript** ya no habría nada que leer. Propongo un `<noscript>` mínimo en la página del
+  juego, con los dos enlaces a los PDF. No se ve nunca salvo en ese caso.
+- **Google** sigue leyendo el título y la descripción de la página. Los textos de las ventanas
+  los lee peor que una página de texto, porque los pinta JavaScript. Para un portfolio que se
+  comparte por enlace importa poco.
+- La red de seguridad para móviles lentos (30 fps y "reducir movimiento") sigue igual.
+
+### J. Iconos del stack técnico
+
+> Añadido el 17/11/2026.
+
+**Para qué:** que cada tecnología de la ventana Stack se reconozca de un vistazo, con su icono al
+lado del nombre.
+
+**Qué se construye**
+- **Un icono por tecnología**, a la izquierda de su nombre. Son 22, las mismas en español y en
+  inglés:
+  - **Dominio:** JavaScript, Java, Python, SQL, Node.js, Express, APIs REST, React, PostgreSQL,
+    Docker, AWS, Linux, WSL, Git y GitHub.
+  - **He trabajado con:** PHP, Django, HTML, CSS, Oracle Database, MongoDB y Terraform.
+- **Todos al mismo tamaño**, a la altura de una línea de texto, y escalados por números enteros,
+  como el resto del pixel art.
+- **SQL y APIs REST** no tienen un logo propio conocido: necesitan un icono genérico (por
+  ejemplo, una tabla y dos flechas).
+
+**De dónde salen los iconos: opción B (tu decisión, 19/11/2026)**
+- Los logos oficiales en SVG de **Simple Icons**, un catálogo de logos de tecnologías con licencia
+  libre (CC0).
+- Un script nuevo, `npm run stack-icons`, los pasa a píxeles:
+  - a un tamaño fijo, de 16×16 o el que mejor se lea a la altura del texto;
+  - sin suavizado: cada píxel está pintado o vacío, como el resto del pixel art;
+  - en un solo color de la paleta, para que encajen con las ventanas.
+- El script se ejecuta una vez y guarda el resultado en el proyecto. La web no depende de Simple
+  Icons.
+- **Si alguna marca no está en Simple Icons** (algunas empresas han pedido retirar su logo), uso
+  un icono genérico. Lo compruebo al empezar y te digo cuáles son.
+- **Si algún logo no se reconoce a 16 px** (los que llevan letras pequeñas), pruebo un tamaño
+  mayor para todos o un icono genérico para ese.
+- **Iconos genéricos** (SQL, APIs REST y los que falten): los dibujo yo en píxeles, como los
+  iconos de la rueda que había hasta ahora. No son personajes, así que la regla de "tal cual" no
+  se aplica.
+
+Usar el logo de una tecnología para decir que la usas es lo habitual en un portfolio. Lo que hay
+que evitar es que parezca que la marca te patrocina.
+
+**Cómo se hace**
+- **Los iconos van juntos en una sola imagen** (un "atlas"), en vez de 22 archivos sueltos. Se
+  descarga una vez, junto con la ventana, y cada icono es un recorte de ella.
+- **Los textos no cambian.** Las tecnologías siguen en `es.ts` y `en.ts`. Cada una lleva un
+  identificador (`'react'`, `'docker'`…) que dice qué icono le toca.
+- **Para los lectores de pantalla los iconos son decorativos.** El nombre ya está en texto, así
+  que no se lee dos veces.
+
+### K. Animaciones en reposo: que no estéis quietos
+
+> Añadido el 19/11/2026.
+
+**Para qué:** en el campamento, hoy estás siempre de pie con los brazos abajo y Null sentado, los
+dos con una respiración de 1 píxel. La idea es que, de vez en cuando, cada uno haga algo, como en
+los juegos de la época cuando dejas el mando.
+
+**Cómo funcionaría**
+- **Tras unos segundos sin tocar nada** (propongo 6–10 s, al azar), uno de los dos hace una
+  acción de una lista, la termina y vuelve a su pose de siempre.
+- **Nunca repite la misma acción dos veces seguidas** y nunca actúan los dos a la vez, salvo en
+  las acciones pensadas para los dos.
+- **Se interrumpe al momento** si el visitante toca algo: girar la rueda o abrir una ventana
+  devuelve al personaje a su pose base en el siguiente fotograma.
+- **Con "reducir movimiento"** no hay acciones, solo la respiración de siempre.
+- **No pesan en la carga inicial.** Las animaciones se descargan después de que el campamento
+  esté listo. Si aún no han llegado, simplemente no se usan.
+- **Cuidado con la rueda.** Los iconos y sus nombres están alrededor de ti. Las acciones que
+  sacan los brazos de tu silueta (estirarse, saludar) tienen que caber sin tapar ningún icono.
+  Lo compruebo en las capturas.
+
+**Ideas para ti (Yeray)**
+
+| Acción | Qué hace | Por qué encaja | Fotogramas aprox. |
+|---|---|---|---|
+| Ajustarse las gafas | Sube una mano y se recoloca las gafas | Pequeña, no sale de tu silueta | 3–4 |
+| Café | Saca una taza, bebe un sorbo y la baja | El tópico del desarrollador, se entiende al momento | 5–6 |
+| Mirar el portátil | Abre un portátil pequeño, teclea un poco y lo cierra | Dice "backend" sin palabras | 6–8 |
+| Pensar | Mano en la barbilla, mira a un lado | Muy barata y expresiva | 3–4 |
+| Estirarse | Brazos arriba, se estira y vuelve | La más visible. Ojo con los iconos de arriba de la rueda | 4–6 |
+| Bostezar | Boca abierta y mano delante | Le da vida tras un rato largo sin tocar nada | 3–4 |
+| Saludar | Levanta la mano y saluda | Al llegar al campamento o al cerrar una ventana | 3–4 |
+| Calentarse las manos | Se gira hacia la hoguera y extiende las manos | Usa el fondo del campamento | 4 (de lado) |
+
+**Ideas para Null**
+
+| Acción | Qué hace | Por qué encaja | Fotogramas aprox. |
+|---|---|---|---|
+| Ladear la cabeza | Inclina la cabeza a un lado, como cuando oye algo | La más tierna y la más barata | 2–3 |
+| Mover la cola | Sentado, mueve la cola | Se puede repetir a menudo sin cansar | 2–3 en bucle |
+| Rascarse la oreja | Con la pata trasera | Clásica de perro, muy reconocible | 4–6 |
+| Bostezar | Abre mucho la boca y se relame | Pareja del bostezo tuyo | 3–4 |
+| Tumbarse y dormir | Se tumba, cierra los ojos y salen "Z" | Para cuando el visitante lleva mucho rato sin tocar nada | 4 + 2 en bucle |
+| Olfatear | Baja el hocico al suelo y lo mueve | Fácil de leer incluso a tamaño pequeño | 3–4 |
+| Sacudirse | Se sacude entero | Muy dinámica | 4–6 |
+| Estirarse | Patas delanteras estiradas y el trasero arriba | Muy de perro | 3–4 |
+
+**Ideas para los dos**
+- **Acariciar a Null:** te agachas, le acaricias y él mueve la cola.
+- **Lanzarle algo:** lanzas un palo fuera de la escena, Null sale corriendo y vuelve con él.
+
+Son las más bonitas, pero también las más difíciles: os tenéis que mover en coordinación, y
+Null sale de su sitio. Propongo dejarlas para más adelante.
+
+**Elegidas (19/11/2026), las que propuse:**
+- **Tú:** ajustarte las gafas, el café y pensar.
+- **Null:** ladear la cabeza, mover la cola y rascarse la oreja.
+
+Son las que mejor se leen, las que menos se salen de la silueta y las más baratas de generar.
+Luego se pueden añadir más sin tocar el código: cada acción es una línea de datos.
+
+**Lo que necesito de ti por cada acción**
+- **Una hoja de fotogramas en fila**, como `front_walk_animation.png`:
+  - fondo liso;
+  - el mismo estilo, tamaño y ropa que tu pose quieta de frente (o la de Null sentado);
+  - de frente, salvo "calentarse las manos".
+- **El primer y el último fotograma, iguales a la pose base**: tu pose quieta de ahora, o Null
+  sentado. Así la acción empieza y termina sin salto.
+- **Si la cabeza no se mueve en la acción**, mejor que sea la misma en todos los fotogramas.
+  Así puedo estampar la cabeza aprobada, como con el sello del caminar, y no cambia de un
+  fotograma a otro.
+- **El orden y, si quieres, el ritmo**: por ejemplo, "el fotograma 3 se queda medio segundo, que
+  es el sorbo".
+- **Dónde dejarlas:** `references/grandes/reposo/`, con nombres como `yeray_gafas.png` o
+  `null_cola.png`.
+
+**Cómo las uso**
+- `npm run characters` las pasa a su rejilla nativa y las guarda tal cual, como el resto de tus
+  sprites. Tu piel nueva (bloque F) se les aplica sola.
+- Cada acción es una pose más en `characters.ts`, y un pequeño "director" elige cuál toca y
+  cuándo.
+- Las comprobaciones de calidad vigilan lo mismo que en el caminar: tamaño, apoyo en el suelo y
+  que la cabeza no tiemble.
+
+### Qué verás al terminar
+- **La rueda** con sus nombres reales siempre visibles y los iconos nuevos, en español e inglés,
+  a 390, 768 y 1440 px.
+- **El CV y el idioma** funcionando desde la rueda, con teclado, ratón y táctil.
+- **La ventana Stack** con un icono junto a cada tecnología.
+- **Las acciones en reposo**, en el campamento y en `/dev/personajes`, una a una.
+- **Los retratos nuevos** en el HUD y tu cara en la pestaña.
+- **En `/dev/personajes`:** tu piel nueva al lado de la anterior y el caminar de Null nuevo.
+- **El informe** `docs/informes/fase-8-mejoras.md`.
+
+### Cómo compruebo que funciona
+- Todas las pruebas y comprobaciones en verde (`check:camp`, `check:windows`, `check:title`,
+  `check:intro`), actualizadas a los nombres nuevos.
+- **Los iconos del stack:**
+  - una prueba falla si una tecnología no tiene icono;
+  - en el móvil, los grupos siguen cabiendo sin desplazamiento horizontal;
+  - el atlas pesa pocos KB y no retrasa la apertura de la ventana.
+- **Las acciones en reposo:**
+  - empiezan y terminan en la pose base sin salto;
+  - se cortan al girar la rueda o abrir una ventana;
+  - no aparecen con "reducir movimiento";
+  - no tapan ningún icono de la rueda;
+  - los 60 fps se mantienen.
+- **La ventana del CV**, desde la rueda y desde el título:
+  - SÍ descarga el PDF correcto en cada idioma;
+  - en el título, ni el pergamino ni la ventana empiezan el juego (`check:title`);
+  - NO, Escape y tocar fuera no descargan nada;
+  - funciona con teclado, ratón y táctil.
+- **La vista CV ya no existe:**
+  - `/cv/` ya no se genera al compilar;
+  - ningún enlace apunta a ella;
+  - el `<noscript>` enlaza a los dos PDF.
+- **Las comprobaciones de calidad de los sprites:**
+  - las del caminar;
+  - las nuevas de la piel;
+  - las del caminar de Null.
+- Contraste AA en los nombres de la rueda y en los iconos.
+- Sin desplazamiento horizontal y ningún error en la consola.
+- Rendimiento: los mismos 60 fps al girar la rueda y el mismo presupuesto de peso.
+
+### TypeScript que aprenderás
+- **Dejar que el compilador te guíe en un cambio de nombre.** Cambio el tipo unión `SectionId`
+  (`'equip' | 'alchemy' | …` → `'projects' | 'stack' | …`) y TypeScript señala cada sitio que
+  hay que actualizar. Ninguno se queda olvidado.
+- **`Record<Locale, string>`** para la ruta del PDF de cada idioma: si algún día hubiera un
+  tercer idioma, el compilador exigiría su PDF.
+- **Uniones con una etiqueta común** (*discriminated unions*). Los elementos de la rueda ya no
+  hacen todos lo mismo: unos abren una ventana, otro descarga y otro cambia el idioma. Un campo
+  `kind` lo dice (`{ kind: 'window', section } | { kind: 'download' } | { kind: 'language' }`) y
+  TypeScript obliga a tratar cada caso.
+- **Un `Record` que obliga a estar completo** (iconos del stack). El tipo unión `TechId`
+  (`'react' | 'docker' | …`) y un `Record<TechId, IconRect>` con la posición de cada icono en el
+  atlas. Si añades una tecnología y olvidas su icono, el compilador te avisa.
+
+### Lo que ya has decidido (17/11/2026)
+- Todos los iconos van **dentro de la rueda**, también el CV y el idioma.
+- La bandera del inglés es la de **Reino Unido**.
+- Tu retrato y el favicon llevan **el tono de piel nuevo**.
+- **PERFIL** en español (PROFILE en inglés), en lugar de STATS.
+- BUFFS y CRAFT desaparecen. "Sobre mí" llegará más adelante.
+- **La vista CV web se quita**, junto con "VER CV" (bloque I).
+- El icono del CV abre una **ventana que pregunta si quieres descargarlo** (bloque C).
+- **Los iconos del stack entran en esta fase** (bloque J), no en una aparte, con la **opción B**:
+  logos de Simple Icons pasados a píxeles.
+- **Animaciones en reposo** para ti y para Null (bloque K): tú, **gafas, café y pensar**; Null,
+  **ladear la cabeza, mover la cola y rascarse la oreja** (19/11/2026).
+- **Además de en la rueda, el CV solo está en la pantalla de título**: el pergamino, arriba a la
+  izquierda, abre la misma ventana y no empieza el juego (bloque I). La intro no tiene acceso.
+
+### Decisiones que puedes cambiar
+- El orden de la rueda: Proyectos, Stack, Perfil, Contacto, CV, Idioma.
+- Mantener el nombre de juego (EQUIP, ALCHEMY, STATS, COMMS) en el título de cada ventana.
+- Los identificadores y enlaces nuevos (`/#projects`, `/#stack`…).
+- Los retratos tal cual con su marco dorado, sin el marco de piedra.
+- El `<noscript>` con los enlaces a los PDF.
+- Iconos del stack: los genéricos de SQL y APIs REST, y el icono a la izquierda del nombre (la
+  otra opción es encima, en formato rejilla).
+
+
+**💬 Tus comentarios:**
+
+---
+
+## Fase 9 — Revisión, refactor y limpieza
+
+**Objetivo:** que el código que vea un reclutador en GitHub esté igual de cuidado que la web.
+
+**Qué se hace**
+- **Revisión de todo el código.** Busco:
+  - errores;
+  - código repetido;
+  - nombres poco claros;
+  - componentes demasiado grandes;
+  - comentarios que se han quedado viejos (por ejemplo, los que hablan de "hasta la fase 6");
+  - código que ya no se usa.
+- **Refactor solo donde aporte**, sin cambiar el resultado. Un ejemplo: los scripts de
+  comprobación (`check:*`, `shots` y `fps`) repiten código que puede ir a una librería común.
+- **Limpieza de carpetas:**
+  - capturas e informes de Lighthouse viejos en `.screenshots/`;
+  - imágenes y archivos que ya no se usan;
+  - páginas `/dev/*` que ya no sirvan;
+  - documentos de análisis de fases pasadas (`animacion-caminar.md`, `fondo-campamento.md`), que
+    se pueden archivar en `docs/historial/`.
+- **Dependencias:** quitar las que no se usen, actualizar las que lo necesiten y revisar
+  `npm audit`.
+- **Documentación al día:** `CLAUDE.md`, `BRIEF.md`, `DESIGN.md` y `CONTENT.md` reflejan cómo es
+  la web de verdad.
+
+**Cómo se hace**
+- **Herramientas:**
+  - la revisión de código de Claude Code (`code-review` y `simplify`);
+  - oxlint;
+  - TypeScript;
+  - una búsqueda de archivos y exportaciones sin usar con `knip`. Lo ejecuto una vez con `npx`,
+    sin añadirlo al proyecto.
+- **Nada se borra sin tu OK.** Te paso la lista de lo que propongo borrar, con el porqué de cada
+  cosa, y espero tu respuesta.
+- **`references/` es tuyo:** como mucho te digo qué sobra, pero no lo toco.
+- **Antes y después:** capturo todas las pantallas antes de empezar y las comparo píxel a píxel
+  al terminar. El refactor no debe cambiar nada visible.
+
+**Qué verás al terminar:** un informe con el antes y el después:
+- número de archivos;
+- líneas de código;
+- peso del JavaScript;
+- puntuaciones de Lighthouse y fps;
+- lista de lo borrado y por qué.
+
+**Cómo compruebo que funciona**
+- Todas las pruebas y comprobaciones en verde.
+- Capturas idénticas a las de antes.
+- Lighthouse y fps iguales o mejores.
+
+**TypeScript que aprenderás:** repaso. El informe enseña cada mejora de tipos con el antes y el
+después, por ejemplo quitar algún `as` que quede o un tipo que se pueda simplificar.
+
+**Decisiones que puedes cambiar:**
+- Cuánto refactor hacer. Propongo un refactor conservador: solo lo que se lee peor o se repite.
+- Qué páginas `/dev/*` se quedan. Propongo dejar `/dev/textos` y `/dev/personajes`.
+- Si los documentos de análisis se archivan o se borran.
+
+**💬 Tus comentarios:**
+
+---
+
+## Fase 10 — Publicación
 
 **Objetivo:** la web en internet, con despliegue automático.
 
@@ -751,19 +1313,21 @@ vista previa al compartirla en LinkedIn se ve bien.
 ---
 
 ## Qué NO entra en la primera versión
-- **BUFFS (entrenamiento) y CRAFT (cocina):** existen en el código pero están ocultos hasta que
-  tengas los datos. Sí se ven sus objetos en el campamento.
+- **"Sobre mí":** sección nueva, pendiente de decidir cómo se organiza. Su icono ya está.
+- (BUFFS y CRAFT se quitan del todo en la fase 8. Sus objetos siguen en el fondo del
+  campamento.)
 - **Audio y música.**
 - **Vistas de espalda de los personajes.**
-- **El CV en PDF en inglés:** la vista CV en inglés sí estará.
+
+(El CV en PDF en inglés estaba aquí; entra en la fase 8.)
 
 ## Riesgos y cómo los gestiono
 | Riesgo | Cómo lo gestiono |
 |---|---|
 | El sprite no se parece lo suficiente | La revisión de la fase 2 va antes de cualquier escena. Plan B: sprites PNG dibujados a mano |
-| La intro aburre o retrasa a los reclutadores | SKIP siempre visible, segunda visita directa al campamento, enlace "Ver CV" en todas las pantallas |
+| La intro aburre o retrasa a los reclutadores | SKIP siempre visible, segunda visita directa al campamento, el CV en PDF desde el título y la rueda |
 | Problemas legales con el juego original | Todo el arte, las fuentes y los textos son originales. Las capturas del juego solo se usan como referencia de ambiente |
-| Mal rendimiento en móviles antiguos | Ver la sección "Rendimiento: objetivos y cómo los mido". Objetivos medidos en cada fase desde la 3, bajada automática a 30 fps y vista `/cv/` ultraligera |
+| Mal rendimiento en móviles antiguos | Ver la sección "Rendimiento: objetivos y cómo los mido". Objetivos medidos en cada fase desde la 3, bajada automática a 30 fps y el CV en PDF a un paso desde la rueda |
 | Se publica algo privado | `references/` está en `.gitignore`. Las páginas `/dev/*` no entran en la versión publicada. El teléfono solo aparece en el PDF |
 
 ## Glosario rápido

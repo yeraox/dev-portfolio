@@ -23,6 +23,37 @@ SKIP INTRO son etiquetas de juego y se quedan en inglés en los dos idiomas.
 
 ---
 
+## Página del juego y vista CV (fase 7)
+
+**Pestaña del navegador y buscadores** (página del juego):
+- Título: "Yeray Caturla — Desarrollador Backend Junior" / "Yeray Caturla — Junior Backend Developer".
+- Descripción: "Portfolio de Yeray Caturla, desarrollador backend junior (Node.js, Express, Java,
+  Python, Docker, AWS), con forma de RPG de 16 bits." (en inglés: "Portfolio of Yeray Caturla,
+  junior backend developer (…), shaped as a 16-bit RPG.")
+- Texto alternativo de la imagen al compartir: "Pantalla de título del portfolio: «YERAY CATURLA»
+  en letras doradas sobre un cielo nocturno de 16 bits."
+
+**Enlace siempre visible en el juego:** "VER CV" / "VIEW CV".
+
+**Vista CV** (`/cv/` en español, `/cv/en/` en inglés): se construye con este mismo contenido
+(perfil, experiencia, formación, proyectos, stack y contacto), así que no hay que mantenerla
+aparte. Textos propios:
+
+| Texto | Español | Inglés |
+|---|---|---|
+| Título de la pestaña | CV · Yeray Caturla — Desarrollador Backend Junior | CV · Yeray Caturla — Junior Backend Developer |
+| Descripción | CV de Yeray Caturla, desarrollador backend junior en Elda (Alicante): Node.js, Express, Java, Python, Docker y AWS. Proyectos, experiencia, formación y contacto. | CV of Yeray Caturla, junior backend developer in Elda (Alicante, Spain): Node.js, Express, Java, Python, Docker and AWS. Projects, experience, education and contact. |
+| Botón del PDF | Descargar CV (PDF) | Download CV (PDF, in Spanish) |
+| Volver | Volver al portfolio | Back to the portfolio |
+| Otro idioma | English version | Versión en español |
+| Apartados | Contacto · Perfil · Experiencia · Formación · Proyectos · Stack técnico | Contact · Profile · Experience · Education · Projects · Tech stack |
+
+**PDF:** `references/cv_es_yeray_caturla.pdf` tal cual (incluye el teléfono: decisión tuya),
+copiado con `npm run cv` a `public/cv/yeray-caturla-cv-es.pdf`. **No hay PDF en inglés** (TODO
+tuyo): la versión inglesa enlaza el español y lo dice en el botón.
+
+---
+
 ## Campamento (fase 3)
 
 **Títulos del banner** (propuestos por mí a partir de la tabla de `BRIEF.md`; cámbialos si
@@ -169,6 +200,8 @@ TODO: receta de paella valenciana y de aceitunas curadas.
 | Email | yeraoxcaturlax@gmail.com |
 | Ubicación | Elda (Alicante), España |
 | Disponibilidad | Disponible · presencial, híbrido o remoto |
+| CV | Versión web → `/cv/` (en inglés, `/cv/en/`) |
+| CV en PDF | Descargar → `/cv/yeray-caturla-cv-es.pdf` (solo existe en español) |
 
 
 Teléfono: **no se publica en la web** (sí aparece en el PDF descargable, decisión de Yeray).
