@@ -1,5 +1,6 @@
 import { Suspense, useEffect, useEffectEvent, useReducer, useRef, useState } from 'react';
 import { BannerWindow } from '../../components/BannerWindow';
+import { CvLink } from '../../components/CvLink';
 import { Hud } from '../../components/Hud';
 import { HelpBar } from '../../components/HelpBar';
 import { KeyHint } from '../../components/KeyHint';
@@ -117,7 +118,8 @@ export function CampScene({ intro, onIntroEnd }: CampSceneProps) {
     />
   );
   const wide = layout.mode === 'wide';
-  const hud = <Hud zoom={layout.portraitZoom} names={t.hud} compact={!wide} />;
+  // Portrait screens: the CV link moves from the corner (where the banner is) to the HUD row.
+  const hud = <Hud zoom={layout.portraitZoom} names={t.hud} compact={!wide} middle={!wide && !intro ? <CvLink inline /> : undefined} />;
   // The banner and the HUD keep their room during the intro (nothing moves when they appear).
   const waiting = intro ? styles.waiting : undefined;
 

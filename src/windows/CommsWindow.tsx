@@ -54,13 +54,20 @@ export default function CommsWindow() {
   return <WindowSections label={t.sections.comms.title} sections={[{ id: 'contact', label: t.sections.comms.title, content }]} />;
 }
 
-/** Web links open in a new tab (the portfolio stays open); the email link opens the mail app. */
+/** Web links and the CV page open in a new tab (the portfolio stays open); the PDF downloads; the
+ *  email link opens the mail app. */
 function ContactLink({ href, label, newTab }: { href: string; label: string; newTab: string }) {
-  const external = href.startsWith('http');
+  const pdf = href.endsWith('.pdf');
+  const opensTab = !pdf && !href.startsWith('mailto:');
   return (
-    <a href={href} target={external ? '_blank' : undefined} rel={external ? 'noopener noreferrer' : undefined}>
+    <a
+      href={href}
+      target={opensTab ? '_blank' : undefined}
+      rel={opensTab ? 'noopener noreferrer' : undefined}
+      download={pdf ? '' : undefined}
+    >
       {label}
-      {external && <span className={styles.srOnly}> {newTab}</span>}
+      {opensTab && <span className={styles.srOnly}> {newTab}</span>}
     </a>
   );
 }

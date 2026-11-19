@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { STONE_TILE } from '../assets/textures';
 import { NULL_DOG, YERAY } from '../assets/characters/characters';
 import { PixelSprite } from './PixelSprite';
@@ -11,11 +12,12 @@ type HudProps = {
   zoom: number; // CSS px per portrait pixel
   names: { yeray: string; null: string };
   compact?: boolean; // name beside the portrait instead of under it (portrait screens)
+  middle?: ReactNode; // between the two portraits (the CV link on portrait screens)
 };
 
 /** Bottom HUD: Yeray's portrait on the left, Null's on the right, each with a name plate.
  *  No bars: there are no real numbers to show (DESIGN.md §7). */
-export function Hud({ zoom, names, compact = false }: HudProps) {
+export function Hud({ zoom, names, compact = false, middle }: HudProps) {
   const frame = { width: FRAME.width * zoom, height: FRAME.height * zoom };
   return (
     <div className={styles.hud} data-compact={compact}>
@@ -25,6 +27,7 @@ export function Hud({ zoom, names, compact = false }: HudProps) {
         </div>
         <figcaption className={styles.name}>{names.yeray}</figcaption>
       </figure>
+      {middle && <div className={styles.middle}>{middle}</div>}
       <figure className={styles.panel} style={{ backgroundImage: STONE_TILE.url }}>
         <div className={`${styles.portrait} ${styles.centred}`} style={frame}>
           <PixelSprite pose={NULL_DOG.portrait} unit={zoom} />

@@ -60,3 +60,23 @@
 .hud[data-compact='true'] .name {
   margin-top: 0;
 }
+
+/* Between the portraits (the CV link on portrait screens). The HUD lets swipes through; this
+   slot takes clicks again. On very narrow phones it moves under the portraits. */
+.middle {
+  align-self: center;
+  pointer-events: auto;
+}
+
+@media (max-width: 359px) {
+  .hud:has(.middle) {
+    flex-wrap: wrap;
+  }
+
+  .middle {
+    order: 3;
+    flex-basis: 100%;
+    display: flex;
+    justify-content: center;
+  }
+}
