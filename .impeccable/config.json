@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "gradient-text",
+        "value": "*",
+        "files": [
+          "src/scenes/title/TitleScreen.module.css"
+        ],
+        "createdAt": "2026-11-15T21:04:11.778Z",
+        "reason": "brief: BRIEF.md/DESIGN.md §4 pin the embossed gold title lettering as hard gold bands (gold-4/3/2), a 16-bit treatment, not a smooth gradient"
+      }
+    ]
+  }
+}

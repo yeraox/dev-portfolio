@@ -25,7 +25,8 @@ export function Window({ title, titleId: givenTitleId, hint, help, closing = fal
     <section
       className={classes}
       style={{ backgroundImage: STONE_TILE.url }}
-      aria-labelledby={title ? titleId : undefined}
+      // A dialog that points at the title already names the window: no second landmark with the same name.
+      aria-labelledby={title && !givenTitleId ? titleId : undefined}
     >
       {(title || hint) && (
         <header className={styles.header}>

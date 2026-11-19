@@ -30,6 +30,7 @@
 
 /* The [ESC] EXIT prompt is also a button, for touch and mouse. */
 .close {
+  position: relative;
   padding: 0;
   font-family: var(--font-display);
   font-size: var(--text-size);
@@ -63,4 +64,14 @@
   overflow: hidden;
   clip-path: inset(50%);
   white-space: nowrap;
+}
+
+/* Touch screens: the finger target reaches 44 px tall (WCAG 2.5.8 asks 24; phones want ~44)
+   without changing how it looks. */
+@media (pointer: coarse) {
+  .close::after {
+    content: '';
+    position: absolute;
+    inset: -13px 0;
+  }
 }

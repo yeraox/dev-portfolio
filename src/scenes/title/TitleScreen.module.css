@@ -95,6 +95,7 @@
 }
 
 .language {
+  position: relative;
   padding: var(--u) calc(3 * var(--u)) 0;
   font-family: var(--font-display);
   font-size: var(--display-size);
@@ -127,6 +128,16 @@
   overflow: hidden;
   clip-path: inset(50%);
   white-space: nowrap;
+}
+
+/* Touch screens: the finger target reaches 44 px tall (WCAG 2.5.8 asks 24; phones want ~44)
+   without changing how it looks. */
+@media (pointer: coarse) {
+  .language::after {
+    content: '';
+    position: absolute;
+    inset: -10px 0;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
