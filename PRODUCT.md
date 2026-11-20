@@ -42,16 +42,19 @@ to scan.
 ## Operating Context
 - Visitors arrive from a LinkedIn profile, a CV link, a job application or a shared link, on
   desktop or phone, often with little time.
-- A recruiter may never press START: the plain CV view and contact must be reachable from any
-  screen in under 10 seconds.
+- A recruiter may never press START: the CV must be one step away from the first screen (the
+  title's parchment asks, then downloads the PDF) and the CV and contact one step away in the camp
+  (the ring). The plain CV web view was dropped in phase 8; the PDF is the CV.
 - Tech reviewers will open the GitHub repo; the code and README are part of the product.
 
 ## Capabilities and Constraints
 - Bilingual ES/EN with typed dictionaries; Spanish is the source language.
 - Keyboard, mouse and touch are all first-class inputs.
-- Sections: EQUIP (projects), ALCHEMY (tech stack), STATS (profile, education, experience),
-  COMMS (contact) are live. BUFFS (training) and CRAFT (cooking) exist but stay hidden until real
-  content is provided.
+- The camp's ring (phase 8): four sections — projects (ALCHEMY), tech stack (EQUIP), profile
+  (STATS: profile, education, experience) and contact (COMMS) — plus the CV (asks, then downloads
+  the PDF of the current language) and the language switch. Every slot shows its real, translated
+  name. An ABOUT ME section is planned and stays hidden until it has content. BUFFS and CRAFT were
+  dropped in phase 8.
 - Performance budget and phase plan: `BRIEF.md` and `docs/plan-de-fases.md`.
 - Git is operated only by Yeray.
 
@@ -62,16 +65,18 @@ to scan.
   `references/null-concept.png`.
 - Era: original work in the 16-bit SNES action-RPG genre. Nothing copied from any existing
   game (logo, lettering, sprites, fonts, music, character names or outfits).
-- Game labels stay English in both locales (EQUIP, ALCHEMY, STATS, BUFFS, CRAFT, COMMS,
-  PRESS START, SKIP INTRO).
+- Game labels stay English in both locales (PRESS START, SKIP INTRO, the key hints). The ring
+  shows real names in each language; the game names live in the window titles, translated
+  ("Alquimia — Proyectos").
 
 ## Evidence on Hand
-- CV (Spanish PDF, includes phone): `references/cv_es_yeray_caturla.pdf`. Downloadable as-is.
+- CV PDFs in Spanish and English (include phone): `references/cv_es_yeray_caturla.pdf` and
+  `references/cv_en_yeray_caturla.pdf`. Downloadable as-is, each in its language.
 - All content: `CONTENT.md`.
 - Project media: `media-src/projects/` (Capyroad screenshot + 26 s raw video, roulette and
   blackjack screenshots of Pakito's Gambling).
 - Absences that must not be fabricated: no deployed demos, no metrics for the Bosa Digital
-  internship (NDA — only the three CV sentences), no English CV PDF yet, no training numbers,
+  internship (NDA — only the three CV sentences), no training numbers,
   no recipes, no testimonials.
 
 ## Product Principles

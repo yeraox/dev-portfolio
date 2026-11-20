@@ -49,8 +49,9 @@ Rendering rules:
 Characters are my large pixel-art references USED AS THEY ARE (option A, chosen in phase 2):
 `npm run characters` rebuilds each one on its native pixel grid as a transparent PNG in
 `src/assets/characters/`, shown with `<PixelSprite>` at whole-number zooms. Hand-drawn sprites
-and grid conversions were tried in phase 2 and rejected (likeness). Ring icons stay hand-drawn
-(16×16 grids drawn by `src/engine/`).
+and grid conversions were tried in phase 2 and rejected (likeness). Ring icons (phase 8) are my
+pixel-art references too: `npm run icons` cuts each one out of its background and reduces it to
+the scene grid (28 px on its longest side, 1 icon pixel = 1 scene pixel), keeping its colours.
 Walk cycles (approved 2026-11-11, `docs/animacion-caminar.md`) come from my walk sheets through
 the "sello": one head stamped pixel for pixel on every frame, a 0/1/2 px body bob by whole
 pixels, and the front step with the other leg mirrored. Nothing is painted. The idle front and
@@ -117,13 +118,15 @@ markings stay readable; confirm against the internal resolution in DESIGN.md.
 | Avatar walk down (toward camera) | 46×113 canvas (figure 110 tall) | 8 |
 | Avatar walk side (mirror for the other side) | 65×110 canvas | 8 |
 | Avatar idle front | frame "up" of the front walk (46×113) | 1 (+1 px breathing) |
-| Avatar portrait (HUD left, STATS window header) | 64×94 (HUD shows the top 64×76) | 1 |
-| Null trot side (mirror for the other side) | ~50×38 | 6 |
-| Null walk down | ~24×38 | 3 (4-step cycle) |
+| Avatar portrait (HUD left, profile window) | his front drawing (the idle image) shown at ×2 Null's zoom, hair to shoulders (phase 8): no file of its own | 1 |
+| Null trot side (mirror for the other side) | ~50×38 — not used since phase 8 (smaller than the new front walk) | 6 |
+| Null walk down | 58×103 canvas drawn at ½ (phase 8, `null_front_walk_animation.jpg`, sello like Yeray's) | 8 |
 | Null sit | 55×93 drawn at ½ | 1 (+1 px breathing) |
+| Null idle actions (phase 8): tilt, wag, scratch | his sitting drawing + what changes in `references/grandes/reposo/` | 1–3 each |
+| Yeray idle actions (phase 8): glasses, coffee, think | his front still drawing + what changes in `references/grandes/reposo/*_new.jpg` | 3–4 each |
 | Null begging pose | — | not available yet (needs a reference) |
-| Null portrait (HUD right) | 50×47 | 1 |
-| Ring icons (one per slot) | 16×16, drawn at 2 scene px per pixel | 1 |
+| Null portrait (HUD right) | 115×115: `references/portraits/portrait_null.jpg` on its grid, without its gold frame (phase 8) | 1 |
+| Ring icons (one per slot) | 28 px on the longest side, 1 scene px per pixel (`npm run icons`) | 1 |
 | Camp background | Yeray's generated image, 1376×768 (art pixels of 5.74 px), filling the scene's height | 1 + a 3-variant flame flicker |
 
 Back views from the concept sheets are not needed in v1.
@@ -164,8 +167,9 @@ for all window text. Self-hosted via @fontsource.
 - "SKIP INTRO" is visible from the first frame. Returning visitors start at HUB
   (localStorage, wrapped in try/catch). `prefers-reduced-motion` → no walk sequence, instant
   transitions.
-- A recruiter reaches projects + contact in under 10 seconds: an always-visible small link to a
-  plain-text CV view, plus a CV PDF download (see "Downloadable CV").
+- A recruiter reaches projects + contact in under 10 seconds: the CV PDF from the title's parchment
+  (top left) and from the ring's CV slot, both asking before downloading (see "Downloadable CV").
+  The plain-text CV view of phase 7 was removed in phase 8.
 - WCAG AA contrast for all window text. Proper `<title>`, meta description, OpenGraph image.
 - No audio in v1.
 
@@ -199,28 +203,38 @@ C. HUB — the avatar stands at camp with the dog sitting beside him. The ring m
 All content lives in `CONTENT.md` (Spanish source of truth, extracted from my CV). Use it
 verbatim; `TODO` / `PREGUNTA` items there are still open.
 
-**Priority:** the professional sections (EQUIP, ALCHEMY, STATS, COMMS) and the CV view come
-first. BUFFS and CRAFT are deferred: each content section has a `status: 'ready' | 'draft'`
-field; `draft` slots are hidden from the ring in production builds and shown in dev, so the
-live site never shows an empty window. The ring layout must work with 4, 5 or 6 slots.
+**The ring (phase 8):** projects, tech stack, profile and contact, then the CV and the language.
+Every slot shows its real name above its icon, always, in the visitor's language; the game name
+stays in the window title. EQUIP (gear) is the tech stack and ALCHEMY the projects. The CV slot
+asks "Download the CV as a PDF?" (YES / NO) in a small window before downloading the PDF of the
+current language; the language slot shows the current language's flag (Spain / UK) and switches
+to the other one, without a window. Each slot has a `status: 'ready' | 'draft'` field; `draft`
+slots are hidden in production builds and shown in dev, so the live site never shows an empty
+window. ABOUT ME is the next section (draft, content to be decided); BUFFS and CRAFT were
+dropped in phase 8. The live ring has 6 slots; with ABOUT ME it will have 7, whose layout is
+still to be checked.
 
-**Downloadable CV:** `references/cv_es_yeray_caturla.pdf` (Spanish; includes my phone — OK in
-the PDF, never on the web). Copied as it is to `public/cv/yeray-caturla-cv-es.pdf` with
-`npm run cv` (phase 7); English PDF TODO.
+**Downloadable CV:** one PDF per language, `references/cv_es_yeray_caturla.pdf` and
+`references/cv_en_yeray_caturla.pdf` (they include my phone — OK in the PDF, never on the web).
+Copied as they are to `public/cv/yeray-caturla-cv-es.pdf` and `…-cv-en.pdf` with `npm run cv`
+(phase 7; English since phase 8). Each language links its own PDF.
 
-**CV view (built in phase 7):** `/cv/` (ES) and `/cv/en/` (EN), static HTML made at build time
-from `src/content` by `src/site/html.ts` through a Vite plugin — no JavaScript. A VER CV / VIEW
-CV link is on every game screen. Head tags, share image (`npm run share`), favicon (Null's
-portrait as it is), robots.txt; canonical URLs and sitemap need `SITE_URL` (phase 8).
+**The CV, since phase 8:** the PDF is the CV. The title screen shows the CV's parchment top left
+(the ring's icon and name) and the camp's ring has a CV slot; both open the same question window
+before downloading the PDF of the current language. The intro has none (4–6 s, skippable). The
+CV web view of phase 7 (`/cv/`, VER CV link) was removed. `src/site/html.ts` (Vite plugin) still
+makes the page's head tags and a `<noscript>` note linking both PDFs; share image
+(`npm run share`), favicon, robots.txt; canonical URL and sitemap need `SITE_URL` (publish phase).
 
-| Ring label | Banner title | Section in CONTENT.md | Window layout |
+| Ring name (EN) | Banner title (EN) | Section in CONTENT.md | Window layout |
 |---|---|---|---|
-| EQUIP | Equipment — Projects | EQUIP | item list left (icon + name), detail panel right |
-| ALCHEMY | Alchemy — Tech Stack | ALCHEMY | two tiers (Mastery / Worked with), grouped ingredient lists, no numeric levels or % |
-| STATS | Stats — Profile | STATS (profile, education, quest log) | stats-sheet layout (portrait + label/value columns + dividers) |
-| BUFFS | Status — Training | BUFFS | active-buff list with red bar gauges |
-| CRAFT | Crafting — Kitchen | CRAFT | recipe card: ingredients → steps → result |
-| COMMS | Config — Contact | COMMS | option list with links + ES/EN toggle |
+| PROJECTS | Alchemy — Projects | Proyectos (ALCHEMY) | one section per project: pictures left, text right |
+| STACK | Equipment — Tech Stack | Stack técnico (EQUIP) | two tiers (Mastery / Worked with), grouped lists, each technology with its pixel icon (phase 8), no numeric levels or % |
+| PROFILE | Stats — Profile | Perfil (STATS: profile, education, quest log) | stats-sheet layout (label/value columns + dividers) |
+| CONTACT | Config — Contact | Contacto (COMMS) | option list with links + ES/EN toggle |
+| CV | Scroll — Download CV | — | small question window: YES downloads the PDF, NO closes |
+| LANGUAGE | Language — Switch to Español | — | no window: switches the language |
+| ABOUT ME (draft) | Journal — About Me | Sobre mí | to be decided |
 
 ## Language — bilingual ES/EN with typed dictionaries (no i18n library)
 - One dictionary per locale: `src/content/es.ts` and `src/content/en.ts`, both typed against a
@@ -229,10 +243,10 @@ portrait as it is), robots.txt; canonical URLs and sitemap need `SITE_URL` (phas
   and `t` (the active dictionary).
 - Initial locale: saved choice (localStorage, try/catch) → else `navigator.language` starting
   with `es` → `es`, otherwise `en`. Update `<html lang>` on change.
-- ES/EN toggle on the TITLE screen and inside the CONFIG/COMMS window, keyboard accessible.
-- Game labels stay English in both locales (EQUIP, ALCHEMY, STATS, BUFFS, CRAFT, COMMS,
-  PRESS START, SKIP INTRO). Banner titles, help lines, window content, CV view and meta
-  description are translated.
+- ES/EN toggle on the TITLE screen and as the ring's language slot (phase 8; the CONFIG/COMMS
+  window no longer has one), keyboard accessible.
+- Game labels stay English in both locales (PRESS START, SKIP INTRO, the key hints). The ring's
+  names, banner titles, help lines, window content and meta description are translated.
 - Workflow: I write content in Spanish; you draft the English version and I review it. Never
   machine-pad missing text — if a Spanish source is a TODO, the English one is too.
 - Keep it migratable to react-i18next later (flat, serializable data; no JSX inside dictionaries).
@@ -252,11 +266,12 @@ Human-readable explanation of every phase: `docs/plan-de-fases.md` (keep both in
    HUB ↔ WINDOW state machine with placeholder windows (native `<dialog>`); draft sections hidden
    in production; portrait-screen layout. Vitest for reducer, ring math and stage layout;
    `npm run check:camp` walkthrough; `npm run fps`; Lighthouse.
-4. Content windows: typed ES/EN dictionaries + `useLocale`; EQUIP, ALCHEMY, STATS, COMMS;
+4. Content windows: typed ES/EN dictionaries + `useLocale`; EQUIP, ALCHEMY, STATS, COMMS (phase 8
+   swapped EQUIP and ALCHEMY and renamed them projects, stack, profile, contact);
    optimized media (WebP, trimmed muted video < 2 MB, poster); lazy-loaded windows.
 5. TITLE screen + transition.
 6. INTRO cave walk (scripted steps) + skip / reduced-motion / returning-visitor logic.
-7. Plain-text CV page (`/cv/`, Vite multi-page), meta/OG/favicon, robots/sitemap,
+7. Plain-text CV page (`/cv/`, Vite multi-page; removed in phase 8), meta/OG/favicon, robots/sitemap,
    `impeccable audit` + `polish`, Lighthouse (aim ≥ 95 a11y/perf).
 8. Publish: I prepare the GitHub Actions workflow (GitHub Pages; alternatives Vercel/Netlify),
    the README for recruiters and a step-by-step guide; Yeray creates the repo, pushes and
@@ -282,7 +297,7 @@ A phase isn't done until it meets this budget (measured from phase 3 on, reporte
 | Capyroad video | ≤ 2 MB, `preload="none"` |
 
 Safety net: adaptive fallback to 30 fps when frames run long; reduced motion skips the intro;
-`/cv/` stays an ultra-light text page.
+without JavaScript, a `<noscript>` note links the CV PDFs.
 
 ## Definition of done
 Works at 390 / 768 / 1440 with no horizontal scroll. Fully playable with keyboard only and with

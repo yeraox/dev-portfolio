@@ -23,9 +23,9 @@ SKIP INTRO son etiquetas de juego y se quedan en inglés en los dos idiomas.
 
 ---
 
-## Página del juego y vista CV (fase 7)
+## Página del juego (fase 7; sin vista CV desde la fase 8)
 
-**Pestaña del navegador y buscadores** (página del juego):
+**Pestaña del navegador y buscadores:**
 - Título: "Yeray Caturla — Desarrollador Backend Junior" / "Yeray Caturla — Junior Backend Developer".
 - Descripción: "Portfolio de Yeray Caturla, desarrollador backend junior (Node.js, Express, Java,
   Python, Docker, AWS), con forma de RPG de 16 bits." (en inglés: "Portfolio of Yeray Caturla,
@@ -33,42 +33,56 @@ SKIP INTRO son etiquetas de juego y se quedan en inglés en los dos idiomas.
 - Texto alternativo de la imagen al compartir: "Pantalla de título del portfolio: «YERAY CATURLA»
   en letras doradas sobre un cielo nocturno de 16 bits."
 
-**Enlace siempre visible en el juego:** "VER CV" / "VIEW CV".
+**El CV es el PDF.** La vista CV web (`/cv/`) y el enlace "VER CV" se quitaron en la fase 8. El CV
+se pide desde el pergamino del título (arriba a la izquierda, con su nombre "CV") y desde el CV
+de la rueda. Los dos abren la misma pregunta (ver "Campamento").
 
-**Vista CV** (`/cv/` en español, `/cv/en/` en inglés): se construye con este mismo contenido
-(perfil, experiencia, formación, proyectos, stack y contacto), así que no hay que mantenerla
-aparte. Textos propios:
+**Sin JavaScript** (un aviso que solo ve quien lo tiene desactivado):
 
 | Texto | Español | Inglés |
 |---|---|---|
-| Título de la pestaña | CV · Yeray Caturla — Desarrollador Backend Junior | CV · Yeray Caturla — Junior Backend Developer |
-| Descripción | CV de Yeray Caturla, desarrollador backend junior en Elda (Alicante): Node.js, Express, Java, Python, Docker y AWS. Proyectos, experiencia, formación y contacto. | CV of Yeray Caturla, junior backend developer in Elda (Alicante, Spain): Node.js, Express, Java, Python, Docker and AWS. Projects, experience, education and contact. |
-| Botón del PDF | Descargar CV (PDF) | Download CV (PDF, in Spanish) |
-| Volver | Volver al portfolio | Back to the portfolio |
-| Otro idioma | English version | Versión en español |
-| Apartados | Contacto · Perfil · Experiencia · Formación · Proyectos · Stack técnico | Contact · Profile · Experience · Education · Projects · Tech stack |
+| Aviso | Este portfolio es un pequeño juego y necesita JavaScript. | This portfolio is a small game and needs JavaScript. |
+| Enlace | Descargar mi CV en PDF (español) | Download my CV as a PDF (English) |
 
-**PDF:** `references/cv_es_yeray_caturla.pdf` tal cual (incluye el teléfono: decisión tuya),
-copiado con `npm run cv` a `public/cv/yeray-caturla-cv-es.pdf`. **No hay PDF en inglés** (TODO
-tuyo): la versión inglesa enlaza el español y lo dice en el botón.
+**PDF:** uno por idioma, tal cual (incluyen el teléfono: decisión tuya). `npm run cv` los copia:
+- `references/cv_es_yeray_caturla.pdf` → `public/cv/yeray-caturla-cv-es.pdf`;
+- `references/cv_en_yeray_caturla.pdf` → `public/cv/yeray-caturla-cv-en.pdf` (fase 8).
+
+Cada idioma descarga el suyo.
 
 ---
 
-## Campamento (fase 3)
+## Campamento (fase 3; la rueda, desde la fase 8)
 
-**Títulos del banner** (propuestos por mí a partir de la tabla de `BRIEF.md`; cámbialos si
-quieres). La etiqueta del anillo sigue en inglés (EQUIP, ALCHEMY…).
+**La rueda.** Cada hueco lleva su nombre real encima del icono, siempre visible y traducido. El
+título del banner (y de la ventana) es "nombre de juego — qué es". Desde la fase 8, el equipo
+(EQUIP) es tu stack y la alquimia (ALCHEMY) tus proyectos. BUFFS y CRAFT ya no existen.
 
-| Etiqueta | Título del banner |
-|---|---|
-| EQUIP | Equipo — Proyectos |
-| ALCHEMY | Alquimia — Stack técnico |
-| STATS | Estadísticas — Perfil |
-| BUFFS | Estado — Entrenamiento |
-| CRAFT | Artesanía — Cocina |
-| COMMS | Configuración — Contacto |
+| Hueco | Nombre (ES / EN) | Banner (ES) | Banner (EN) |
+|---|---|---|---|
+| Proyectos | PROYECTOS / PROJECTS | Alquimia — Proyectos | Alchemy — Projects |
+| Stack | STACK / STACK | Equipo — Stack técnico | Equipment — Tech Stack |
+| Perfil | PERFIL / PROFILE | Estadísticas — Perfil | Stats — Profile |
+| Contacto | CONTACTO / CONTACT | Configuración — Contacto | Config — Contact |
+| CV | CV / CV | Pergamino — Descargar CV | Scroll — Download CV |
+| Idioma | IDIOMA / LANGUAGE | Idioma — Cambiar a English | Language — Switch to Español |
+| Sobre mí (borrador, solo en desarrollo) | SOBRE MÍ / ABOUT ME | Diario — Sobre mí | Journal — About Me |
 
-**HUD:** "Yeray" y "Null". **Encabezado de la página** (solo para lectores de pantalla):
+**La ventana del CV** (al elegir el CV en la rueda):
+
+| Texto | Español | Inglés |
+|---|---|---|
+| Pregunta | ¿Descargar el CV en PDF? | Download the CV as a PDF? |
+| Archivo | PDF · español · 3,1 MB | PDF · English · 3.1 MB |
+| Respuestas | SÍ · NO | YES · NO |
+
+El peso tiene que coincidir con el PDF real: una prueba lo comprueba.
+
+**El idioma:** la bandera es la del idioma actual (España o Reino Unido). Al elegirla cambia al
+otro. Los lectores de pantalla oyen "IDIOMA: Idioma — Cambiar a English". También se cambia con
+el ES/EN del título; la ventana de Contacto ya no tiene elección de idioma (fase 8).
+
+**HUD:** "Yeray" y "Null", con las barras **HP** y **XP** (etiquetas de juego, iguales en los dos idiomas). La XP se llena al explorar las secciones; un lector de pantalla oye "Experiencia: {n} de 4 secciones exploradas" / "Experience: {n} of 4 sections explored". **Encabezado de la página** (solo para lectores de pantalla):
 "Yeray Caturla · Desarrollador Backend Junior".
 
 ---
@@ -112,7 +126,7 @@ de vida del software, desde la API hasta su despliegue automatizado.
 
 ---
 
-## EQUIP — Proyectos
+## Proyectos (ALCHEMY)
 
 ### Pakito's Gambling
 - **Qué es:** plataforma web de recreación de juegos de azar con **moneda ficticia (sin dinero
@@ -152,9 +166,12 @@ de vida del software, desde la API hasta su despliegue automatizado.
 
 ---
 
-## ALCHEMY — Stack técnico
+## Stack técnico (EQUIP)
 
 Sin niveles numéricos: dos rangos según la confianza declarada por Yeray (confirmado).
+
+Cada tecnología lleva su icono (fase 8): el logo de Simple Icons pasado a píxeles, o uno genérico
+para SQL, APIs REST, Java, AWS, WSL y Oracle Database, que no tienen logo allí.
 
 **Rango 1 — Dominio:**
 
@@ -181,17 +198,13 @@ Nota: AWS no aparece en el CV actual; lo ha confirmado Yeray.
 
 ---
 
-## BUFFS — Entrenamiento
-`status: draft` (aplazado; oculto en producción hasta tener datos reales).
-TODO: rutina de 6 días (división por días), sesiones/semana, constancia real.
-
-## CRAFT — Cocina
-`status: draft` (aplazado; oculto en producción hasta tener las recetas).
-TODO: receta de paella valenciana y de aceitunas curadas.
+## Sobre mí
+`status: draft`: sección nueva (fase 8), oculta en producción. Cómo se organiza y qué cuenta
+queda pendiente de decidir contigo. (BUFFS y CRAFT se quitaron en la fase 8.)
 
 ---
 
-## COMMS — Contacto
+## Contacto (COMMS)
 
 | Campo | Valor |
 |---|---|
@@ -200,8 +213,7 @@ TODO: receta de paella valenciana y de aceitunas curadas.
 | Email | yeraoxcaturlax@gmail.com |
 | Ubicación | Elda (Alicante), España |
 | Disponibilidad | Disponible · presencial, híbrido o remoto |
-| CV | Versión web → `/cv/` (en inglés, `/cv/en/`) |
-| CV en PDF | Descargar → `/cv/yeray-caturla-cv-es.pdf` (solo existe en español) |
+| CV en PDF | Descargar → `/cv/yeray-caturla-cv-es.pdf` (en inglés, «CV as PDF · Download» → `/cv/yeray-caturla-cv-en.pdf`) |
 
 
 Teléfono: **no se publica en la web** (sí aparece en el PDF descargable, decisión de Yeray).

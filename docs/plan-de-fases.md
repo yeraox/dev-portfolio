@@ -809,7 +809,10 @@ tarde, te enseño la fase en dos rondas.
 
 **3. Siempre visibles**
 - Hoy solo se ve el nombre del icono activo, encima de la rueda.
-- Ahora **cada icono lleva su nombre debajo todo el rato**, también mientras gira.
+- Ahora **cada icono lleva su nombre todo el rato**, también mientras gira.
+- **Encima del icono, no debajo** (cambiado al hacerlo, 19/11/2026): el icono de abajo de la
+  rueda queda bajo tus botas, casi en el borde de la escena, y en el móvil su nombre no cabe
+  debajo.
 - El activo sigue destacado con los corchetes azules y su nombre más brillante. Los demás, en un
   tono más apagado, pero con contraste AA (un par nuevo en `CONTRAST_PAIRS`).
 - **El riesgo es el móvil.** A 390 px, seis nombres alrededor de ti podrían tocarse o tapar la
@@ -839,15 +842,16 @@ tarde, te enseño la fase en dos rondas.
 | `spain_icon.jpg` y `uk_icon.jpg` | Idioma |
 | `aboutme_icon.jpg` (el libro) | Sobre mí, cuando llegue. Lo dejo preparado |
 
-**Cómo los uso**
-- Como son pixel art, los trato igual que a tus personajes. Un script nuevo, `npm run icons`, los
-  pasa a su rejilla nativa, les quita el fondo y los guarda tal cual, sin redibujar.
+**Cómo los uso** (actualizado al hacerlo, 19/11/2026)
+- Un script nuevo, `npm run icons`, les quita el fondo y los guarda sin redibujar nada.
+- **No pueden ir "tal cual":** están dibujados con 80–250 píxeles de lado, y el hueco de la rueda
+  mide 28 píxeles de escena. Tal cual, cada icono sería tan grande como tu personaje.
+- **Así que el script los reduce a la rejilla de la escena:** cada píxel del icono es la media de
+  los píxeles de tu imagen que tapa, y mide lo mismo que un píxel tuyo o de Null.
+- **Un contorno claro de 1 píxel**, sin desenfoque, para que los oscuros (chaleco, silueta,
+  teléfono) se vean sobre la tierra del campamento.
 - Sustituyen a los iconos de 16×16 que dibujé yo en `icons.ts`, que desaparecen.
-- **A tener en cuenta:**
-  - cada imagen puede estar dibujada a una rejilla distinta. Las mido y las muestro a un mismo
-    tamaño en la rueda, escalando siempre por números enteros si se puede;
-  - el chaleco trae un cuadro de fondo propio que hay que quitar con cuidado;
-  - los iconos conservan sus colores, como los personajes. `CLAUDE.md` lo dirá.
+- Conservan sus colores, como los personajes. `CLAUDE.md` lo dice.
 
 **CV**
 - Al elegirlo, se abre una **ventana de confirmación** con el estilo del juego: "¿Descargar el
@@ -885,11 +889,19 @@ rompan la experiencia. Se manejan como el resto: flechas y Enter, ratón o dedo.
 - Propongo usarlos **tal cual, con su marco dorado**, y quitar el marco de piedra del retrato
   para no tener dos marcos. El HUD cambia su medida a la de los retratos nuevos.
 - Tu retrato lleva también el tono de piel nuevo (bloque F).
+- **Cambiado al hacerlo (19/11/2026, a petición tuya), en dos rondas:**
+  1. tu retrato pasa a ser tu cara del juego ampliada, para no perder el estilo pixel art;
+  2. vuelve el marco de piedra del HUD (sin el marco dorado de los retratos), y tu cara se ve más
+     grande (×3 respecto a Null, del pelo a la barbilla);
+  3. al final, un poco menos (×2): del pelo a los hombros, con el cuello y algo de ropa.
+
+  El retrato de Null es su imagen sin el marco dorado.
 
 ### E. Favicon con tu cara
 
 - `npm run share` hace el icono de la pestaña (`favicon.png`) y el de iPhone
-  (`apple-touch-icon.png`) con **tu cara**, sacada del retrato nuevo.
+  (`apple-touch-icon.png`) con **tu cara**: la cabeza de tu dibujo del juego (hecho: de tu pose
+  quieta, no del retrato, porque a ese tamaño solo encaja sin reescalar).
 - Hasta ahora era la de Null.
 - A 32 px solo cabe la cabeza, así que recorto del pelo a la barbilla y la amplío por un número
   entero, sin suavizar.
@@ -928,6 +940,10 @@ misma escala que en la web. Eliges uno.
 `CLAUDE.md`: el color de piel, con una tabla fija y desde el generador.
 
 ### G. El caminar de Null
+
+> Hecho el 19/11/2026: diagnóstico y resultado en `docs/animacion-caminar.md`, sección 8. Null
+> ya no trota de lado en la intro (su dibujo de lado es más pequeño): baja de frente hasta su
+> sitio.
 
 **Cómo está hoy**
 - **De lado:** 6 dibujos de `null_caminando.jpg`, a 110 ms cada uno.
@@ -999,6 +1015,10 @@ frente, en dos filas de 4)
 
 ### J. Iconos del stack técnico
 
+> Hecho el 19/11/2026 con la opción B. Sin logo en Simple Icons: SQL y APIs REST (no tienen), Java
+> y Oracle (retirados por su empresa), AWS y WSL. Llevan un icono genérico: tabla, flechas, taza,
+> base de datos, nube y terminal.
+
 > Añadido el 17/11/2026.
 
 **Para qué:** que cada tecnología de la ventana Stack se reconozca de un vistazo, con su icono al
@@ -1044,6 +1064,12 @@ que evitar es que parezca que la marca te patrocina.
   que no se lee dos veces.
 
 ### K. Animaciones en reposo: que no estéis quietos
+
+> 19/11/2026: hechas las de Null (ladear la cabeza, mover la cola, rascarse la oreja) y el
+> "director". 20/11/2026: arreglado el fallo de Null que desaparecía, y hechas las tuyas (gafas,
+> café, pensar) con tus hojas nuevas (`*_new.jpg`), hechas desde tu dibujo del juego. Ronda 2
+> (20/11, tras tu revisión): el café ya no se rompe, y los gestos salen cada 3–6 s por rondas
+> (los seis por turnos), también mientras se usa la rueda.
 
 > Añadido el 19/11/2026.
 
@@ -1127,6 +1153,27 @@ Luego se pueden añadir más sin tocar el código: cada acción es una línea de
   cuándo.
 - Las comprobaciones de calidad vigilan lo mismo que en el caminar: tamaño, apoyo en el suelo y
   que la cabeza no tiemble.
+
+### M. Barras de vida y experiencia en el HUD
+
+> Añadido el 19/11/2026, a petición tuya: "para que la inmersión aumente".
+
+- Al lado de cada retrato: el nombre, una barra **HP** (vida) y una **XP** (experiencia).
+- **HP siempre llena:** no hay nada real que medir.
+- **XP crece al explorar:** un cuarto por cada sección abierta (Proyectos, Stack, Perfil,
+  Contacto), compartida por Yeray y Null, y recordada en el navegador. Mide la visita, nunca a
+  Yeray: no hay números inventados.
+
+### L. Fuera el idioma de la ventana de Contacto
+
+> Añadido el 19/11/2026.
+
+- **Qué se quita:** la elección de idioma ("Idioma: Español / English") del final de la ventana
+  de Contacto, con sus estilos.
+- **Por qué:** ahora el idioma se cambia desde la rueda (la bandera) y desde la pantalla de
+  título. Tres sitios eran demasiados.
+- **Se quedan:** la bandera de la rueda y el ES/EN del título.
+- Lo hago junto con el bloque I, porque los dos tocan la ventana de Contacto.
 
 ### Qué verás al terminar
 - **La rueda** con sus nombres reales siempre visibles y los iconos nuevos, en español e inglés,
@@ -1212,6 +1259,10 @@ Luego se pueden añadir más sin tocar el código: cada acción es una línea de
 ---
 
 ## Fase 9 — Revisión, refactor y limpieza
+
+> 20/11/2026: parte 1 hecha (revisión con la skill `modern-web-guidance` y cambios que no se ven;
+> capturas idénticas). La parte 2 (borrados y cuatro decisiones) espera tu OK. Informe:
+> `docs/informes/fase-9-revision.md`.
 
 **Objetivo:** que el código que vea un reclutador en GitHub esté igual de cuidado que la web.
 
