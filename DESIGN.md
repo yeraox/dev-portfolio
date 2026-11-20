@@ -1,6 +1,6 @@
 ---
 name: Yeray Caturla — 16-bit portfolio
-description: A personal portfolio as an original 16-bit action-RPG night camp, with a plain CV one click away.
+description: A personal portfolio as an original 16-bit action-RPG night camp, with the CV one step away.
 colors:
   ink: "#0b0b1a"
   night-0: "#070912"
@@ -136,9 +136,9 @@ components:
 A quiet night in an original 16-bit action-RPG: a night-blue title with embossed gold lettering, a
 cave mouth opening onto a small camp, and stone-and-gold windows that hold Yeray's real CV. Warm
 light appears only where it matters, like a campfire in the dark: the gold of the name, the key
-caps, the selected tab, the PDF button. Everything else is night, stone and crisp pixels. The
+caps, the selected tab, the chosen answer. Everything else is night, stone and crisp pixels. The
 interface is part of the world, not a website laid over a game, and the world invites you to sit
-for a while, but never makes you play: the plain CV is always one click away.
+for a while, but never makes you play: the CV is one step away from the first screen.
 
 Density is low and deliberate: one scene, one ring of six icons, one window at a time. Content
 inside the world is plain, factual and fast to scan; the game frames it and never distorts it (no
@@ -160,10 +160,10 @@ accents. Source of truth: `src/styles/palette.ts`.
 
 ### Primary
 - **Campfire Gold** (`gold-3`): the interface's one warm accent. Title lettering band, window
-  and section headings, key-cap letters, selected tab, tags, links, HUD names, the CV page's
-  name, headings and PDF button. Its ramp: **Gold Shadow** (`gold-0`, extrusion), **Bronze**
-  (`gold-1`, rope and hard underside), **Old Gold** (`gold-2`, title lower band, pixel bullets),
-  **Pale Gold** (`gold-4`, title highlight band, PDF hover).
+  and section headings, key-cap letters, selected tab, tags, links, HUD names, the chosen answer
+  of the CV question. Its ramp: **Gold Shadow** (`gold-0`, extrusion), **Bronze** (`gold-1`, rope
+  and hard underside), **Old Gold** (`gold-2`, title lower band, pixel bullets), **Pale Gold**
+  (`gold-4`, title highlight band).
 
 ### Secondary
 - **Banner Royal** (`blue-1`) and **Banner Bright** (`blue-2`): the banner's 2×2 checker dither,
@@ -183,7 +183,7 @@ accents. Source of truth: `src/styles/palette.ts`.
   and stars.
 - **Granite** (`stone-0`, `stone-1`): window fills; the only surfaces text may sit on inside
   windows. **Granite Bevels** (`stone-2`, `stone-3`, `stone-4`): bevels, engraved lines, plate
-  undersides, radio edges; never under text.
+  undersides, the ring icons' outline; never under text.
 - **Parchment** (`text`) and **Weathered Parchment** (`text-dim`): body and secondary text.
 - **Forest** (`forest-0..2`) and **Earth** (`earth-0`): low-contrast scenery, so characters and
   UI dominate.
@@ -223,21 +223,23 @@ drawn on a 10 px grid, so its sizes stay multiples of 10.
 - **Headline** (Jersey 10 400, `--title-size` = 10 × round(2 × scale), min 20: 40 px at 1440):
   window titles, PRESS START.
 - **Title** (Jersey 10 400, `--display-size` = 10 × round(1.5 × scale), min 20: 30 px at 1440,
-  letter-spacing 0.08em, uppercase): game labels (EQUIP, STATS…), ring label, banner title,
-  section headings, HUD names, ES/EN, SKIP INTRO, VER CV, title credits (10 × round(scale)).
+  letter-spacing 0.08em, uppercase): game labels, banner title, section headings, HUD names,
+  ES/EN, SKIP INTRO, the title's CV plate, the CV question's YES / NO, title credits
+  (10 × round(scale)).
 - **Body** (Pixelify Sans 400, `--text-size` = 13 scene px, min 16: 26 px at 1440, 39 at 1920;
   line-height 1.35; paragraphs ≤ 65ch): everything inside windows. Entry titles in 700.
-- **Label** (Pixelify Sans 400, `--text-small` = 10.5 scene px, min 14): meta lines, help line.
-- **CV page** (rem, follows the reader's own text size): body Pixelify 1.125rem / 1.5; name
-  Jersey 10 3.75rem `gold-3` with a hard 3 px `gold-1` underside; section headings Jersey 10 2rem
-  uppercase over a 2 px `stone-2` rule; print 10.5 pt in `ink`.
+- **Label** (Pixelify Sans 400, `--text-small` = 10.5 scene px, min 14): meta lines, help line,
+  the ring's names (uppercase, letter-spacing 0.04em: they are real names in the visitor's
+  language, so Pixelify speaks; at 14 px they fit six around Yeray on a phone).
+- **No-JavaScript note** (rem): Pixelify 1.125rem / 1.5 in `text` on `night-0`, links `gold-3`.
 
 ### Named Rules
 **The Two Voices Rule.** Jersey 10 speaks for the game (labels, titles, buttons); Pixelify Sans
 speaks for Yeray (facts to read). Never set a paragraph in Jersey 10 or a game label in Pixelify.
 
-**The English Labels Rule.** Game labels stay English in both languages (EQUIP, ALCHEMY, STATS,
-BUFFS, CRAFT, COMMS, PRESS START, SKIP INTRO); titles, help and content are translated.
+**The English Labels Rule.** Game labels stay English in both languages (PRESS START, SKIP INTRO,
+the key hints); the ring's names, titles, help and content are translated. The game names of the
+sections (ALCHEMY, EQUIP, STATS, COMMS) live in the window titles, translated.
 
 ## Layout
 
@@ -255,11 +257,10 @@ BUFFS, CRAFT, COMMS, PRESS START, SKIP INTRO); titles, help and content are tran
   the content changes. Inside: label/value rows with an 8.5em label column from 480 px (stacked
   below), two columns from 1024 px, section layouts by the window's own width (container queries).
 - **Title:** the landscape fills the screen; the name, credits and PRESS START sit in the sky
-  above the peak; ES/EN top right, SKIP INTRO bottom right, VER CV top left.
-- **VER CV** is fixed top left (4u in) on every screen; on portrait screens the camp moves it
-  between the two HUD portraits, where the banner can't cover it and the thumb reaches it.
-- **CV page:** one column, max 46rem, 16 px gutters; contact, profile, experience, education,
-  projects and stack as sections; rows with a 9em label column from 560 px.
+  above the peak; ES/EN top right, SKIP INTRO bottom right, the CV's parchment top left (4u in):
+  the ring's icon at the scene's pixel size under a "CV" plate like ES/EN. It opens the same
+  question as the ring's CV slot and never starts the game. The intro and the camp have no corner
+  link: the camp's CV is in the ring.
 
 ## Elevation & Depth
 
@@ -273,9 +274,9 @@ dithered ellipses: half the pixels in `ink`, no alpha.
 - **Window bevel** (`inset var(--u) var(--u) 0 stone-3, inset calc(-1 * var(--u)) calc(-1 * var(--u)) 0 ink, 0 0 0 var(--u) ink`):
   every window and HUD panel.
 - **Plate underside** (`inset 0 calc(-1 * var(--u)) 0 stone-2`): ink plates of key caps, ES/EN,
-  SKIP INTRO and VER CV.
-- **Key-cap edge** (`0 4px 0 gold-1`): the CV page's PDF button; pressing it drops the button
-  4 px and removes the edge.
+  SKIP INTRO, the title's CV plate and the CV question's answers.
+- **Icon outline** (four zero-blur `drop-shadow`s of one scene pixel in `stone-3`): the ring's icons
+  and the title's parchment.
 - **Title extrusion** (`drop-shadow(0 var(--u) 0 gold-1) drop-shadow(0 var(--u) 0 gold-0) drop-shadow(var(--u) var(--u) 0 ink)`):
   the gold name only.
 
@@ -289,7 +290,7 @@ Square everywhere: no border-radius on anything (`rounded.none`). Corners and ed
 as pixel art: the window granite is a 32×32 generated tile, the banner's gold rope is an 18×18
 nine-slice (6-px cells: knot corners, twisted edges), the selection brackets an 8×8 nine-slice of
 four blue corners. Scaled pixel art always uses `image-rendering: pixelated`; bullets are 2u
-squares with a pixel shadow; radios are 5u ink squares.
+squares with a pixel shadow.
 
 **The Square Pixel Rule.** If it isn't a whole number of pixels, square, it doesn't belong.
 
@@ -315,15 +316,18 @@ tab sits on an `ink` plate in `gold-3` with the pixel bullet as cursor. A gold p
 lonely last word.
 
 ### Content windows (`src/windows/`)
-- **EQUIP:** one section per project. Wide windows (≥ 820 px) put the pictures left and the text
+- **Projects (ALCHEMY):** one section per project. Wide windows (≥ 820 px) put the pictures left and the text
   right: name + tag, context, summary, "what I did", facts (stack, notes, repo, demo). Bosa
   Digital: text only, tag CLASIFICADO / CLASSIFIED.
-- **ALCHEMY:** one section per tier, rows of group → items joined by ·. No levels.
-- **STATS:** Profile (portrait in an ink screen at ×round(1.5 × scale), name, role, rows, bio),
+- **Stack (EQUIP):** one section per tier, rows of group → technologies, each with its 16×16
+  icon before its name (phase 8, `npm run stack-icons`: Simple Icons logos without smoothing,
+  generic pixel icons for SQL, REST APIs, Java, AWS, WSL and Oracle), in `text`, about as tall as
+  a line (32 CSS px at 1440, 16 on a phone, whole screen pixels). No levels.
+- **Profile (STATS):** Profile (portrait in an ink screen at ×round(1.5 × scale), name, role, rows, bio),
   Education, Quest log.
-- **COMMS:** contact rows (web links and the CV page open a new tab with a hidden "(opens in a new
-  tab)", the PDF downloads, email opens the mail app) and the language as a native radio group
-  with pixel radios.
+- **Contact (COMMS):** contact rows (web links open a new tab with a hidden "(opens in a new
+  tab)", the PDF downloads, email opens the mail app). No language choice since phase 8: the
+  ring's flag and the title's ES/EN do it.
 - **Media** inside windows is not pixelated: screenshots (WebP 640/1280, lazy, sizes reserved) and
   the 14 s muted Capyroad video sit crisp in a 1u `ink` + 1u `stone-3` frame, a screen within the
   screen. Autoplay and loop only without reduced motion.
@@ -334,20 +338,40 @@ Gold rope nine-slice drawn 6u thick (`border-image-repeat: round`) around a `blu
 mouse-and-keyboard devices a `[← →] ROTATE · [ENTER] OPEN` hint.
 
 ### Ring menu (`RingMenu`, geometry in `src/game/ring.ts`)
-16×16 icons drawn at 2 scene px per pixel on an ellipse (rx 124, ry 84) around Yeray's middle
-(320, 255); slots spread over 360° for the visible count (4 live, 6 in development). The active
-slot sits at the top inside the blue brackets, its label above in `green-1` on an `ink` plate.
+Six slots live (seven in development, with the ABOUT ME draft): projects, stack, profile, contact,
+CV, language. Icons 28 scene px on their longest side, 1 icon pixel = 1 scene pixel, each with a
+hard 1-scene-pixel `stone-3` outline (zero-blur drop shadows) so the dark ones read on the earth.
+Ellipse rx 136, ry 88 around Yeray's middle (320, 255). **Every slot shows its name above its
+icon, always:** Pixelify `--text-small` uppercase on an `ink` plate, `text-dim`; the active one
+sits at the top inside the blue brackets, its name in `green-1` above them. The ellipse is sized
+so the top name clears the banner, the bottom name fits between Yeray's boots and its icon and
+the lower names pass beside Null (`check:camp` measures it at 390/768/1440 in both languages).
 Turns in 8 whole frames, the short way round; after the intro it opens by spreading out from
-Yeray in 6 steps of 2 frames while turning one slot. ARIA `menu` with roving focus; ←/→ turn,
-Enter/Space open, a click or tap opens a slot, a sideways swipe turns.
+Yeray in 6 steps of 2 frames while turning one slot; the names appear once it has opened. ARIA
+`menu` with roving focus; ←/→ turn, Enter/Space open, a click or tap opens a slot, a sideways
+swipe turns. The CV slot opens a compact question window ("Download the CV as a PDF?", the file's
+language and size, YES / NO on `ink` plates, the chosen one `ink` on `gold-3`, YES first). The
+language slot shows the current language's flag and switches to the other at once.
 
 ### HUD (`Hud`)
-Bottom corners of the scene: stone panels (window bevel) with the portrait in an `ink` screen of
-64×76 portrait px (Yeray's head to the vest collar; Null's face centred) and the name in `gold-3`.
-Zoom round(scale / 2). Portrait screens: below the scene, name beside the portrait, VER CV in the
-middle. No bars: there are no real numbers to show.
+Bottom corners of the scene: two stone panels (window bevel), Yeray's on the left and Null's on the
+right, mirrored so both portraits sit at the outer edges. In each: the portrait in an `ink` screen
+with the engraved `stone-3` edge (`night-1` behind), and beside it the name in `gold-3` and two
+game gauges, **HP** and **XP** (Jersey labels in `text-dim`, 24u ink tracks with a 1u margin).
+- **Portraits (phase 8):** Null's is his portrait picture without its gold frame (115×115 on its
+  native grid). Yeray's is his in-game drawing — the front image, skin tone included — at twice
+  Null's zoom, framed from the hair to the shoulders (his neck and the top of his clothes show),
+  centred in whole pixels: it keeps the game's big pixels. The screen is 115 of Null's pixels in whole screen pixels: up to 36 UI
+  pixels (115 CSS px on a 1440 laptop), up to 46 on portrait screens (57 or 77 CSS px on a
+  phone), where the HUD sits in its own row below the scene.
+- **HP** (`red-1` fill) is always full: there is nothing real to measure, so screen readers
+  don't hear it. **XP** (`blue-3` fill) is the party's experience: a quarter for every live section
+  the visitor has opened, remembered in the browser (`explored`), heard as "Experiencia: 2 de 4
+  secciones exploradas". It grows in 4 hard steps over 16 frames. Never a number about Yeray.
+- The profile window shows Yeray's face the same way in an ink screen, from the hair to the
+  collar, up to 48 UI pixels (about 140 CSS px on portrait screens).
 
-### Game labels on ink plates (ES/EN, SKIP INTRO, VER CV, key caps)
+### Game labels on ink plates (ES/EN, SKIP INTRO, the title's CV, YES / NO, key caps)
 Jersey 10 `text-dim` on `ink` with the plate underside; hover turns the text `gold-3`; the active
 language is `ink` on `gold-3`. Key caps are `<kbd>` in `gold-3` on `ink`. On touch screens the hit
 area grows to 44 px tall without changing the look.
@@ -366,7 +390,8 @@ scene's height. Yeray stands at x 320 with his feet on y 310, Null sits at (376,
 dithered shadow ellipses. The campfire flickers by re-toning the image's own flame pixels in 3
 variants every 110 ms. The intro happens in the same scene: the fade reveals Yeray at the cave
 mouth (x 283–358, floor y 112) with Null a step behind; a data script walks Yeray down at 60 px/s
-and Null at 68 px/s, then a trot to his spot and a sit; 4.7 s with the ring opening; skippable by
+and Null at 65 px/s, facing the camera and drifting to his spot (phase 8: no side trot), then a
+sit; 4.7 s with the ring opening; skippable by
 any key, click or SKIP INTRO; paused while the tab is hidden.
 
 ### Scene transition (`DitherTransition`)
@@ -377,14 +402,30 @@ each, 16 out and 16 in; the next scene appears while it is fully dark.
 Yeray's references on their native pixel grid (`npm run characters`), never redrawn, repainted or
 resampled; drawn at whole CSS px per image pixel. Walk cycles use the approved "sello": one head
 stamped on every frame, whole-pixel body bob, the front step mirrored (8 frames × 120 ms). Null:
-sit (drawn at ½), 6-frame trot, 3-frame front walk, the front walk's first drawing as a still.
-Ring icons (16×16): EQUIP vest, ALCHEMY flask, STATS scroll, BUFFS dumbbell, CRAFT paella pan,
-COMMS letter, drawn on the shared palette.
+sit (drawn at ½); front walk (phase 8) from his 8-frame sheet through the same sello as Yeray's (one
+head stamped, one step and its mirror, 0–2 px bob; 8 frames × 70 ms), drawn at ½ like the sit so
+he is one size standing, walking and sitting; its still drawing as the standing pose. The old
+6-frame side trot is no longer used.
+Idle actions (phase 8): Yeray pushes up his glasses, drinks his coffee or thinks (hand on chin);
+Null tilts his head, wags his tail or scratches his ear. Each is built on the in-game still drawing
+(only what changes in the generated sheets is laid over it, as whole regions — a hand with its mug,
+the whole face when the expression changes — so nothing is half old, half new and they start and
+end without a jump; nothing outside the moving part flickers; Yeray's skin re-toned with his still
+drawing's own ramp).
+Every 3–6 s one plays once (0.7–1.6 s), whatever the visitor is doing (turning the ring does not
+stop it): in rounds where each of the six plays once in a random order and the two take turns, so
+none is left waiting and none plays twice in a row; never both at once; they keep breathing
+meanwhile; none while a window is open or with reduced motion. Each action's drawings download the
+first time it plays.
+Ring icons (`npm run icons`, phase 8): Yeray's pixel-art references, cut out of their background
+and reduced to the scene grid, keeping their own colours like the characters: flask (projects),
+vest (stack), silhouette (profile), telephone (contact), parchment (CV), Spanish and UK flags
+(language), open book (ABOUT ME).
 
-### CV page (`/cv/`, `/cv/en/`)
-Plain HTML made at build time from the same content, no JavaScript. `night-0` page, Pixelify body,
-`gold-3` Jersey name and headings, square gold bullets, label/value rows like the windows, a gold
-key-cap PDF button. Print: ink on paper, no buttons, nothing split across pages (2–3 A4 pages).
+### Without JavaScript
+The game can't run, so a `<noscript>` note (made at build time from the content) says so and links
+both CV PDFs, each sentence in its language. Nobody with JavaScript ever sees it. (The plain CV web
+view of phase 7 was removed in phase 8: the CV is the PDF.)
 
 ### Motion timing
 All motion is stepped; 1 frame = 1/60 s. If a device can't hold 60 fps, the game loop drops to a
@@ -411,7 +452,8 @@ steady 30 (every other refresh) for the rest of the visit.
 - **Do** keep gold as the single warm accent (The One Warm Light Rule).
 - **Do** animate in whole frames with `steps()` or the game loop, and give reduced motion an
   instant equivalent that keeps the same state change.
-- **Do** keep the CV reachable from every screen in one click (VER CV) and the facts plain.
+- **Do** keep the CV one step away: the title's parchment and the ring's CV slot (both ask, then
+  download the PDF); keep the facts plain.
 - **Do** show Yeray's characters and backgrounds exactly as he made them.
 
 ### Don't:
