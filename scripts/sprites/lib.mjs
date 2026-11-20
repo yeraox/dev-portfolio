@@ -2,6 +2,7 @@
 // reference, remove its background, find its figures, rebuild each one on its native pixel grid and
 // clean it up. Dev tools only: needs ffmpeg/ffprobe.
 import { execFileSync } from 'node:child_process';
+import { rmSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -16,6 +17,21 @@ export function loadImage(file) {
     .toString().trim().split(',').map(Number);
   const data = execFileSync('ffmpeg', ['-v', 'error', '-i', path, '-f', 'rawvideo', '-pix_fmt', 'rgb24', '-'], { maxBuffer: 1 << 28 });
   return { w, h, data, at: (x, y) => { const i = (y * w + x) * 3; return [data[i], data[i + 1], data[i + 2]]; } };
+}
+
+/** Saves a grid of [r, g, b] colours (null = transparent) as a PNG. */
+export function writePng(path, grid) {
+  const h = grid.length, w = grid[0].length;
+  const buf = Buffer.alloc(w * h * 4);
+  grid.forEach((row, y) => row.forEach((c, x) => {
+    if (!c) return;
+    const i = (y * w + x) * 4;
+    buf[i] = c[0]; buf[i + 1] = c[1]; buf[i + 2] = c[2]; buf[i + 3] = 255;
+  }));
+  const raw = `${path}.rgba`;
+  writeFileSync(raw, buf);
+  execFileSync('ffmpeg', ['-v', 'error', '-y', '-f', 'rawvideo', '-pix_fmt', 'rgba', '-s', `${w}x${h}`, '-i', raw, '-pix_fmt', 'rgba', path]);
+  rmSync(raw);
 }
 
 export const dist2 = (a, b) => (a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2 + (a[2] - b[2]) ** 2;
