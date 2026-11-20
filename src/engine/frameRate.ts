@@ -3,7 +3,7 @@
 // Animations are timed by the clock, not by counting frames, so they keep their speed. Pure
 // function → tested in frameRate.test.ts.
 
-export const SLOW_FRAME_MS = 1000 / 45; // frames that come slower than 45 fps on average: struggling
+const SLOW_FRAME_MS = 1000 / 45; // frames that come slower than 45 fps on average: struggling
 const SETTLE_FRAMES = 60; // judge only after a second of frames (the first ones are always slow)
 const PAUSE_MS = 250; // a gap this long is a pause (hidden tab, debugger), not a slow frame
 const HALF_RATE_MS = 1000 / 30 - 4; // at 30 fps, with some slack for timing jitter

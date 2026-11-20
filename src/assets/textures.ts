@@ -14,7 +14,7 @@ export type Texture = {
   url: string; // CSS-ready `url("data:image/svg+xml,…")`
 };
 
-export function makeTexture(width: number, height: number, pixel: PixelFn): Texture {
+function makeTexture(width: number, height: number, pixel: PixelFn): Texture {
   const rects: string[] = [];
   const used = new Set<UiColor>();
   for (let y = 0; y < height; y++) {
