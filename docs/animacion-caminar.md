@@ -440,3 +440,42 @@ Si alguna falla, el script se detiene con error.
 - Quedan algunos píxeles del contorno algo azulados (mezcla de contorno y fondo con más de un
   60 % de contorno). Son contorno de verdad: quitarlos abriría huecos.
 - ~~La pose de brazos cruzados sigue saliendo de su referencia.~~ Descartada el 11-11-2026.
+
+---
+
+## 8. Null: diagnóstico y nuevo caminar (fase 8, 19-11-2026)
+
+### 8.1 Qué fallaba
+
+| Qué | Cómo era | Por qué se veía raro |
+|---|---|---|
+| **De frente** | 3 dibujos de `null_frente.jpg` en ida y vuelta (0-1-2-1), a 160 ms | Solo el dibujo 1 adelanta una pata, y el 0 y el 2 son casi iguales: parecía que cojeaba de una pata. Cada dibujo tenía la cabeza algo distinta: temblaba |
+| **De lado** | 6 dibujos de `null_caminando.jpg`, a 110 ms | Anchos distintos (48–51 px) centrados por su ancho: el cuerpo se desplazaba a saltos. La cabeza subía y bajaba sin orden |
+| **Tamaño** | De frente y de lado medía 38 px de alto; sentado, 46,5 | Al llegar y sentarse crecía de golpe un 22 % |
+
+### 8.2 Qué se ha hecho
+- **Referencia nueva:** `null_front_walk_animation.jpg`, 8 fotogramas de frente en dos filas de
+  4. Su rejilla es de 3,75 píxeles de imagen por píxel (medido a ojo y por la detección), así
+  que cada fotograma sale de unos 55×96. Es la misma resolución que su dibujo sentado (55×93):
+  los dos se dibujan a medio píxel de escena, y Null mide lo mismo de pie, andando y sentado
+  (48,5 y 46,5 px).
+- **El mismo sello que tu caminar** (`buildWalk`, sección 3):
+  - la cabeza del fotograma 0 (filas 0–44, de las orejas al final de la barba) se estampa en
+    todas las imágenes;
+  - el paso es el fotograma 3, con una pata delantera adelantada hacia la cámara y la otra
+    levantada;
+  - el otro paso es el mismo reflejado (la cabeza nunca se refleja);
+  - el cuerpo bota 0, 1 o 2 píxeles; las patas, desde la fila 70, se quedan en el suelo.
+- **Ciclo:** el mismo patrón de 8 que el tuyo (contacto, bajada, paso, arriba, y lo mismo con la
+  otra pata), a 70 ms por fotograma: 0,56 s por cada dos pasos, el paso más rápido de un perro
+  pequeño.
+- **Las comprobaciones de calidad** del generador pasan en las 6 imágenes: cabeza idéntica
+  (verificada también píxel a píxel), bote correcto, sin motas y patas en el suelo.
+- **En la intro** Null baja de frente en diagonal hasta su sitio, a 65 px/s, y se sienta. Ya no
+  trota de lado: el dibujo de lado es más pequeño que el nuevo de frente, y reescalarlo no está
+  permitido. La intro sigue durando 4,8 s.
+
+### 8.3 Pendiente
+- **El trote de lado** se queda en `/dev/personajes` pero no se usa. Para recuperarlo hace falta
+  una hoja de lado a la misma resolución que `null_front_walk_animation.jpg`. Con ella se aplica
+  el mismo método (`align: 'ground'`, como tu caminar de lado).

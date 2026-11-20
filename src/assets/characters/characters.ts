@@ -45,20 +45,61 @@ export const YERAY = {
   side: { frames: ['yeray-side'], ms: 650, pixelSize: 1, bob: true },
   walkDown: { frames: WALK_DOWN, ms: 120, pixelSize: 1 }, // toward the camera
   walkSide: { frames: WALK_SIDE, ms: 120, pixelSize: 1 }, // facing right; flip for left
-  portrait: { frames: ['yeray-portrait'], ms: 1000, pixelSize: 1 },
+  // Idle actions, built on his still drawing (scripts/sprites/idle.mjs), so
+  // they start and end on it without a jump. Repeating a frame holds it.
+  glasses: { frames: ['yeray-glasses-1', 'yeray-glasses-2', 'yeray-glasses-3', 'yeray-glasses-3', 'yeray-glasses-3', 'yeray-glasses-2', 'yeray-glasses-1'], ms: 140, pixelSize: 1 },
+  coffee: {
+    frames: ['yeray-coffee-1', 'yeray-coffee-1', 'yeray-coffee-2', 'yeray-coffee-3', 'yeray-coffee-3', 'yeray-coffee-3', 'yeray-coffee-3', 'yeray-coffee-2', 'yeray-coffee-4', 'yeray-coffee-4'],
+    ms: 160,
+    pixelSize: 1,
+  },
+  think: {
+    frames: ['yeray-think-1', 'yeray-think-2', 'yeray-think-2', 'yeray-think-3', 'yeray-think-3', 'yeray-think-3', 'yeray-think-3', 'yeray-think-3', 'yeray-think-2', 'yeray-think-1'],
+    ms: 150,
+    pixelSize: 1,
+  },
 } satisfies Record<string, Pose>;
+
+// Null walking towards the camera: the same 8-step pattern as Yeray's, at a small
+// dog's quicker pace (70 ms a frame: 0.56 s for two steps).
+const NULL_WALK_DOWN: CharacterImageName[] = [
+  'null-front-step-a',
+  'null-front-step-a-down',
+  'null-front-pass',
+  'null-front',
+  'null-front-step-b',
+  'null-front-step-b-down',
+  'null-front-pass',
+  'null-front',
+];
 
 export const NULL_DOG = {
   sit: { frames: ['null-sit'], ms: 700, pixelSize: 0.5, bob: true },
-  // Standing still, facing the camera: the front walk's first drawing (legs together), held.
-  stand: { frames: ['null-front-0'], ms: 700, pixelSize: 1 },
+  // Standing still, facing the camera: the front walk's still drawing (legs together), held. His
+  // walk sheet is drawn at the resolution of the sitting picture: half a scene px per pixel too,
+  // so he is the same size standing, walking and sitting.
+  stand: { frames: ['null-front'], ms: 700, pixelSize: 0.5 },
+  walkDown: { frames: NULL_WALK_DOWN, ms: 70, pixelSize: 0.5 },
+  // Idle actions, sitting: built on his sitting drawing, so they start and end
+  // on it without a jump (scripts/sprites/idle.mjs). Repeating a frame holds it.
+  tilt: { frames: ['null-tilt-1', 'null-tilt-1', 'null-tilt-1', 'null-tilt-1', 'null-tilt-1', 'null-tilt-1'], ms: 120, pixelSize: 0.5 },
+  wag: {
+    frames: ['null-tail-1', 'null-tail-2', 'null-tail-3', 'null-tail-2', 'null-tail-1', 'null-tail-2', 'null-tail-3', 'null-tail-2'],
+    ms: 110,
+    pixelSize: 0.5,
+  },
+  scratch: {
+    frames: ['null-scratch-1', 'null-scratch-2', 'null-scratch-3', 'null-scratch-2', 'null-scratch-3', 'null-scratch-2', 'null-scratch-3', 'null-scratch-1'],
+    ms: 140,
+    pixelSize: 0.5,
+  },
+  // The old side trot (null_caminando.jpg): no longer in the intro, kept for /dev/personajes
+  // until there is a new side sheet at the same size as the front one.
   trotSide: {
     frames: ['null-side-0', 'null-side-1', 'null-side-2', 'null-side-3', 'null-side-4', 'null-side-5'],
     ms: 110,
     pixelSize: 1,
   },
-  walkDown: { frames: ['null-front-0', 'null-front-1', 'null-front-2', 'null-front-1'], ms: 160, pixelSize: 1 },
-  portrait: { frames: ['null-portrait'], ms: 1000, pixelSize: 1 },
 } satisfies Record<string, Pose>;
 
 export { CHARACTER_IMAGES };
