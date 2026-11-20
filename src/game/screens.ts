@@ -21,7 +21,7 @@ export type ScreenStart = {
 };
 
 // The one link that always shows the title, even after a visit (to see it again, or show it).
-export const TITLE_HASH = '#title';
+const TITLE_HASH = '#title';
 
 /** Links to a window and returning visitors go straight to the camp; first visits see the title. */
 export function initialScreen({ hash, visited }: ScreenStart): Screen {

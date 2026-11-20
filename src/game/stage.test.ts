@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { SCENE, fitScale, stageLayout, tallReservedHeight, titleNameSize, toStage } from './stage';
+import { SCENE, devicePixelZoom, fitScale, stageLayout, tallReservedHeight, titleNameSize, toStage } from './stage';
 
 describe('stageLayout', () => {
   // TS concept — a tuple type in a test table: [width, height, dpr, mode, scale, uiUnit].
@@ -69,6 +69,24 @@ describe('stageLayout', () => {
   ])('sizes the title name on %i×%i: %i px, inside the screen', (w, h, dpr, size) => {
     expect(titleNameSize(stageLayout(w, h, dpr))).toBe(size);
     expect(size * 5.46).toBeLessThanOrEqual(w * 0.9);
+  });
+
+  it.each([
+    [1440, 900, 1, 1], // a laptop: one screen pixel per portrait pixel, 115 CSS px
+    [1920, 1080, 1, 1],
+    [2560, 1440, 1, 2],
+    [1440, 900, 2, 1], // a retina laptop: 2 screen pixels per portrait pixel, still 115 CSS px
+    [390, 844, 2, 0.5], // a phone: 1 screen pixel per portrait pixel, 57.5 CSS px
+    [390, 844, 3, 2 / 3], // a 3× phone: 2 screen pixels, 77 CSS px
+  ])('sizes the HUD portraits on %i×%i ×%i in whole screen pixels', (w, h, dpr, zoom) => {
+    const layout = stageLayout(w, h, dpr);
+    expect(layout.portraitZoom).toBeCloseTo(zoom);
+    expect(Number.isInteger(Math.round(layout.portraitZoom * dpr * 1000) / 1000)).toBe(true);
+  });
+
+  it('never draws a picture smaller than one screen pixel per image pixel', () => {
+    expect(devicePixelZoom(10, 137, 1)).toBe(1);
+    expect(devicePixelZoom(10, 137, 2)).toBe(0.5);
   });
 
   it('turns scene pixels into stage CSS pixels', () => {

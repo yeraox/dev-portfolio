@@ -7,21 +7,19 @@ import type { SectionId } from '../content/sections';
 // TS concept — a function type in a Record: for every section, a function returning the promise
 // of a module whose default export is a component.
 const LOADERS: Record<SectionId, () => Promise<{ default: ComponentType }>> = {
-  equip: () => import('./EquipWindow'),
-  alchemy: () => import('./AlchemyWindow'),
-  stats: () => import('./StatsWindow'),
-  comms: () => import('./CommsWindow'),
-  buffs: () => import('./DraftWindow'),
-  craft: () => import('./DraftWindow'),
+  projects: () => import('./ProjectsWindow'),
+  stack: () => import('./StackWindow'),
+  profile: () => import('./ProfileWindow'),
+  contact: () => import('./ContactWindow'),
+  about: () => import('./DraftWindow'),
 };
 
 export const WINDOWS: Record<SectionId, LazyExoticComponent<ComponentType>> = {
-  equip: lazy(LOADERS.equip),
-  alchemy: lazy(LOADERS.alchemy),
-  stats: lazy(LOADERS.stats),
-  comms: lazy(LOADERS.comms),
-  buffs: lazy(LOADERS.buffs),
-  craft: lazy(LOADERS.craft),
+  projects: lazy(LOADERS.projects),
+  stack: lazy(LOADERS.stack),
+  profile: lazy(LOADERS.profile),
+  contact: lazy(LOADERS.contact),
+  about: lazy(LOADERS.about),
 };
 
 export function preloadWindow(section: SectionId): void {

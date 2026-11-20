@@ -1,9 +1,9 @@
 // Single source of truth for every color in the project.
 // - UI_PALETTE: scenes + interface (max 32 colors). Mirrored as CSS variables in tokens.css;
 //   a test fails if both files drift apart.
-// - Characters (Yeray, Null, portraits) are NOT drawn with this palette: they are Yeray's
-//   reference images on their native pixel grid (src/assets/characters, made by
-//   scripts/sprites/cutout.mjs) and keep the references' own colours.
+// - Characters (Yeray, Null, portraits) and the ring icons are NOT drawn with this palette: they
+//   are Yeray's reference images (src/assets/characters and src/assets/icons, made by
+//   scripts/sprites/cutout.mjs and icons.mjs) and keep the references' own colours.
 
 // TS concept — `Record<K, V>`: an object whose keys are of type K and values of type V.
 // Here: any string name → a hex color string.

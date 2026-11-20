@@ -1,0 +1,42 @@
+.bar {
+  display: flex;
+  align-items: center;
+  gap: calc(2 * var(--u));
+}
+
+.label {
+  min-width: 2ch;
+  font-family: var(--font-display);
+  font-size: max(20px, calc(5 * var(--u)));
+  line-height: 1;
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+}
+
+/* An ink track with a 1u inner margin (DESIGN.md §6, like the windows' StatBar). */
+.track {
+  width: calc(24 * var(--u));
+  height: calc(4 * var(--u));
+  padding: var(--u);
+  background: var(--ink);
+}
+
+/* The fill grows in 4 hard steps over 16 frames when it changes (never a smooth slide). */
+.fill {
+  height: 100%;
+  background: var(--red-1);
+  box-shadow: inset 0 calc(-1 * var(--u)) 0 var(--red-0);
+}
+
+/* (With less motion asked for, the bar simply takes its new length.) */
+@media (prefers-reduced-motion: no-preference) {
+  .fill {
+    transition: width calc(16 * var(--frame)) steps(4);
+  }
+}
+
+.bar[data-kind='xp'] .fill {
+  background: var(--blue-3);
+  box-shadow: inset 0 calc(-1 * var(--u)) 0 var(--blue-1);
+}
+

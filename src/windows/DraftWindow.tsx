@@ -2,7 +2,7 @@ import { useLocale } from '../content/useLocale';
 import { WindowSections } from './WindowSections';
 import sheet from './sheet.module.css';
 
-/** BUFFS and CRAFT while they are drafts (only reachable in development). */
+/** A section still without its content: ABOUT ME for now (only reachable in development). */
 export default function DraftWindow() {
   const { t } = useLocale();
   const content = <p className={sheet.paragraph}>{t.window.draft}</p>;

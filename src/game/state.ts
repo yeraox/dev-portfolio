@@ -1,12 +1,13 @@
-// The camp's state machine (BRIEF.md: HUB ↔ WINDOW). TITLE, TRANSITION and INTRO join in
-// phases 5–6. A pure function: (state, action) → next state, so every transition is testable.
-import type { SectionId } from '../content/sections';
+// The camp's state machine (BRIEF.md: HUB ↔ WINDOW); the title, transition and intro have their
+// own (screens.ts). A pure function: (state, action) → next state, so every transition is testable.
+import { isSection, type SectionId, type SlotId } from '../content/sections';
 
 // TS concept — discriminated union: both states share the `scene` field with a different literal
 // value. After `if (state.scene === 'WINDOW')`, TypeScript knows `state.section` exists.
+// The open window is a section's, or the CV's question ("Download the CV?").
 export type GameState =
-  | { scene: 'HUB'; ring: SectionId[]; active: number }
-  | { scene: 'WINDOW'; ring: SectionId[]; active: number; section: SectionId };
+  | { scene: 'HUB'; ring: SlotId[]; active: number }
+  | { scene: 'WINDOW'; ring: SlotId[]; active: number; section: SectionId | 'cv' };
 
 export type GameAction =
   | { type: 'ROTATE'; step: 1 | -1 } // ← / → / swipe: the next or previous slot comes to the top
@@ -14,22 +15,35 @@ export type GameAction =
   | { type: 'OPEN' } // Enter / Space: open the slot at the top
   | { type: 'CLOSE' }; // Esc / back button: close the window
 
-/** `ring` = the sections the menu shows, in order. The first one starts at the top, unless the
- *  page was opened on a section's link (`opened`, e.g. /#equip): then that window starts open. */
-export function initialState(ring: SectionId[], opened: SectionId | null = null): GameState {
+/** `ring` = the slots the menu shows, in order. The first one starts at the top, unless the page
+ *  was opened on a section's link (`opened`, e.g. /#projects): then that window starts open. */
+export function initialState(ring: SlotId[], opened: SectionId | null = null): GameState {
   const index = opened ? ring.indexOf(opened) : -1;
   if (opened && index >= 0) return { scene: 'WINDOW', ring, active: index, section: opened };
   return { scene: 'HUB', ring, active: 0 };
 }
 
-/** The section named by a link's hash (#equip → 'equip'), if the ring shows it. */
-export function sectionFromHash(hash: string, ring: SectionId[]): SectionId | null {
-  return ring.find((section) => `#${section}` === hash) ?? null;
+/** The section named by a link's hash (#projects → 'projects'), if the ring shows it. The CV and
+ *  the language have no link of their own. */
+export function sectionFromHash(hash: string, ring: SlotId[]): SectionId | null {
+  for (const slot of ring) {
+    if (isSection(slot) && `#${slot}` === hash) return slot;
+  }
+  return null;
 }
 
 /** Index arithmetic that wraps around the ring: -1 → last, length → 0. */
 export function wrap(index: number, length: number): number {
   return ((index % length) + length) % length;
+}
+
+/** Opening a slot: a section shows its window and the CV asks before downloading. The language
+ *  slot only comes to the top: the camp switches the language itself, without a window. */
+function activate(state: GameState, index: number): GameState {
+  const slot = state.ring[index];
+  if (slot === 'language') return { scene: 'HUB', ring: state.ring, active: index };
+  // Here TypeScript has narrowed `slot` to SectionId | 'cv': the `if` above ruled 'language' out.
+  return { scene: 'WINDOW', ring: state.ring, active: index, section: slot };
 }
 
 export function gameReducer(state: GameState, action: GameAction): GameState {
@@ -42,9 +56,9 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       return { ...state, active: wrap(state.active + action.step, state.ring.length) };
     case 'PICK':
       if (!Number.isInteger(action.index) || action.index < 0 || action.index >= state.ring.length) return state;
-      return { scene: 'WINDOW', ring: state.ring, active: action.index, section: state.ring[action.index] };
+      return activate(state, action.index);
     case 'OPEN':
-      return { scene: 'WINDOW', ring: state.ring, active: state.active, section: state.ring[state.active] };
+      return activate(state, state.active);
     case 'CLOSE':
       return state;
   }

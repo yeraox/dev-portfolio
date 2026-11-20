@@ -12,8 +12,16 @@
   background: none;
 }
 
+/* A scroll inside the window never carries on to the page behind it (both rules are needed:
+   the backdrop is not a scroll container by itself). */
+.dialog:modal {
+  overscroll-behavior: contain;
+}
+
 /* SNES windows open over the scene without dimming it. */
 .dialog::backdrop {
+  overflow: hidden;
+  overscroll-behavior: contain;
   background: none;
 }
 
@@ -26,6 +34,17 @@
 
 .window {
   height: 100%;
+}
+
+/* Compact (a question, e.g. "Download the CV?"): as big as its content, in the middle of the
+   screen, on every screen size. */
+.dialog[data-compact='true'] {
+  width: min(calc(var(--stage-width, 100vw) - 8 * var(--u)), calc(140 * var(--u)));
+  height: fit-content; /* with the browser's own `inset: 0; margin: auto`, this centres it */
+}
+
+.dialog[data-compact='true'] .window {
+  height: auto;
 }
 
 /* The [ESC] EXIT prompt is also a button, for touch and mouse. */

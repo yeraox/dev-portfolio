@@ -39,6 +39,15 @@
   background: var(--ink);
 }
 
+/* Windows' high-contrast mode drops backgrounds and box-shadows (the plate and the bullet), so
+   there the chosen tab gets an outline: never marked by colour alone (WCAG 1.4.1). */
+@media (forced-colors: active) {
+  .tab[aria-selected='true'] {
+    outline: var(--u) solid CanvasText;
+    outline-offset: calc(-1 * var(--u));
+  }
+}
+
 .tab[aria-selected='true']::before {
   content: '';
   flex: none;
@@ -84,8 +93,14 @@
   height: calc(4 * var(--u));
   background: var(--gold-3);
   clip-path: polygon(0 0, 100% 0, 50% 100%);
-  animation: blink calc(48 * var(--frame)) steps(1) infinite;
   pointer-events: none;
+}
+
+/* It blinks only for visitors who haven't asked for less motion; otherwise it stays still. */
+@media (prefers-reduced-motion: no-preference) {
+  .more {
+    animation: blink calc(48 * var(--frame)) steps(1) infinite;
+  }
 }
 
 @keyframes blink {
@@ -99,8 +114,3 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .more {
-    animation: none;
-  }
-}

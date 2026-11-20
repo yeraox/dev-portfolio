@@ -1,14 +1,16 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type RefObject } from 'react';
 import { NULL_DOG, YERAY, type Pose } from '../../assets/characters/characters';
 import { drawPose, drawShadow, poseBob, poseFrame, preloadPoses } from '../../engine/drawCharacter';
 import { CAMP_POSES, loadCampBackground, type CampBackground } from './campAssets';
 import { useGameLoop } from '../../engine/useGameLoop';
+import { poseDuration, type IdleActor } from '../../game/idle';
 import { actorAt, type ActorFrame } from '../../game/script';
 import type { StageLayout } from '../../game/stage';
 import { UI_PALETTE } from '../../styles/palette';
 import { CAMP } from './campLayout';
 import { FIRE, fireFrame } from './fireFlicker';
 import { INTRO, INTRO_MS, INTRO_POSES } from './intro';
+import type { IdleNow } from './useIdleDirector';
 import styles from './CampScene.module.css';
 
 // The intro's clock only moves while frames are drawn: a hidden tab stops the game loop, and the
@@ -20,13 +22,18 @@ type CampCanvasProps = {
   reducedMotion: boolean;
   intro: boolean; // play the intro's script instead of the still camp
   onIntroEnd: () => void; // called once, when the script is over
+  idle?: RefObject<IdleNow | null>; // the idle action playing now, if any (useIdleDirector)
 };
+
+// TS concept — an intersection (`&`): everything an ActorFrame has, plus one optional field.
+/** A character in the camp: `breathe` = the still pose whose breathing goes on during an action. */
+type CampActor = ActorFrame & { breathe?: Pose };
 
 /** The size of a character's ground shadow, in scene px (radii of the ellipse). */
 function shadowFor(pose: Pose): { rx: number; ry: number } {
-  if (pose === NULL_DOG.sit) return { rx: 13, ry: 3 };
+  if (pose === NULL_DOG.sit || pose === NULL_DOG.tilt || pose === NULL_DOG.wag || pose === NULL_DOG.scratch) return { rx: 13, ry: 3 };
   if (pose === NULL_DOG.trotSide) return { rx: 16, ry: 3 };
-  if (pose === NULL_DOG.walkDown || pose === NULL_DOG.stand) return { rx: 9, ry: 2 };
+  if (pose === NULL_DOG.walkDown || pose === NULL_DOG.stand) return { rx: 12, ry: 3 }; // as wide as he is sitting
   return { rx: 17, ry: 4 }; // Yeray
 }
 
@@ -36,7 +43,7 @@ function shadowFor(pose: Pose): { rx: number; ry: number } {
  * they stay at their places. The game loop asks every frame, but the canvas is only redrawn when
  * something visible changed (a step, a pose, a breath, the flame, the size).
  */
-export function CampCanvas({ layout, reducedMotion, intro, onIntroEnd }: CampCanvasProps) {
+export function CampCanvas({ layout, reducedMotion, intro, onIntroEnd, idle }: CampCanvasProps) {
   const ref = useRef<HTMLCanvasElement>(null);
   // TS concept — a union with null: until the image has loaded there is no background to draw.
   const [background, setBackground] = useState<CampBackground | null>(null);
@@ -67,7 +74,7 @@ export function CampCanvas({ layout, reducedMotion, intro, onIntroEnd }: CampCan
     if (!canvas || !ctx || !background || !posesReady) return;
 
     // Who stands where: the intro's script, or the camp's places.
-    let actors: ActorFrame[];
+    let actors: CampActor[];
     if (intro) {
       const c = clock.current;
       if (c.last >= 0) c.elapsed += Math.min(now - c.last, LONGEST_STEP_MS);
@@ -78,9 +85,19 @@ export function CampCanvas({ layout, reducedMotion, intro, onIntroEnd }: CampCan
       }
       actors = [actorAt(INTRO.yeray, c.elapsed), actorAt(INTRO.null, c.elapsed)];
     } else {
+      // At rest, unless one of them is playing an idle action (it starts on its first frame).
+      const playing = idle?.current;
+      const acting = (who: IdleActor) => (playing && playing.actor === who && now - playing.start < poseDuration(playing.pose) ? playing : null);
+      const yeray = acting('yeray');
+      const dog = acting('null');
+      // Which action plays, for the checks (check:camp): "null:wag", or nothing at rest.
+      const showing = yeray ? `yeray:${yeray.name}` : dog ? `null:${dog.name}` : '';
+      if (canvas.dataset.idle !== showing) canvas.dataset.idle = showing;
+      // They keep breathing during an action (the still pose's clock), so it never starts or
+      // ends with a 1 px hop.
       actors = [
-        { pose: YERAY.idle, x: CAMP.yeray.x, ground: CAMP.yeray.ground, flip: false, poseTime: now },
-        { pose: NULL_DOG.sit, x: CAMP.null.x, ground: CAMP.null.ground, flip: false, poseTime: now },
+        { pose: yeray?.pose ?? YERAY.idle, x: CAMP.yeray.x, ground: CAMP.yeray.ground, flip: false, poseTime: yeray ? now - yeray.start : now, breathe: YERAY.idle },
+        { pose: dog?.pose ?? NULL_DOG.sit, x: CAMP.null.x, ground: CAMP.null.ground, flip: false, poseTime: dog ? now - dog.start : now, breathe: NULL_DOG.sit },
       ];
     }
     // The one further down the screen is nearer the camera, so it is drawn last (in front).
@@ -88,7 +105,7 @@ export function CampCanvas({ layout, reducedMotion, intro, onIntroEnd }: CampCan
     const looks = drawOrder.map((actor) => ({
       ...actor,
       frame: poseFrame(actor.pose, actor.poseTime),
-      bob: poseBob(actor.pose, actor.poseTime, reducedMotion),
+      bob: actor.breathe ? poseBob(actor.breathe, now, reducedMotion) : poseBob(actor.pose, actor.poseTime, reducedMotion),
     }));
 
     const flame = fireFrame(now, reducedMotion);

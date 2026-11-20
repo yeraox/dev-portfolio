@@ -1,8 +1,11 @@
 // Ring menu geometry (DESIGN.md §6), in scene pixels of the 640×360 scene. Pure functions.
 export const RING = {
-  rx: 124, // horizontal radius of the ellipse
-  ry: 84, // vertical radius
-  icon: 32, // a 16×16 icon drawn at 2 scene px per icon pixel
+  // Each slot carries its name above its icon, so the ellipse leaves room for it: the top slot's
+  // name clears the banner, the bottom slot's name fits between Yeray's boots and its icon, and
+  // the lower side names pass beside Null (measured in check:camp at 390, 768 and 1440 px).
+  rx: 136, // horizontal radius of the ellipse
+  ry: 88, // vertical radius
+  icon: 28, // the longest side of an icon (npm run icons), 1 icon pixel = 1 scene pixel
 } as const;
 // TS concept — `as const`: the values become read-only and keep their exact numbers.
 

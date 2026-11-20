@@ -6,9 +6,13 @@
   pointer-events: none;
 }
 
-/* A small stone panel with the window bevel (DESIGN.md §5), no opening wipe. */
+/* A small stone panel with the window bevel (DESIGN.md §5), no opening wipe: the portrait, and
+   beside it the name and the bars. Null's is mirrored, so both portraits sit at the outer edges. */
 .panel {
   margin: 0;
+  display: flex;
+  align-items: center;
+  gap: calc(3 * var(--u));
   padding: calc(3 * var(--u));
   background-color: var(--stone-0);
   background-size: calc(32 * var(--u)) calc(32 * var(--u));
@@ -19,64 +23,42 @@
     0 0 0 var(--u) var(--ink);
 }
 
+.panel:last-child {
+  flex-direction: row-reverse;
+}
+
 /* The portrait sits in an ink "screen" with the engraved edge of the windows. */
-.portrait {
-  position: relative;
-  overflow: hidden;
-  background: var(--night-1);
+.screen {
+  flex: none;
+  margin: calc(2 * var(--u));
+  background-color: var(--night-1);
   box-shadow:
     0 0 0 var(--u) var(--ink),
     0 0 0 calc(2 * var(--u)) var(--stone-3);
 }
 
-.centred {
+.status {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: calc(2 * var(--u));
+}
+
+.panel:last-child .status {
   align-items: flex-end;
 }
 
 .name {
-  margin-top: calc(3 * var(--u));
   font-family: var(--font-display);
   font-size: var(--display-size);
   line-height: 1;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  text-align: center;
   color: var(--gold-3);
 }
 
-/* Portrait screens: name beside the portrait, so the HUD row stays short. */
+/* Portrait screens: a little tighter, the row under the scene is narrow. */
 .hud[data-compact='true'] .panel {
-  display: flex;
-  align-items: center;
-  gap: calc(4 * var(--u));
-}
-
-.hud[data-compact='true'] .panel:last-child {
-  flex-direction: row-reverse;
-}
-
-.hud[data-compact='true'] .name {
-  margin-top: 0;
-}
-
-/* Between the portraits (the CV link on portrait screens). The HUD lets swipes through; this
-   slot takes clicks again. On very narrow phones it moves under the portraits. */
-.middle {
-  align-self: center;
-  pointer-events: auto;
-}
-
-@media (max-width: 359px) {
-  .hud:has(.middle) {
-    flex-wrap: wrap;
-  }
-
-  .middle {
-    order: 3;
-    flex-basis: 100%;
-    display: flex;
-    justify-content: center;
-  }
+  gap: calc(2 * var(--u));
+  padding: calc(2 * var(--u));
 }

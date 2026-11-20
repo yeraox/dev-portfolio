@@ -134,7 +134,6 @@ export function WindowSections({ label, sections }: WindowSectionsProps) {
               type="button"
               role="tab"
               id={`${id}-tab-${index}`}
-              aria-controls={`${id}-panel`}
               aria-selected={index === selected}
               tabIndex={index === selected ? 0 : -1}
               className={styles.tab}

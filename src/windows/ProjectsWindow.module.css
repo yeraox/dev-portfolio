@@ -1,4 +1,4 @@
-/* EQUIP: one project per section. Wide windows put the pictures on the left and the text on
+/* ALCHEMY (projects): one project per section. Wide windows put the pictures on the left and the text on
    the right; narrow ones stack them. The width is the window's (container query), not the
    screen's. */
 .project {

@@ -1,26 +1,28 @@
-import { YERAY } from '../assets/characters/characters';
 import { Divider } from '../components/Divider';
-import { PixelSprite } from '../components/PixelSprite';
+import { Portrait } from '../components/Portrait';
 import { useLocale } from '../content/useLocale';
 import { useStageLayout } from '../engine/useScreen';
+import { CHARACTER_IMAGES } from '../assets/characters/characters';
+import { devicePixelZoom } from '../game/stage';
 import { WindowSections } from './WindowSections';
 import sheet from './sheet.module.css';
-import styles from './StatsWindow.module.css';
+import styles from './ProfileWindow.module.css';
 
-/** STATS — the character sheet in three sections: profile, education and the quest log. */
-export default function StatsWindow() {
+/** STATS (profile) — the character sheet in three sections: profile, education and the quest log. */
+export default function ProfileWindow() {
   const { t } = useLocale();
-  const { scale } = useStageLayout();
-  const s = t.stats;
-  // The portrait grows with the window: ×3 on a 1440 laptop, ×2 on a phone.
-  const portraitZoom = Math.max(2, Math.round(1.5 * scale));
+  const { mode, uiUnit, dpr } = useStageLayout();
+  const s = t.profile;
+  // His face (the same as in the HUD: his in-game drawing, from the hair to the collar) grows with
+  // the window, in whole screen pixels: 138 CSS px on phones, tablets and a 1440 laptop, 276 from
+  // 1920 px. (On portrait screens the window is the whole screen.)
+  const face = CHARACTER_IMAGES['yeray-front'].width;
+  const portraitZoom = devicePixelZoom(mode === 'tall' ? 140 : 48 * uiUnit, face, dpr);
 
   const profile = (
     <div className={styles.profile}>
       <div className={styles.card}>
-        <div className={styles.portrait}>
-          <PixelSprite pose={YERAY.portrait} unit={portraitZoom} />
-        </div>
+        <Portrait who="yeray" side={face * portraitZoom} zoom={portraitZoom} className={styles.portrait} />
         <div className={styles.identity}>
           <p className={styles.name}>{s.name}</p>
           <p className={styles.role}>{s.role}</p>
@@ -76,7 +78,7 @@ export default function StatsWindow() {
 
   return (
     <WindowSections
-      label={t.sections.stats.title}
+      label={t.sections.profile.title}
       sections={[
         { id: 'profile', label: s.profileTitle, content: profile },
         { id: 'education', label: s.educationTitle, content: education },

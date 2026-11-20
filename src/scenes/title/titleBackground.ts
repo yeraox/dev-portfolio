@@ -1,6 +1,6 @@
 // The title screen's night landscape, drawn in code from the palette as flat silhouettes: a dark
 // sky in dithered bands with stars, a thin blue glow on the horizon, the cave mountain (its mouth
-// is where the intro starts in phase 6) and a pine forest in front. One "art pixel" = 2 scene px.
+// is where the intro starts) and a pine forest in front. One "art pixel" = 2 scene px.
 import { UI_PALETTE, type UiColor } from '../../styles/palette';
 
 /** Repeatable "random" number in [0, 1) for a pixel. */

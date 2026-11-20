@@ -1,0 +1,15 @@
+/* The technologies of a group in a row that wraps, each one with its icon before its name. */
+.techs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--u) calc(5 * var(--u));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tech {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(2 * var(--u));
+}

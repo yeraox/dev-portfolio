@@ -1,3 +1,4 @@
+import { statSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { EN } from './en';
 import { ES } from './es';
@@ -19,10 +20,11 @@ describe('Spanish and English', () => {
 
   it('keep the facts that must not change: links, names, dates', () => {
     const facts = (content: Content) => [
-      content.comms.rows.map((row) => row.href).filter((href) => !href?.startsWith('/cv/')),
-      content.equip.projects.map((project) => [project.id, project.repo, project.stack.length, project.media.kind]),
-      content.stats.education.map((item) => [item.school, item.years, item.status]),
-      content.stats.quests.map((quest) => [quest.company, quest.tasks.length]),
+      content.contact.rows.map((row) => row.href).filter((href) => !href?.startsWith('/cv/')),
+      content.projects.list.map((project) => [project.id, project.repo, project.stack.length, project.media.kind]),
+      content.profile.education.map((item) => [item.school, item.years, item.status]),
+      content.profile.quests.map((quest) => [quest.company, quest.tasks.length]),
+      content.stack.tiers.map((tier) => tier.groups.map((group) => group.items.map((tech) => tech.id))),
     ];
     expect(facts(EN)).toEqual(facts(ES));
   });
@@ -40,30 +42,30 @@ describe.each(LOCALES)('%s', (_locale, content) => {
   });
 
   it('links are https or mailto, or the CV pages and PDF on this site', () => {
-    const hrefs = [...content.comms.rows.map((row) => row.href), ...content.equip.projects.map((project) => project.repo)];
+    const hrefs = [...content.contact.rows.map((row) => row.href), ...content.projects.list.map((project) => project.repo)];
     for (const href of hrefs) if (href) expect(href).toMatch(/^(https:\/\/|mailto:|\/cv\/)/);
   });
 
   it('Bosa Digital (NDA) only shows its three CV sentences, with no media', () => {
-    const bosa = content.equip.projects.find((project) => project.id === 'bosa');
+    const bosa = content.projects.list.find((project) => project.id === 'bosa');
     expect(bosa?.did).toHaveLength(3);
-    expect(bosa?.did).toEqual(content.stats.quests[0].tasks);
+    expect(bosa?.did).toEqual(content.profile.quests[0].tasks);
     expect(bosa?.media.kind).toBe('classified');
     expect(bosa?.repo).toBeUndefined();
     expect(bosa?.summary).toBeUndefined();
   });
 
-  it('ALCHEMY has no levels or percentages', () => {
-    for (const tier of content.alchemy.tiers) {
-      for (const group of tier.groups) for (const item of group.items) expect(item).not.toMatch(/%|\d+\s*\/\s*\d+/);
+  it('STACK has no levels or percentages', () => {
+    for (const tier of content.stack.tiers) {
+      for (const group of tier.groups) for (const item of group.items) expect(item.name).not.toMatch(/%|\d+\s*\/\s*\d+/);
     }
-    expect(content.alchemy.tiers).toHaveLength(2);
+    expect(content.stack.tiers).toHaveLength(2);
   });
 });
 
 describe('Spanish source', () => {
   it('keeps the Bosa Digital sentences exactly as in the CV', () => {
-    expect(ES.stats.quests[0].tasks).toEqual([
+    expect(ES.profile.quests[0].tasks).toEqual([
       'Herramientas en Python para automatizar procesos internos del área de ventas.',
       'Investigación e integración de APIs externas y fuentes de datos para herramientas internas.',
       'Lógica de backend con Django en el entorno de desarrollo de la empresa, con Git.',
@@ -84,5 +86,16 @@ describe('pickLocale', () => {
     expect(pickLocale(null, 'en-GB')).toBe('en');
     expect(pickLocale(null, undefined)).toBe('en');
     expect(pickLocale('fr', 'es-AR')).toBe('es'); // an unknown saved value is ignored
+  });
+});
+
+describe('the CV slot of the ring', () => {
+  it.each([
+    ['es', ES, ','],
+    ['en', EN, '.'],
+  ] as const)('%s: says how much its PDF really weighs', (locale, content, decimalMark) => {
+    // The question window tells the size before downloading: it must match the file in public/.
+    const megabytes = statSync(`public/cv/yeray-caturla-cv-${locale}.pdf`).size / 1024 / 1024;
+    expect(content.cvDownload.file).toContain(`${megabytes.toFixed(1).replace('.', decimalMark)} MB`);
   });
 });

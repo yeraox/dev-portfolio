@@ -4,19 +4,19 @@ import type { Project, ProjectMedia } from '../content/types';
 import { useReducedMotion } from '../engine/useScreen';
 import { WindowSections } from './WindowSections';
 import sheet from './sheet.module.css';
-import styles from './EquipWindow.module.css';
+import styles from './ProjectsWindow.module.css';
 
 // Screenshots fill the media column: half the window on a laptop, the whole width on a phone.
 const SHOT_SIZES = '(min-width: 1040px) 50vw, 92vw';
 
-/** EQUIP — projects, one section each: the wheel, ← →, the tabs or a swipe go from one to the next. */
-export default function EquipWindow() {
+/** ALCHEMY (projects) — projects, one section each: the wheel, ← →, the tabs or a swipe go from one to the next. */
+export default function ProjectsWindow() {
   const { t } = useLocale();
   const reducedMotion = useReducedMotion();
   return (
     <WindowSections
-      label={t.equip.listLabel}
-      sections={t.equip.projects.map((project) => ({
+      label={t.projects.listLabel}
+      sections={t.projects.list.map((project) => ({
         id: project.id,
         label: project.name,
         tag: project.tag,
@@ -28,7 +28,7 @@ export default function EquipWindow() {
 
 function ProjectDetail({ project, reducedMotion }: { project: Project; reducedMotion: boolean }) {
   const { t } = useLocale();
-  const labels = t.equip.labels;
+  const labels = t.projects.labels;
   const hasMedia = project.media.kind !== 'classified';
   return (
     // Wide windows: pictures on the left, text on the right (see .project in the CSS).

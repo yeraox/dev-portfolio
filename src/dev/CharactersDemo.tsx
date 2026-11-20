@@ -3,10 +3,13 @@
 import { Fragment } from 'react';
 import { CHARACTER_IMAGES, NULL_DOG, YERAY, type CharacterImageName, type Pose } from '../assets/characters/characters';
 import { PixelSprite } from '../components/PixelSprite';
+import { Portrait } from '../components/Portrait';
+import { PORTRAIT_PX } from '../game/stage';
 import refFrontWalk from '../../references/grandes/front_walk_animation.png';
-import refPortrait from '../../references/grandes/retrato_yeray.jpg';
+import refPortraitNull from '../../references/portraits/portrait_null.jpg';
 import refSideWalk from '../../references/grandes/sidewalk_animation.png';
 import refNull from '../../references/grandes/null.jpg';
+import refNullFrontWalk from '../../references/grandes/null_front_walk_animation.jpg';
 import styles from './CharactersDemo.module.css';
 
 const SCENE_UNIT = 2; // the scene scale on a 1440 px screen (640×360 ×2)
@@ -20,17 +23,23 @@ const SLOW = 4;
 const WALKS = [
   { title: 'Hacia la cámara', walk: YERAY.walkDown, slow: { ...YERAY.walkDown, ms: YERAY.walkDown.ms * SLOW }, sheet: refFrontWalk },
   { title: 'De lado', walk: YERAY.walkSide, slow: { ...YERAY.walkSide, ms: YERAY.walkSide.ms * SLOW }, sheet: refSideWalk },
+  { title: 'Null hacia la cámara', walk: NULL_DOG.walkDown, slow: { ...NULL_DOG.walkDown, ms: NULL_DOG.walkDown.ms * SLOW }, sheet: refNullFrontWalk },
 ];
 
-/** A single frame shown still. */
-const still = (frame: CharacterImageName): Pose => ({ frames: [frame], ms: 1000, pixelSize: 1 });
+/** A single frame shown still, at its walk's pixel size (Null's is half Yeray's). */
+const still = (frame: CharacterImageName, pixelSize = 1): Pose => ({ frames: [frame], ms: 1000, pixelSize });
 
 type Row = { label: string; reference: string; pose: Pose; unit: number };
 
-const ROWS: Row[] = [
-  { label: 'Retrato', reference: refPortrait, pose: YERAY.portrait, unit: 3 },
-  { label: 'Null sentado', reference: refNull, pose: NULL_DOG.sit, unit: 7 },
-];
+const ROWS: Row[] = [{ label: 'Null sentado', reference: refNull, pose: NULL_DOG.sit, unit: 7 }];
+
+// The HUD portraits (phase 8): Null's picture without its gold frame, and Yeray's in-game face
+// (twice Null's zoom, as in the HUD), next to their references, 3 screen pixels per pixel
+// of Null's portrait.
+const PORTRAITS = [
+  { label: 'Retrato de Yeray (tu dibujo del juego, ×2 respecto a Null)', who: 'yeray', reference: refFrontWalk, zoom: 6 },
+  { label: 'Retrato de Null (sin su marco dorado)', who: 'null', reference: refPortraitNull, zoom: 3 },
+] as const;
 
 export default function CharactersDemo() {
   return (
@@ -57,6 +66,26 @@ export default function CharactersDemo() {
         </div>
       </section>
 
+      <section className={styles.section}>
+        <h2>En reposo (fase 8): las acciones, a tamaño de revisión</h2>
+        <p>
+          Cada una empieza y acaba en el dibujo quieto del juego: de tus hojas solo se toma lo que
+          cambia (el brazo, la taza, la cabeza, la pata, la cola).
+        </p>
+        <div className={styles.scene}>
+          <PixelSprite pose={YERAY.idle} unit={REVIEW_UNIT} />
+          <PixelSprite pose={YERAY.glasses} unit={REVIEW_UNIT} />
+          <PixelSprite pose={YERAY.coffee} unit={REVIEW_UNIT} />
+          <PixelSprite pose={YERAY.think} unit={REVIEW_UNIT} />
+        </div>
+        <div className={styles.scene}>
+          <PixelSprite pose={NULL_DOG.sit} unit={REVIEW_UNIT} />
+          <PixelSprite pose={NULL_DOG.tilt} unit={REVIEW_UNIT} />
+          <PixelSprite pose={NULL_DOG.wag} unit={REVIEW_UNIT} />
+          <PixelSprite pose={NULL_DOG.scratch} unit={REVIEW_UNIT} />
+        </div>
+      </section>
+
       {WALKS.map(({ title, walk, slow, sheet }) => (
         <section key={title} className={styles.section}>
           <h2>Caminar · {title}</h2>
@@ -74,7 +103,7 @@ export default function CharactersDemo() {
                 {i === 4 && <div className={styles.break} />}
                 <figure className={styles.frame}>
                   <div className={styles.stage}>
-                    <PixelSprite pose={still(frame)} unit={REVIEW_UNIT} />
+                    <PixelSprite pose={still(frame, walk.pixelSize)} unit={REVIEW_UNIT} />
                   </div>
                   <figcaption>
                     {i + 1} · {STEPS[i]}
@@ -93,11 +122,11 @@ export default function CharactersDemo() {
                   <div className={styles.stage}>
                     <div className={styles.onion}>
                       <PixelSprite
-                        pose={still(walk.frames[(i + walk.frames.length - 1) % walk.frames.length])}
+                        pose={still(walk.frames[(i + walk.frames.length - 1) % walk.frames.length], walk.pixelSize)}
                         unit={REVIEW_UNIT}
                         className={styles.ghost}
                       />
-                      <PixelSprite pose={still(frame)} unit={REVIEW_UNIT} />
+                      <PixelSprite pose={still(frame, walk.pixelSize)} unit={REVIEW_UNIT} />
                     </div>
                   </div>
                   <figcaption>
@@ -131,11 +160,16 @@ export default function CharactersDemo() {
       </section>
 
       <section className={styles.section}>
-        <h2>Retratos</h2>
-        <div className={styles.scene}>
-          <PixelSprite pose={YERAY.portrait} unit={3} />
-          <PixelSprite pose={NULL_DOG.portrait} unit={4} />
-        </div>
+        <h2>Retratos · Referencia · Personaje</h2>
+        {PORTRAITS.map((portrait) => (
+          <figure key={portrait.label} className={styles.compare}>
+            <figcaption>{portrait.label}</figcaption>
+            <div className={styles.columns}>
+              <img className={styles.reference} src={portrait.reference} alt={`Referencia: ${portrait.label}`} />
+              <Portrait who={portrait.who} side={PORTRAIT_PX * 3} zoom={portrait.zoom} />
+            </div>
+          </figure>
+        ))}
       </section>
     </main>
   );

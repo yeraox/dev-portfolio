@@ -1,0 +1,52 @@
+/* Which file it is: format, language and size. */
+.file {
+  margin: 0 0 calc(6 * var(--u));
+  font-size: var(--text-small);
+  color: var(--text-dim);
+}
+
+.answers {
+  display: flex;
+  gap: calc(6 * var(--u));
+}
+
+/* Two game answers on ink plates; the focused (or hovered) one turns gold, like the key caps. */
+.answer {
+  position: relative;
+  min-width: calc(24 * var(--u));
+  padding: calc(2 * var(--u)) calc(5 * var(--u)) var(--u);
+  font-family: var(--font-display);
+  font-size: var(--display-size);
+  line-height: 1;
+  letter-spacing: 0.08em;
+  text-align: center;
+  text-decoration: none;
+  color: var(--text-dim);
+  background: var(--ink);
+  border: 0;
+  box-shadow: inset 0 calc(-1 * var(--u)) 0 var(--stone-2);
+  cursor: pointer;
+}
+
+/* The chosen answer turns gold. Any focus, not only the keyboard's: the window opens with YES
+   focused, also after a click or a tap, so the visitor always sees which answer Enter picks; the
+   mouse moves the focus too (see the component), so only one answer is ever gold. */
+.answer:focus {
+  color: var(--ink);
+  background: var(--gold-3);
+  outline: none;
+}
+
+/* Touch screens: the finger target reaches 44 px tall without changing how it looks. The row
+   keeps room below for it, so the window's panel never gets a scroll of a few pixels. */
+@media (pointer: coarse) {
+  .answers {
+    padding-bottom: 8px;
+  }
+
+  .answer::after {
+    content: '';
+    position: absolute;
+    inset: -8px 0;
+  }
+}

@@ -6,7 +6,7 @@ import { SCENE_IMAGES } from '../../assets/scenes/scenes.gen';
 // The flame inside the camp image, in the image's pixels (below the paella pan).
 export const FIRE = { x: 380, y: 445, width: 100, height: 60 } as const;
 
-export const FIRE_FRAME_MS = 110;
+const FIRE_FRAME_MS = 110;
 const SEQUENCE = [0, 1, 2, 0, 3, 1, 2, 3]; // 0 = the flame as drawn
 const VARIANTS = 3;
 

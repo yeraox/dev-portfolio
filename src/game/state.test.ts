@@ -1,26 +1,33 @@
 import { describe, expect, it } from 'vitest';
-import { SECTIONS, visibleSections } from '../content/sections';
+import { SLOTS, isSection, visibleSlots } from '../content/sections';
 import { gameReducer, initialState, sectionFromHash, wrap, type GameAction, type GameState } from './state';
 
-const RING_ALL = visibleSections(true).map((section) => section.id);
-const RING_LIVE = visibleSections(false).map((section) => section.id);
+const RING_ALL = visibleSlots(true);
+const RING_LIVE = visibleSlots(false);
 
-describe('sections', () => {
-  it('hides drafts in production: BUFFS and CRAFT', () => {
-    expect(RING_ALL).toHaveLength(SECTIONS.length);
-    expect(RING_LIVE).toEqual(['equip', 'alchemy', 'stats', 'comms']);
+describe('ring slots', () => {
+  it('shows the four sections, then the CV and the language; ABOUT ME only while developing', () => {
+    expect(RING_ALL).toHaveLength(SLOTS.length);
+    expect(RING_ALL).toContain('about');
+    expect(RING_LIVE).toEqual(['projects', 'stack', 'profile', 'contact', 'cv', 'language']);
+  });
+
+  it('tells the sections apart from the two actions', () => {
+    expect(RING_ALL.filter(isSection)).toEqual(['projects', 'stack', 'profile', 'contact', 'about']);
   });
 });
 
 describe('gameReducer', () => {
   const hub = initialState(RING_LIVE);
+  const CV = RING_LIVE.indexOf('cv');
+  const LANGUAGE = RING_LIVE.indexOf('language');
 
-  it('starts at the camp with the first section at the top', () => {
+  it('starts at the camp with the first slot at the top', () => {
     expect(hub).toEqual({ scene: 'HUB', ring: RING_LIVE, active: 0 });
   });
 
   it('rotates both ways and wraps around', () => {
-    expect(gameReducer(hub, { type: 'ROTATE', step: -1 }).active).toBe(3);
+    expect(gameReducer(hub, { type: 'ROTATE', step: -1 }).active).toBe(RING_LIVE.length - 1);
     const twice = gameReducer(gameReducer(hub, { type: 'ROTATE', step: 1 }), { type: 'ROTATE', step: 1 });
     expect(twice.active).toBe(2);
   });
@@ -28,14 +35,24 @@ describe('gameReducer', () => {
   it('opens the active section and closes back to it', () => {
     const turned = gameReducer(hub, { type: 'ROTATE', step: 1 });
     const open = gameReducer(turned, { type: 'OPEN' });
-    expect(open).toEqual({ scene: 'WINDOW', ring: RING_LIVE, active: 1, section: 'alchemy' });
+    expect(open).toEqual({ scene: 'WINDOW', ring: RING_LIVE, active: 1, section: 'stack' });
     expect(gameReducer(open, { type: 'CLOSE' })).toEqual({ scene: 'HUB', ring: RING_LIVE, active: 1 });
   });
 
   it('opens a clicked slot and ignores slots that do not exist', () => {
-    expect(gameReducer(hub, { type: 'PICK', index: 3 })).toMatchObject({ scene: 'WINDOW', section: 'comms' });
-    expect(gameReducer(hub, { type: 'PICK', index: 4 })).toBe(hub);
+    expect(gameReducer(hub, { type: 'PICK', index: 3 })).toMatchObject({ scene: 'WINDOW', section: 'contact' });
+    expect(gameReducer(hub, { type: 'PICK', index: RING_LIVE.length })).toBe(hub);
     expect(gameReducer(hub, { type: 'PICK', index: -1 })).toBe(hub);
+  });
+
+  it('asks before downloading the CV: its slot opens the question window', () => {
+    expect(gameReducer(hub, { type: 'PICK', index: CV })).toEqual({ scene: 'WINDOW', ring: RING_LIVE, active: CV, section: 'cv' });
+  });
+
+  it('never opens a window for the language: its slot only comes to the top', () => {
+    expect(gameReducer(hub, { type: 'PICK', index: LANGUAGE })).toEqual({ scene: 'HUB', ring: RING_LIVE, active: LANGUAGE });
+    const atTop: GameState = { scene: 'HUB', ring: RING_LIVE, active: LANGUAGE };
+    expect(gameReducer(atTop, { type: 'OPEN' })).toEqual(atTop);
   });
 
   it('keeps the ring still while a window is open', () => {
@@ -50,6 +67,7 @@ describe('gameReducer', () => {
       { type: 'ROTATE', step: 1 },
       { type: 'ROTATE', step: -1 },
       { type: 'PICK', index: 2 },
+      { type: 'PICK', index: LANGUAGE },
       { type: 'OPEN' },
       { type: 'CLOSE' },
     ];
@@ -59,16 +77,21 @@ describe('gameReducer', () => {
         state = gameReducer(state, actions[(i * 7 + (i >> 2)) % actions.length]);
         expect(state.active).toBeGreaterThanOrEqual(0);
         expect(state.active).toBeLessThan(ring.length);
-        if (state.scene === 'WINDOW') expect(state.section).toBe(ring[state.active]);
+        if (state.scene === 'WINDOW') {
+          expect(state.section).toBe(ring[state.active]);
+          expect(state.section).not.toBe('language');
+        }
       }
     }
   });
 
-  it('opens the window of a section link (/#comms) when the ring shows it', () => {
-    expect(initialState(RING_LIVE, 'comms')).toEqual({ scene: 'WINDOW', ring: RING_LIVE, active: 3, section: 'comms' });
-    expect(initialState(RING_LIVE, 'buffs')).toEqual(hub); // a draft: not in the live ring
-    expect(sectionFromHash('#stats', RING_LIVE)).toBe('stats');
-    expect(sectionFromHash('#craft', RING_LIVE)).toBeNull();
+  it('opens the window of a section link (/#contact) when the ring shows it', () => {
+    expect(initialState(RING_LIVE, 'contact')).toEqual({ scene: 'WINDOW', ring: RING_LIVE, active: 3, section: 'contact' });
+    expect(initialState(RING_LIVE, 'about')).toEqual(hub); // a draft: not in the live ring
+    expect(sectionFromHash('#profile', RING_LIVE)).toBe('profile');
+    expect(sectionFromHash('#about', RING_LIVE)).toBeNull();
+    expect(sectionFromHash('#cv', RING_LIVE)).toBeNull(); // the two actions have no link
+    expect(sectionFromHash('#language', RING_LIVE)).toBeNull();
     expect(sectionFromHash('', RING_LIVE)).toBeNull();
   });
 

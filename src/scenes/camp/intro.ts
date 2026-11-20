@@ -1,4 +1,4 @@
-// The intro's script (docs/plan-de-fases.md, phase 6): Yeray and Null come out of the cave at the
+// The intro's script (BRIEF.md): Yeray and Null come out of the cave at the
 // top of the camp image and walk down to their places; then the ring opens. It is the camp scene
 // itself, so no other transition is needed. Change the timings here: the player
 // (game/script.ts) only follows this list.
@@ -22,14 +22,14 @@ const YERAY_SCRIPT: ActorScript = {
 };
 
 // Null: a step behind Yeray, at his right inside the cave (dark on dark: he shows up as he steps
-// out). He sets off later, follows him down a few steps behind, trots to his spot and sits.
+// out). He sets off later and follows him down a few steps behind, facing the camera and drifting
+// to his spot on the way (no side trot: his side drawing is smaller), then sits.
 const NULL_X = 348;
 const NULL_SCRIPT: ActorScript = {
   from: { x: NULL_X, y: CAVE_MOUTH.floor - 4 },
   steps: [
     { type: 'wait', pose: NULL_DOG.stand, ms: 1100 },
-    { type: 'walk', pose: NULL_DOG.walkDown, to: { x: NULL_X, y: CAMP.null.ground - 12 }, speed: 68 },
-    { type: 'walk', pose: NULL_DOG.trotSide, to: { x: CAMP.null.x, y: CAMP.null.ground }, speed: 90 },
+    { type: 'walk', pose: NULL_DOG.walkDown, to: { x: CAMP.null.x, y: CAMP.null.ground }, speed: 65 },
   ],
   rest: NULL_DOG.sit,
 };
@@ -43,4 +43,4 @@ const SETTLE_MS = 300;
 export const INTRO_MS = Math.max(scriptDuration(YERAY_SCRIPT), scriptDuration(NULL_SCRIPT)) + SETTLE_MS;
 
 /** Every pose the intro draws, for preloading. */
-export const INTRO_POSES = [YERAY.idle, YERAY.walkDown, NULL_DOG.stand, NULL_DOG.walkDown, NULL_DOG.trotSide, NULL_DOG.sit];
+export const INTRO_POSES = [YERAY.idle, YERAY.walkDown, NULL_DOG.stand, NULL_DOG.walkDown, NULL_DOG.sit];

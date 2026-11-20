@@ -14,7 +14,7 @@ export type StageLayout = {
   textSmall: number; // meta lines, help line
   displaySize: number; // game labels, banner, headings inside windows (Jersey 10)
   titleSize: number; // window titles (Jersey 10)
-  portraitZoom: number; // CSS px per portrait pixel in the HUD
+  portraitZoom: number; // CSS px per portrait pixel in the HUD (may be ½, ⅔…: see devicePixelZoom)
   viewport: { width: number; height: number }; // the window, in CSS px
   dpr: number; // screen pixels per CSS px (the canvas draws in screen pixels)
 };
@@ -27,6 +27,21 @@ const TALL_CAMERA_WIDTH = 360;
  *  UI pixels, so they grow with --u (measured: 176 px at --u 2, 264 px at --u 4). */
 export function tallReservedHeight(uiUnit: number): number {
   return 88 + 44 * uiUnit;
+}
+
+// The HUD portraits' screen, in pixels of Null's portrait (his picture without its gold frame,
+// 115×115: src/assets/characters, a test keeps this in step). Yeray's face fills the same screen
+// at 3 times that zoom (Portrait.tsx).
+export const PORTRAIT_PX = 115;
+
+/**
+ * CSS px per image pixel for a picture `imagePx` wide that should be about `targetCss` CSS px:
+ * the largest whole number of the screen's own pixels per image pixel (at least one) that keeps
+ * it within the target. Every image pixel stays a perfect square on screen, also when that is
+ * half a CSS px (a phone with 2 screen pixels per CSS px).
+ */
+export function devicePixelZoom(targetCss: number, imagePx: number, dpr: number): number {
+  return Math.max(1, Math.floor((targetCss * dpr) / imagePx)) / dpr;
 }
 
 const uiUnitFor = (scale: number) => Math.min(8, Math.max(2, Math.round(2 * scale)));
@@ -60,9 +75,10 @@ export function stageLayout(viewportWidth: number, viewportHeight: number, dpr: 
   const textSmall = Math.max(14, Math.round(10.5 * scale));
   const displaySize = 10 * Math.max(2, Math.round(1.5 * scale));
   const titleSize = 10 * Math.max(2, Math.round(2 * scale));
-  // HUD portraits: one portrait pixel per UI pixel's half (1× on most screens, 2× from 1920 px),
-  // so they stay a frame in the corner instead of competing with the characters.
-  const portraitZoom = Math.max(1, Math.round(scale / 2));
+  // HUD portraits: up to 36 UI pixels in the scene's corners (115 CSS px on a 1440 laptop), up to
+  // 46 on portrait screens, where they sit in the row under the scene (57 or 77 CSS px on a
+  // phone), so they stay a frame in the corner instead of competing with the characters.
+  const portraitZoom = devicePixelZoom((tall ? 46 : 36) * uiUnit, PORTRAIT_PX, dpr);
   const viewport = { width: viewportWidth, height: viewportHeight };
   return { mode: tall ? 'tall' : 'wide', camera, scale, uiUnit, textSize, textSmall, displaySize, titleSize, portraitZoom, viewport, dpr };
 }

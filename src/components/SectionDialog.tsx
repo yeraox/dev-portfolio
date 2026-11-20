@@ -1,4 +1,4 @@
-import { useEffect, useEffectEvent, useId, useRef, type KeyboardEvent, type ReactNode } from 'react';
+import { useEffect, useEffectEvent, useId, useRef, type ReactNode } from 'react';
 import { Window } from './Window';
 import styles from './SectionDialog.module.css';
 
@@ -6,7 +6,11 @@ type SectionDialogProps = {
   title: string;
   open: boolean; // false → plays the closing wipe, then calls onClosed
   tall: boolean; // portrait screens: the window becomes a full-width sheet
-  closeLabel: string; // said after the visible "ESC EXIT" by screen readers
+  // A small window in the middle, as big as its content (a question), instead of one covering
+  // the scene. It has no ESC EXIT button: its own answers close it (Esc still does too).
+  compact?: boolean;
+  closeLabel?: string; // said after the visible "ESC EXIT" by screen readers (not in compact)
+  descriptionId?: string; // id of a text inside that screen readers read with the title
   help?: ReactNode; // bottom help line, usually <HelpBar />
   onRequestClose: () => void; // Esc, the close button or a click outside
   onClosed: () => void; // the closing wipe has finished
@@ -15,29 +19,13 @@ type SectionDialogProps = {
 
 const CLOSE_FALLBACK_MS = 400; // in case the closing animation never reports its end
 
-const FOCUSABLE = 'button, a[href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
-
-/** Tab from the last control goes back to the first one (and Shift+Tab the other way), so focus
- *  never leaves the window for the browser's own toolbar (ARIA modal dialog pattern). */
-function keepTabInside(event: KeyboardEvent<HTMLDialogElement>, dialog: HTMLDialogElement) {
-  const controls = [...dialog.querySelectorAll<HTMLElement>(FOCUSABLE)];
-  if (controls.length === 0) return;
-  const first = controls[0];
-  const last = controls[controls.length - 1];
-  if (event.shiftKey && document.activeElement === first) {
-    event.preventDefault();
-    last.focus();
-  } else if (!event.shiftKey && document.activeElement === last) {
-    event.preventDefault();
-    first.focus();
-  }
-}
-
 /**
- * A section window as a native modal <dialog>: the browser keeps Tab inside it, hides the rest
- * of the page from screen readers and turns Esc into a "cancel" event.
+ * A section window as a native modal <dialog> (showModal): the browser makes the rest of the page
+ * inert — Tab never reaches it, screen readers don't read it — and turns Esc into a "cancel"
+ * event. No focus trap of our own: like any native modal, Tab may still reach the browser's own
+ * toolbar (modern-web-guidance: dialog).
  */
-export function SectionDialog({ title, open, tall, closeLabel, help, onRequestClose, onClosed, children }: SectionDialogProps) {
+export function SectionDialog({ title, open, tall, compact = false, closeLabel, descriptionId, help, onRequestClose, onClosed, children }: SectionDialogProps) {
   const ref = useRef<HTMLDialogElement>(null);
   const titleId = useId();
   // Really close the <dialog> first: while it is open the rest of the page is inert and the
@@ -65,8 +53,10 @@ export function SectionDialog({ title, open, tall, closeLabel, help, onRequestCl
     <dialog
       ref={ref}
       className={styles.dialog}
-      data-tall={tall}
+      data-tall={tall && !compact}
+      data-compact={compact}
       aria-labelledby={titleId}
+      aria-describedby={descriptionId}
       onCancel={(event) => {
         event.preventDefault(); // we close it ourselves, after the closing wipe
         onRequestClose();
@@ -77,9 +67,6 @@ export function SectionDialog({ title, open, tall, closeLabel, help, onRequestCl
       onAnimationEnd={() => {
         if (!open) closeNow();
       }}
-      onKeyDown={(event) => {
-        if (event.key === 'Tab' && ref.current) keepTabInside(event, ref.current);
-      }}
     >
       <Window
         title={title}
@@ -88,10 +75,12 @@ export function SectionDialog({ title, open, tall, closeLabel, help, onRequestCl
         className={styles.window}
         help={help}
         hint={
-          // The accessible name starts with what is visible (WCAG 2.5.3 "label in name").
-          <button type="button" className={styles.close} onClick={onRequestClose}>
-            <kbd className={styles.key}>ESC</kbd> EXIT<span className={styles.srOnly}> · {closeLabel}</span>
-          </button>
+          compact ? undefined : (
+            // The accessible name starts with what is visible (WCAG 2.5.3 "label in name").
+            <button type="button" className={styles.close} onClick={onRequestClose}>
+              <kbd className={styles.key}>ESC</kbd> EXIT<span className={styles.srOnly}> · {closeLabel}</span>
+            </button>
+          )
         }
       >
         {children}

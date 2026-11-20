@@ -5,7 +5,7 @@ import type { Content, Locale } from './types';
 
 export const DICTIONARIES: Record<Locale, Content> = { es: ES, en: EN };
 
-export const LOCALE_STORAGE_KEY = 'locale';
+const LOCALE_STORAGE_KEY = 'locale';
 
 /** The visitor's saved choice wins; otherwise Spanish for Spanish browsers, English for the rest. */
 export function pickLocale(saved: string | null, browserLanguage: string | undefined): Locale {

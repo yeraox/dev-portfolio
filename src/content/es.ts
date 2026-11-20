@@ -18,22 +18,9 @@ export const ES: Content = {
     description:
       'Portfolio de Yeray Caturla, desarrollador backend junior (Node.js, Express, Java, Python, Docker, AWS), con forma de RPG de 16 bits.',
     shareImageAlt: 'Pantalla de título del portfolio: «YERAY CATURLA» en letras doradas sobre un cielo nocturno de 16 bits.',
-  },
-  cv: {
-    link: 'VER CV',
-    title: 'CV · Yeray Caturla — Desarrollador Backend Junior',
-    description:
-      'CV de Yeray Caturla, desarrollador backend junior en Elda (Alicante): Node.js, Express, Java, Python, Docker y AWS. Proyectos, experiencia, formación y contacto.',
-    download: 'Descargar CV (PDF)',
-    back: 'Volver al portfolio',
-    otherLanguage: 'English version',
-    headings: {
-      contact: 'Contacto',
-      profile: 'Perfil',
-      experience: 'Experiencia',
-      education: 'Formación',
-      projects: 'Proyectos',
-      stack: 'Stack técnico',
+    noscript: {
+      message: 'Este portfolio es un pequeño juego y necesita JavaScript.',
+      link: 'Descargar mi CV en PDF (español)',
     },
   },
   title: {
@@ -44,15 +31,38 @@ export const ES: Content = {
   },
   ring: {
     label: 'Menú del campamento',
+    // Under each icon of the ring, always visible.
+    names: {
+      projects: 'PROYECTOS',
+      stack: 'STACK',
+      profile: 'PERFIL',
+      contact: 'CONTACTO',
+      about: 'SOBRE MÍ',
+      cv: 'CV',
+      language: 'IDIOMA',
+    },
   },
-  // Banner titles: "game label — what it is" (BRIEF.md table), in Spanish.
+  // Banner titles: "game name — what it is" (BRIEF.md table), in Spanish.
   sections: {
-    equip: { title: 'Equipo — Proyectos' },
-    alchemy: { title: 'Alquimia — Stack técnico' },
-    stats: { title: 'Estadísticas — Perfil' },
-    buffs: { title: 'Estado — Entrenamiento' },
-    craft: { title: 'Artesanía — Cocina' },
-    comms: { title: 'Configuración — Contacto' },
+    projects: { title: 'Alquimia — Proyectos' },
+    stack: { title: 'Equipo — Stack técnico' },
+    profile: { title: 'Estadísticas — Perfil' },
+    contact: { title: 'Configuración — Contacto' },
+    about: { title: 'Diario — Sobre mí' },
+  },
+  cvDownload: {
+    banner: 'Pergamino — Descargar CV',
+    question: '¿Descargar el CV en PDF?',
+    file: 'PDF · español · 3,1 MB',
+    yes: 'SÍ',
+    no: 'NO',
+  },
+  language: {
+    legend: 'Idioma',
+    es: 'Español',
+    en: 'English',
+    banner: 'Idioma — Cambiar a English',
+    switchTo: 'Cambiar a English',
   },
   window: {
     close: 'Cerrar ventana',
@@ -73,9 +83,12 @@ export const ES: Content = {
   hud: {
     yeray: 'Yeray',
     null: 'Null',
+    hp: 'HP',
+    xp: 'XP',
+    explored: 'Experiencia: {n} de {total} secciones exploradas',
   },
 
-  stats: {
+  profile: {
     profileTitle: 'Perfil',
     name: 'Yeray Caturla',
     role: 'Desarrollador Backend Junior',
@@ -133,10 +146,10 @@ export const ES: Content = {
     ],
   },
 
-  equip: {
+  projects: {
     listLabel: 'Proyectos',
     labels: { did: 'Qué hice', stack: 'Stack', repo: 'Repositorio', demo: 'Demo' },
-    projects: [
+    list: [
       {
         id: 'capyroad',
         name: 'Capyroad',
@@ -199,42 +212,40 @@ export const ES: Content = {
     ],
   },
 
-  alchemy: {
+  stack: {
     tiers: [
       {
         title: 'Dominio',
         groups: [
-          { name: 'Lenguajes', items: ['JavaScript', 'Java', 'Python', 'SQL'] },
-          { name: 'Backend', items: ['Node.js', 'Express', 'APIs REST'] },
-          { name: 'Frontend', items: ['React'] },
-          { name: 'Bases de datos', items: ['PostgreSQL'] },
-          { name: 'DevOps y cloud', items: ['Docker', 'AWS', 'Linux', 'WSL'] },
-          { name: 'Herramientas', items: ['Git', 'GitHub'] },
+          { name: 'Lenguajes', items: [{ id: 'javascript', name: 'JavaScript' }, { id: 'java', name: 'Java' }, { id: 'python', name: 'Python' }, { id: 'sql', name: 'SQL' }] },
+          { name: 'Backend', items: [{ id: 'nodejs', name: 'Node.js' }, { id: 'express', name: 'Express' }, { id: 'rest', name: 'APIs REST' }] },
+          { name: 'Frontend', items: [{ id: 'react', name: 'React' }] },
+          { name: 'Bases de datos', items: [{ id: 'postgresql', name: 'PostgreSQL' }] },
+          { name: 'DevOps y cloud', items: [{ id: 'docker', name: 'Docker' }, { id: 'aws', name: 'AWS' }, { id: 'linux', name: 'Linux' }, { id: 'wsl', name: 'WSL' }] },
+          { name: 'Herramientas', items: [{ id: 'git', name: 'Git' }, { id: 'github', name: 'GitHub' }] },
         ],
       },
       {
         title: 'He trabajado con',
         groups: [
-          { name: 'Lenguajes', items: ['PHP'] },
-          { name: 'Backend', items: ['Django'] },
-          { name: 'Frontend', items: ['HTML', 'CSS'] },
-          { name: 'Bases de datos', items: ['Oracle Database', 'MongoDB'] },
-          { name: 'DevOps y cloud', items: ['Terraform'] },
+          { name: 'Lenguajes', items: [{ id: 'php', name: 'PHP' }] },
+          { name: 'Backend', items: [{ id: 'django', name: 'Django' }] },
+          { name: 'Frontend', items: [{ id: 'html', name: 'HTML' }, { id: 'css', name: 'CSS' }] },
+          { name: 'Bases de datos', items: [{ id: 'oracle', name: 'Oracle Database' }, { id: 'mongodb', name: 'MongoDB' }] },
+          { name: 'DevOps y cloud', items: [{ id: 'terraform', name: 'Terraform' }] },
         ],
       },
     ],
   },
 
-  comms: {
+  contact: {
     rows: [
       { label: 'GitHub', value: 'github.com/yeraox', href: 'https://github.com/yeraox' },
       { label: 'LinkedIn', value: 'linkedin.com/in/yeraycaturla', href: 'https://www.linkedin.com/in/yeraycaturla' },
       { label: 'Email', value: 'yeraoxcaturlax@gmail.com', href: 'mailto:yeraoxcaturlax@gmail.com' },
       { label: 'Ubicación', value: 'Elda (Alicante), España' },
       { label: 'Disponibilidad', value: 'Disponible · presencial, híbrido o remoto' },
-      { label: 'CV', value: 'Versión web', href: '/cv/' },
       { label: 'CV en PDF', value: 'Descargar', href: '/cv/yeray-caturla-cv-es.pdf' },
     ],
-    language: { legend: 'Idioma', es: 'Español', en: 'English' },
   },
 };

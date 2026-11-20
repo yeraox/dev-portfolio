@@ -17,7 +17,7 @@ describe('ring geometry', () => {
     expect(right.y).toBeCloseTo(0);
   });
 
-  it.each([4, 5, 6])('keeps %i slots from overlapping', (count) => {
+  it.each([4, 5, 6, 7])('keeps %i slots from overlapping', (count) => {
     for (let i = 0; i < count; i++) {
       const a = slotOffset(i, 0, count);
       const b = slotOffset((i + 1) % count, 0, count);

@@ -28,7 +28,7 @@
 /* The portrait in a dark "screen" with the window's engraved edge (like the HUD). */
 .portrait {
   margin: calc(2 * var(--u));
-  background: var(--night-1);
+  background-color: var(--night-1);
   box-shadow:
     0 0 0 var(--u) var(--ink),
     0 0 0 calc(2 * var(--u)) var(--stone-3);

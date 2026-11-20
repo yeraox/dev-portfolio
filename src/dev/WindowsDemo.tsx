@@ -1,5 +1,5 @@
 // Dev-only page: /dev/windows. Never shipped (see Root.tsx).
-// The window system pieces (phase 1) and, since phase 4, the real STATS window with the content
+// The window system pieces (phase 1) and, since phase 4, the real STATS (profile) window with the content
 // from src/content/ — the fixture data that lived here moved to es.ts / en.ts.
 import { useState } from 'react';
 import { BannerWindow } from '../components/BannerWindow';
@@ -10,7 +10,7 @@ import { StatBar } from '../components/StatBar';
 import { Window } from '../components/Window';
 import { LocaleProvider } from '../content/LocaleProvider';
 import { useLocale } from '../content/useLocale';
-import StatsWindow from '../windows/StatsWindow';
+import ProfileWindow from '../windows/ProfileWindow';
 import styles from './WindowsDemo.module.css';
 
 export default function WindowsDemo() {
@@ -45,14 +45,14 @@ function Demo() {
       </header>
 
       <div className={styles.stage}>
-        <BannerWindow title={t.sections.stats.title} />
+        <BannerWindow title={t.sections.profile.title} />
         <Window
           key={replay}
-          title={t.sections.stats.title}
+          title={t.sections.profile.title}
           hint={<KeyHint items={[{ key: 'ESC', action: 'EXIT' }]} />}
           help={<HelpBar>{t.help.back}</HelpBar>}
         >
-          <StatsWindow />
+          <ProfileWindow />
         </Window>
       </div>
 
