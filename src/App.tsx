@@ -1,5 +1,4 @@
 import { useEffect, useReducer } from 'react';
-import { CvLink } from './components/CvLink';
 import { DitherTransition } from './components/DitherTransition';
 import { LocaleProvider } from './content/LocaleProvider';
 import { useReducedMotion, useStageLayout } from './engine/useScreen';
@@ -22,7 +21,7 @@ function Game() {
   const layout = useStageLayout();
   const reducedMotion = useReducedMotion();
   useUiTokens(layout);
-  // A link to a window (/#equip) and returning visitors skip the title; /#title always shows it.
+  // A link to a window (/#projects…) and returning visitors skip the title; /#title always shows it.
   const [screen, dispatch] = useReducer(screenReducer, window.location.hash, (hash) =>
     initialScreen({ hash, visited: hasVisited() }),
   );
@@ -36,13 +35,9 @@ function Game() {
   // intro is the camp scene itself, with Yeray and Null still walking out of the cave.
   const showTitle = screen.name === 'TITLE' || (screen.name === 'TRANSITION' && screen.half === 'out');
   const intro = screen.name === 'INTRO' || (screen.name === 'TRANSITION' && screen.to === 'INTRO');
-  // On portrait screens the camp shows the CV link in its HUD row (the corner is the banner's).
-  const cvInHud = layout.mode === 'tall' && !showTitle && !intro;
 
   return (
     <>
-      {/* First in the page, so it is also the first stop when tabbing: the CV, one key away. */}
-      {!cvInHud && <CvLink />}
       {showTitle ? (
         <TitleScreen
           layout={layout}
