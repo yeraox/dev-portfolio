@@ -18,22 +18,9 @@ export const EN: Content = {
     description:
       'Portfolio of Yeray Caturla, junior backend developer (Node.js, Express, Java, Python, Docker, AWS), shaped as a 16-bit RPG.',
     shareImageAlt: 'Title screen of the portfolio: “YERAY CATURLA” in gold letters over a 16-bit night sky.',
-  },
-  cv: {
-    link: 'VIEW CV',
-    title: 'CV · Yeray Caturla — Junior Backend Developer',
-    description:
-      'CV of Yeray Caturla, junior backend developer in Elda (Alicante, Spain): Node.js, Express, Java, Python, Docker and AWS. Projects, experience, education and contact.',
-    download: 'Download CV (PDF, in Spanish)',
-    back: 'Back to the portfolio',
-    otherLanguage: 'Versión en español',
-    headings: {
-      contact: 'Contact',
-      profile: 'Profile',
-      experience: 'Experience',
-      education: 'Education',
-      projects: 'Projects',
-      stack: 'Tech stack',
+    noscript: {
+      message: 'This portfolio is a small game and needs JavaScript.',
+      link: 'Download my CV as a PDF (English)',
     },
   },
   title: {
@@ -44,15 +31,38 @@ export const EN: Content = {
   },
   ring: {
     label: 'Camp menu',
+    // Under each icon of the ring, always visible.
+    names: {
+      projects: 'PROJECTS',
+      stack: 'STACK',
+      profile: 'PROFILE',
+      contact: 'CONTACT',
+      about: 'ABOUT ME',
+      cv: 'CV',
+      language: 'LANGUAGE',
+    },
   },
   // Banner titles from the BRIEF.md table.
   sections: {
-    equip: { title: 'Equipment — Projects' },
-    alchemy: { title: 'Alchemy — Tech Stack' },
-    stats: { title: 'Stats — Profile' },
-    buffs: { title: 'Status — Training' },
-    craft: { title: 'Crafting — Kitchen' },
-    comms: { title: 'Config — Contact' },
+    projects: { title: 'Alchemy — Projects' },
+    stack: { title: 'Equipment — Tech Stack' },
+    profile: { title: 'Stats — Profile' },
+    contact: { title: 'Config — Contact' },
+    about: { title: 'Journal — About Me' },
+  },
+  cvDownload: {
+    banner: 'Scroll — Download CV',
+    question: 'Download the CV as a PDF?',
+    file: 'PDF · English · 3.1 MB',
+    yes: 'YES',
+    no: 'NO',
+  },
+  language: {
+    legend: 'Language',
+    es: 'Español',
+    en: 'English',
+    banner: 'Language — Switch to Español',
+    switchTo: 'Switch to Español',
   },
   window: {
     close: 'Close window',
@@ -73,9 +83,12 @@ export const EN: Content = {
   hud: {
     yeray: 'Yeray',
     null: 'Null',
+    hp: 'HP',
+    xp: 'XP',
+    explored: 'Experience: {n} of {total} sections explored',
   },
 
-  stats: {
+  profile: {
     profileTitle: 'Profile',
     name: 'Yeray Caturla',
     role: 'Junior Backend Developer',
@@ -133,10 +146,10 @@ export const EN: Content = {
     ],
   },
 
-  equip: {
+  projects: {
     listLabel: 'Projects',
     labels: { did: 'What I did', stack: 'Stack', repo: 'Repository', demo: 'Demo' },
-    projects: [
+    list: [
       {
         id: 'capyroad',
         name: 'Capyroad',
@@ -199,42 +212,40 @@ export const EN: Content = {
     ],
   },
 
-  alchemy: {
+  stack: {
     tiers: [
       {
         title: 'Mastery',
         groups: [
-          { name: 'Languages', items: ['JavaScript', 'Java', 'Python', 'SQL'] },
-          { name: 'Backend', items: ['Node.js', 'Express', 'REST APIs'] },
-          { name: 'Frontend', items: ['React'] },
-          { name: 'Databases', items: ['PostgreSQL'] },
-          { name: 'DevOps & cloud', items: ['Docker', 'AWS', 'Linux', 'WSL'] },
-          { name: 'Tools', items: ['Git', 'GitHub'] },
+          { name: 'Languages', items: [{ id: 'javascript', name: 'JavaScript' }, { id: 'java', name: 'Java' }, { id: 'python', name: 'Python' }, { id: 'sql', name: 'SQL' }] },
+          { name: 'Backend', items: [{ id: 'nodejs', name: 'Node.js' }, { id: 'express', name: 'Express' }, { id: 'rest', name: 'REST APIs' }] },
+          { name: 'Frontend', items: [{ id: 'react', name: 'React' }] },
+          { name: 'Databases', items: [{ id: 'postgresql', name: 'PostgreSQL' }] },
+          { name: 'DevOps & cloud', items: [{ id: 'docker', name: 'Docker' }, { id: 'aws', name: 'AWS' }, { id: 'linux', name: 'Linux' }, { id: 'wsl', name: 'WSL' }] },
+          { name: 'Tools', items: [{ id: 'git', name: 'Git' }, { id: 'github', name: 'GitHub' }] },
         ],
       },
       {
         title: 'Worked with',
         groups: [
-          { name: 'Languages', items: ['PHP'] },
-          { name: 'Backend', items: ['Django'] },
-          { name: 'Frontend', items: ['HTML', 'CSS'] },
-          { name: 'Databases', items: ['Oracle Database', 'MongoDB'] },
-          { name: 'DevOps & cloud', items: ['Terraform'] },
+          { name: 'Languages', items: [{ id: 'php', name: 'PHP' }] },
+          { name: 'Backend', items: [{ id: 'django', name: 'Django' }] },
+          { name: 'Frontend', items: [{ id: 'html', name: 'HTML' }, { id: 'css', name: 'CSS' }] },
+          { name: 'Databases', items: [{ id: 'oracle', name: 'Oracle Database' }, { id: 'mongodb', name: 'MongoDB' }] },
+          { name: 'DevOps & cloud', items: [{ id: 'terraform', name: 'Terraform' }] },
         ],
       },
     ],
   },
 
-  comms: {
+  contact: {
     rows: [
       { label: 'GitHub', value: 'github.com/yeraox', href: 'https://github.com/yeraox' },
       { label: 'LinkedIn', value: 'linkedin.com/in/yeraycaturla', href: 'https://www.linkedin.com/in/yeraycaturla' },
       { label: 'Email', value: 'yeraoxcaturlax@gmail.com', href: 'mailto:yeraoxcaturlax@gmail.com' },
       { label: 'Location', value: 'Elda (Alicante), Spain' },
       { label: 'Availability', value: 'Available · on-site, hybrid or remote' },
-      { label: 'CV', value: 'Web version', href: '/cv/en/' },
-      { label: 'CV as PDF', value: 'Download (in Spanish)', href: '/cv/yeray-caturla-cv-es.pdf' },
+      { label: 'CV as PDF', value: 'Download', href: '/cv/yeray-caturla-cv-en.pdf' },
     ],
-    language: { legend: 'Language', es: 'Español', en: 'English' },
   },
 };
