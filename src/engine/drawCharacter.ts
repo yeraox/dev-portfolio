@@ -21,15 +21,20 @@ export function preloadPoses(poses: Pose[]): Promise<void> {
   return Promise.all([...sources].map((src) => imageFor(src).decode().catch(() => undefined))).then(() => undefined);
 }
 
+// A pose that starts "now" can be asked for a few ms BEFORE it started: the game loop's `now` is
+// when the screen frame began, which may be earlier than the performance.now() that started the
+// pose. A negative time would ask for frames[-1] (nothing), so it counts as its first moment.
+const sinceStart = (elapsed: number) => Math.max(0, elapsed);
+
 /** Which image of the pose shows `elapsed` ms after it started. */
 export function poseFrame(pose: Pose, elapsed: number): CharacterImageName {
-  return pose.frames[Math.floor(elapsed / pose.ms) % pose.frames.length];
+  return pose.frames[Math.floor(sinceStart(elapsed) / pose.ms) % pose.frames.length];
 }
 
 /** 1 when a breathing pose is in its "down" half, else 0 (1 scene px, like PixelSprite's bob). */
 export function poseBob(pose: Pose, elapsed: number, reducedMotion: boolean): number {
   if (!pose.bob || reducedMotion) return 0;
-  return Math.floor(elapsed / pose.ms) % 2;
+  return Math.floor(sinceStart(elapsed) / pose.ms) % 2;
 }
 
 export type Placement = {

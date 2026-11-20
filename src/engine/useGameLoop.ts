@@ -16,7 +16,17 @@ function tick(now: number) {
   const step = onRefresh(frameRate, now);
   if (step.rate.halved && !frameRate.halved) document.documentElement.dataset.fps = '30';
   frameRate = step.rate;
-  if (step.run) for (const callback of subscribers) callback(now);
+  // A mistake in one subscriber (a drawing that fails) must not stop the game's clock for good:
+  // it is reported (it still shows in the console) and everything else keeps running.
+  if (step.run) {
+    for (const callback of subscribers) {
+      try {
+        callback(now);
+      } catch (error) {
+        reportError(error);
+      }
+    }
+  }
   start();
 }
 
