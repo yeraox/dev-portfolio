@@ -3,11 +3,11 @@
 // modest phone), and times how long the page takes to answer keys and clicks (the INP idea).
 // Budget: 60 fps normally, ≥ 30 fps steady at 4×, answers in < 200 ms.
 // Usage: npm run fps -- [url]   (best against the production build: npm run build && npx vite preview)
-import { chromium } from 'playwright';
+import { chromium, siteUrl } from './lib/browser.mjs';
 
 // The title screen comes first; any #hash skips it and goes straight to the camp, and /#title
 // always shows it (to time the intro).
-const base = (process.argv[2] ?? 'http://localhost:4173/').replace(/#.*$/, '');
+const base = siteUrl('http://localhost:4173/');
 const url = `${base}#camp`;
 const SECONDS = 5;
 

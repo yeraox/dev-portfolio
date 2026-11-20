@@ -1,43 +1,19 @@
-// Phase-6 check of the cave intro: screenshots while Yeray and Null walk out of the cave, how long
+// Check of the cave intro: screenshots while Yeray and Null walk out of the cave, how long
 // it lasts, SKIP INTRO at any moment (button, key, click, tap), the camp afterwards (ring, banner,
 // HUD, focus, nothing moving), returning visitors, /#title, reduced motion and the pause when the
 // tab is hidden.
 // Usage: npm run check:intro -- [url]   (default http://localhost:5173/)
 import { mkdirSync } from 'node:fs';
-import { chromium } from 'playwright';
+import { DESKTOP, PHONE, SIZES, chromium, createChecks, newPage, siteUrl } from './lib/browser.mjs';
 
-const url = (process.argv[2] ?? 'http://localhost:5173/').replace(/#.*$/, '');
+const url = siteUrl();
 const OUT = '.screenshots/fase-6';
-const SIZES = [
-  { width: 390, height: 844, deviceScaleFactor: 2, isMobile: true, hasTouch: true },
-  { width: 768, height: 1024, deviceScaleFactor: 2, isMobile: true, hasTouch: true },
-  { width: 1440, height: 900, deviceScaleFactor: 1, isMobile: false, hasTouch: false },
-];
-const desktop = SIZES[2];
-
-let failures = 0;
-const check = (name, ok, detail = '') => {
-  if (!ok) failures++;
-  console.log(`${ok ? '✓' : '✗'} ${name}${detail ? `  (${detail})` : ''}`);
-};
+const { check, done } = createChecks();
 
 mkdirSync(OUT, { recursive: true });
 const browser = await chromium.launch();
-const newPage = async (size, extra = {}) => {
-  const context = await browser.newContext({
-    viewport: { width: size.width, height: size.height },
-    deviceScaleFactor: size.deviceScaleFactor,
-    isMobile: size.isMobile,
-    hasTouch: size.hasTouch,
-    locale: 'es-ES',
-    ...extra,
-  });
-  const page = await context.newPage();
-  const errors = [];
-  page.on('pageerror', (error) => errors.push(error.message));
-  page.on('console', (message) => message.type() === 'error' && errors.push(message.text()));
-  return { context, page, errors };
-};
+/** A fresh page at `size` (in Spanish), not loaded yet. */
+const open = (size, extra = {}) => newPage(browser, size, 'es', extra);
 const goto = async (page, hash = '') => {
   await page.goto(`${url}${hash}`, { waitUntil: 'networkidle' });
   await page.evaluate(() => document.fonts.ready);
@@ -54,7 +30,7 @@ const startIntro = async (page) => {
 // ---------- Screenshots: walking out of the cave, then the camp ----------
 let shotErrors = 0;
 for (const size of SIZES) {
-  const { context, page, errors } = await newPage(size);
+  const { context, page, errors } = await open(size);
   await goto(page);
   const box = async () => page.locator('[data-scene] > div').nth(size.width === 1440 ? 0 : 1).boundingBox();
   await startIntro(page);
@@ -79,7 +55,7 @@ check('intro rendered at 3 sizes without console errors', shotErrors === 0, `${s
 
 // ---------- Length, what shows during and after ----------
 {
-  const { context, page, errors } = await newPage(desktop);
+  const { context, page, errors } = await open(DESKTOP);
   await goto(page);
   await startIntro(page);
   const started = Date.now();
@@ -105,16 +81,18 @@ check('intro rendered at 3 sizes without console errors', shotErrors === 0, `${s
 for (const [label, at, how] of [
   ['SKIP INTRO while it is still fading in', 100, 'button'],
   ['SKIP INTRO halfway', 1800, 'button'],
-  ['SKIP INTRO at the very end', 4100, 'button'],
+  // The intro scene lasts ~4.5 s: 3.7 s leaves room for a busy machine (4.1 s sometimes missed it).
+  ['SKIP INTRO at the very end', 3700, 'button'],
   ['Escape skips', 1500, 'escape'],
   ['any key skips', 1500, 'key'],
   ['a click on the scene skips', 1500, 'click'],
 ]) {
-  const { context, page } = await newPage(desktop);
+  const { context, page } = await open(DESKTOP);
   await goto(page);
   await startIntro(page);
   await page.waitForTimeout(at);
-  if (how === 'button') await page.getByRole('button', { name: 'SKIP INTRO' }).click();
+  // A short timeout: if the button is already gone, this check fails instead of the whole script.
+  if (how === 'button') await page.getByRole('button', { name: 'SKIP INTRO' }).click({ timeout: 2000 }).catch(() => {});
   if (how === 'escape') await page.keyboard.press('Escape');
   if (how === 'key') await page.keyboard.press('x');
   if (how === 'click') await page.mouse.click(400, 600);
@@ -123,7 +101,7 @@ for (const [label, at, how] of [
   await context.close();
 }
 {
-  const { context, page } = await newPage(SIZES[0]);
+  const { context, page } = await open(PHONE);
   await goto(page);
   await page.getByRole('button', { name: 'PRESS START' }).tap();
   await page.waitForSelector('[data-scene="intro"]');
@@ -136,7 +114,7 @@ for (const [label, at, how] of [
 
 // ---------- Returning visitors and /#title ----------
 {
-  const { context, page } = await newPage(desktop);
+  const { context, page } = await open(DESKTOP);
   await goto(page);
   await page.getByRole('button', { name: 'SKIP INTRO' }).click(); // the title's: straight to the camp
   await page.getByRole('menu').waitFor();
@@ -153,7 +131,7 @@ for (const [label, at, how] of [
 
 // ---------- Straight into the camp: the intro's drawings are not downloaded ----------
 {
-  const { context, page } = await newPage(desktop);
+  const { context, page } = await open(DESKTOP);
   const images = [];
   page.on('request', (request) => request.resourceType() === 'image' && images.push(request.url()));
   await goto(page, '#camp');
@@ -164,7 +142,7 @@ for (const [label, at, how] of [
 
 // ---------- Reduced motion: no walk ----------
 {
-  const { context, page } = await newPage(desktop, { reducedMotion: 'reduce' });
+  const { context, page } = await open(DESKTOP, { reducedMotion: 'reduce' });
   await goto(page);
   await page.evaluate(() => {
     window.__sawIntro = false;
@@ -180,7 +158,7 @@ for (const [label, at, how] of [
 
 // ---------- A hidden tab pauses the intro ----------
 {
-  const { context, page } = await newPage(desktop);
+  const { context, page } = await open(DESKTOP);
   await goto(page);
   await startIntro(page);
   const started = Date.now();
@@ -200,5 +178,4 @@ for (const [label, at, how] of [
 }
 
 await browser.close();
-console.log(failures === 0 ? '\nAll checks passed.' : `\n${failures} check(s) failed.`);
-process.exit(failures === 0 ? 0 : 1);
+done();

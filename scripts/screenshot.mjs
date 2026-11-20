@@ -3,7 +3,7 @@
 //   e.g. npm run shots -- http://localhost:5173/dev/specimen specimen
 // Output: .screenshots/<name>-<width>.png (git-ignored)
 import { mkdirSync } from 'node:fs';
-import { chromium } from 'playwright';
+import { SIZES, chromium } from './lib/browser.mjs';
 
 const [url, name = 'page'] = process.argv.slice(2);
 if (!url) {
@@ -11,16 +11,9 @@ if (!url) {
   process.exit(1);
 }
 
-// Phone and tablet are emulated as touch devices, like the real thing (no hover, coarse pointer).
-const VIEWPORTS = [
-  { width: 390, height: 844, deviceScaleFactor: 2, isMobile: true, hasTouch: true },
-  { width: 768, height: 1024, deviceScaleFactor: 2, isMobile: true, hasTouch: true },
-  { width: 1440, height: 900, deviceScaleFactor: 1, isMobile: false, hasTouch: false },
-];
-
 mkdirSync('.screenshots', { recursive: true });
 const browser = await chromium.launch();
-for (const { width, height, deviceScaleFactor, isMobile, hasTouch } of VIEWPORTS) {
+for (const { width, height, deviceScaleFactor, isMobile, hasTouch } of SIZES) {
   const page = await browser.newPage({ viewport: { width, height }, deviceScaleFactor, isMobile, hasTouch });
   const errors = [];
   page.on('console', (msg) => msg.type() === 'error' && errors.push(msg.text()));
