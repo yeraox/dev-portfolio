@@ -26,18 +26,25 @@ const open = async (lang, size, hash = '', extra = {}) => {
 let screenshotErrors = 0;
 const wrapped = []; // windows whose tabs needed a second row
 const clipped = []; // windows still clipped once open (their 1u ink outline hidden)
+const bodyScrolls = []; // windows whose body scrolls as well as their text (a second scrollbar)
 for (const lang of ['es', 'en']) {
   for (const size of SIZES) {
     for (const section of SECTIONS) {
       const { context, page, errors } = await open(lang, size, `#${section}`);
       await page.waitForTimeout(600); // the opening wipe
       await page.screenshot({ path: `${OUT}/${section}-${lang}-${size.width}.png` });
-      const { rows, clip } = await page.evaluate(() => ({
-        rows: new Set([...document.querySelectorAll('[role="tab"]')].map((tab) => Math.round(tab.getBoundingClientRect().top))).size,
-        clip: getComputedStyle(document.querySelector('dialog').firstElementChild).clipPath,
-      }));
+      const { rows, clip, extra } = await page.evaluate(() => {
+        // The Window's body: the part between the title and the help line that may scroll.
+        const body = [...document.querySelectorAll('dialog section > div')].find((div) => getComputedStyle(div).overflowY === 'auto');
+        return {
+          rows: new Set([...document.querySelectorAll('[role="tab"]')].map((tab) => Math.round(tab.getBoundingClientRect().top))).size,
+          clip: getComputedStyle(document.querySelector('dialog').firstElementChild).clipPath,
+          extra: body ? body.scrollHeight - body.clientHeight : 0,
+        };
+      });
       if (rows > 1) wrapped.push(`${section} ${lang} ${size.width}`);
       if (clip !== 'none') clipped.push(`${section} ${lang} ${size.width}: ${clip}`);
+      if (extra > 1) bodyScrolls.push(`${section} ${lang} ${size.width}: +${extra}px`);
       // The whole window, scrolled content included: lift the height limits for this shot.
       await page.addStyleTag({ content: 'dialog, dialog * { max-height: none !important; overflow: visible !important; }' });
       await page.locator('dialog').screenshot({ path: `${OUT}/${section}-${lang}-${size.width}-full.png` });
@@ -52,6 +59,7 @@ for (const lang of ['es', 'en']) {
 check('24 windows rendered without console errors', screenshotErrors === 0, `${screenshotErrors} errors`);
 check('the tabs always fit on one row', wrapped.length === 0, wrapped.join(', '));
 check('open windows are not clipped: their ink outline shows', clipped.length === 0, clipped.join(', '));
+check('only the text scrolls: no window body has a scrollbar of its own (it left the window blank)', bodyScrolls.length === 0, bodyScrolls.join(', '));
 
 // ---------- Find in the page (Ctrl+F) reaches every section ----------
 {
@@ -119,13 +127,26 @@ for (const [lang, expected] of [
   const video = page.locator('dialog video');
   const state = await video.evaluate((v) => ({ muted: v.muted, loop: v.loop, autoplay: v.autoplay, paused: v.paused, src: v.currentSrc }));
   check('the Capyroad video plays muted and in a loop', state.muted && state.loop && state.autoplay && !state.paused, JSON.stringify(state));
-  check('the window opens with the focus on its text', (await page.evaluate(() => document.activeElement?.getAttribute('role'))) === 'tabpanel');
+  const focus = () =>
+    page.evaluate(() => {
+      const element = document.activeElement;
+      return { tag: element?.tagName, outline: element ? getComputedStyle(element).outlineStyle : '', textTabStop: document.querySelector('[role="tabpanel"]')?.hasAttribute('tabindex') };
+    });
+  const opened = await focus();
+  check('the window opens with the focus on itself, with no outline, and the text is not a Tab stop', opened.tag === 'DIALOG' && opened.outline === 'none' && !opened.textTabStop, JSON.stringify(opened));
   await page.keyboard.press('ArrowRight');
-  check("→ from the text shows the next project, Pakito's Gambling", (await heading()).startsWith("Pakito's Gambling"));
-  check('…and the focus stays on the text', (await page.evaluate(() => document.activeElement?.getAttribute('role'))) === 'tabpanel');
+  check("→ from the window shows the next project, Pakito's Gambling", (await heading()).startsWith("Pakito's Gambling"));
+  check('…and the focus stays on the window', (await focus()).tag === 'DIALOG');
+  const textTop = () => page.getByRole('tabpanel').evaluate((panel) => panel.scrollTop);
+  await page.keyboard.press('PageDown');
+  await page.keyboard.press('ArrowDown');
+  const scrolled = await textTop();
+  check('Page Down and ↓ from the window scroll the text, without changing project', scrolled > 0 && (await heading()).startsWith("Pakito's Gambling"), `${scrolled}px`);
+  await page.keyboard.press('Home');
+  check('Home from the window takes the text back to its top', (await textTop()) === 0);
   await tabs.nth(1).focus();
   await page.keyboard.press('ArrowDown');
-  check('↓ on a tab does not change project', (await tabs.nth(1).getAttribute('aria-selected')) === 'true');
+  check('↓ on a tab scrolls the text and does not change project', (await tabs.nth(1).getAttribute('aria-selected')) === 'true' && (await textTop()) > 0);
   await page.keyboard.press('End');
   check('End on a tab reaches the last one: this portfolio, YOU ARE HERE', (await page.getByRole('tabpanel').innerText()).includes('ESTÁS AQUÍ'));
   check('…with the focus on its tab', (await page.evaluate(() => document.activeElement?.getAttribute('aria-selected'))) === 'true');

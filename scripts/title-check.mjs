@@ -49,7 +49,7 @@ check('6 title screens rendered without console errors', shotErrors === 0, `${sh
 {
   const { context, page, errors } = await open('es', DESKTOP);
   check('the title is real text (h1 "YERAY CATURLA")', await onTitle(page));
-  check('Spanish browser: Spanish credits', (await page.locator('main p').first().innerText()).startsWith('DESARROLLADOR BACKEND'));
+  check('Spanish browser: Spanish credits, the role and DevOps', (await page.locator('main p').first().innerText()) === 'DESARROLLADOR BACKEND JUNIOR · DEVOPS');
   await page.keyboard.press('Tab');
   await page.waitForTimeout(300);
   check('the first Tab stop is the CV (the parchment), and it does not start', (await onTitle(page)) && (await page.evaluate(() => document.activeElement?.getAttribute('aria-label'))) === 'CV: Pergamino — Descargar CV');
@@ -70,7 +70,7 @@ check('6 title screens rendered without console errors', shotErrors === 0, `${sh
   await page.keyboard.press('Escape');
   await page.waitForTimeout(450);
   check('Esc closes SETTINGS, with the focus back on the gear', (await dialog.count()) === 0 && (await onTitle(page)) && (await focusedLabel()) === 'SETTINGS');
-  check('…the credits are now in English', (await page.locator('main p').first().innerText()).startsWith('BACKEND DEVELOPER'));
+  check('…the credits are now in English', (await page.locator('main p').first().innerText()) === 'JUNIOR BACKEND DEVELOPER · DEVOPS');
   check('the title no longer has its own ES / EN buttons', (await page.getByRole('button', { name: /^(ES|EN) / }).count()) === 0);
   // Watch the transition's darkness steps.
   await page.evaluate(() => {
