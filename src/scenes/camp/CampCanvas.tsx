@@ -32,7 +32,6 @@ type CampActor = ActorFrame & { breathe?: Pose };
 /** The size of a character's ground shadow, in scene px (radii of the ellipse). */
 function shadowFor(pose: Pose): { rx: number; ry: number } {
   if (pose === NULL_DOG.sit || pose === NULL_DOG.tilt || pose === NULL_DOG.wag || pose === NULL_DOG.scratch) return { rx: 13, ry: 3 };
-  if (pose === NULL_DOG.trotSide) return { rx: 16, ry: 3 };
   if (pose === NULL_DOG.walkDown || pose === NULL_DOG.stand) return { rx: 12, ry: 3 }; // as wide as he is sitting
   return { rx: 17, ry: 4 }; // Yeray
 }

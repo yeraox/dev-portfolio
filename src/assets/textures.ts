@@ -120,7 +120,6 @@ function ropeFrame(): Texture {
 export const STONE_TILE = stoneTile();
 export const BANNER_DITHER = ditherTile('blue-1', 'blue-2');
 export const ROPE_FRAME = ropeFrame();
-export const ROPE_SLICE = 6; // art pixels per nine-slice cell
 
 /** Selection brackets: four blue-3 corners of an 8×8 nine-slice (3-px corner cells). */
 function bracketFrame(): Texture {

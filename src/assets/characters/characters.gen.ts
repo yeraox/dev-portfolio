@@ -4,12 +4,6 @@
 // image starts inside its png (walk sheets stack several images in one png); top = its first
 // visible row (the HUD frames Yeray's face from there).
 import nullSit from './null-sit.png';
-import nullSide0 from './null-side-0.png';
-import nullSide1 from './null-side-1.png';
-import nullSide2 from './null-side-2.png';
-import nullSide3 from './null-side-3.png';
-import nullSide4 from './null-side-4.png';
-import nullSide5 from './null-side-5.png';
 import nullPortrait from './null-portrait.png';
 import yerayFrontWalk from './yeray-front-walk.png';
 import yeraySideWalk from './yeray-side-walk.png';
@@ -25,12 +19,6 @@ export type CharacterImage = { src: string; width: number; height: number; groun
 
 export const CHARACTER_IMAGES = {
   'null-sit': { src: nullSit, width: 55, height: 93, ground: 92, y: 0, top: 0 },
-  'null-side-0': { src: nullSide0, width: 51, height: 38, ground: 37, y: 0, top: 0 },
-  'null-side-1': { src: nullSide1, width: 49, height: 38, ground: 37, y: 0, top: 0 },
-  'null-side-2': { src: nullSide2, width: 50, height: 38, ground: 37, y: 0, top: 0 },
-  'null-side-3': { src: nullSide3, width: 51, height: 38, ground: 37, y: 0, top: 0 },
-  'null-side-4': { src: nullSide4, width: 48, height: 38, ground: 37, y: 0, top: 0 },
-  'null-side-5': { src: nullSide5, width: 49, height: 38, ground: 37, y: 0, top: 0 },
   'null-portrait': { src: nullPortrait, width: 115, height: 115, ground: 114, y: 0, top: 0 },
   'yeray-front': { src: yerayFrontWalk, width: 46, height: 113, ground: 109, y: 0, top: 0 },
   'yeray-front-pass': { src: yerayFrontWalk, width: 46, height: 113, ground: 109, y: 113, top: 1 },

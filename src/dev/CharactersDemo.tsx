@@ -61,13 +61,12 @@ export default function CharactersDemo() {
           <PixelSprite pose={YERAY.walkSide} unit={SCENE_UNIT} />
           <PixelSprite pose={YERAY.walkSide} unit={SCENE_UNIT} flip />
           <PixelSprite pose={NULL_DOG.sit} unit={SCENE_UNIT} />
-          <PixelSprite pose={NULL_DOG.trotSide} unit={SCENE_UNIT} />
           <PixelSprite pose={NULL_DOG.walkDown} unit={SCENE_UNIT} />
         </div>
       </section>
 
       <section className={styles.section}>
-        <h2>En reposo (fase 8): las acciones, a tamaño de revisión</h2>
+        <h2>En reposo: las acciones, a tamaño de revisión</h2>
         <p>
           Cada una empieza y acaba en el dibujo quieto del juego: de tus hojas solo se toma lo que
           cambia (el brazo, la taza, la cabeza, la pata, la cola).

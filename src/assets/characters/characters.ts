@@ -93,13 +93,6 @@ export const NULL_DOG = {
     ms: 140,
     pixelSize: 0.5,
   },
-  // The old side trot (null_caminando.jpg): no longer in the intro, kept for /dev/personajes
-  // until there is a new side sheet at the same size as the front one.
-  trotSide: {
-    frames: ['null-side-0', 'null-side-1', 'null-side-2', 'null-side-3', 'null-side-4', 'null-side-5'],
-    ms: 110,
-    pixelSize: 1,
-  },
 } satisfies Record<string, Pose>;
 
 export { CHARACTER_IMAGES };

@@ -6,8 +6,6 @@ import App from './App';
 // TS concept — `Record<string, X>`: "an object whose keys are any string and values are X".
 const DEV_PAGES: Record<string, LazyExoticComponent<ComponentType>> = import.meta.env.DEV
   ? {
-      '/dev/specimen': lazy(() => import('./dev/Specimen')),
-      '/dev/windows': lazy(() => import('./dev/WindowsDemo')),
       '/dev/personajes': lazy(() => import('./dev/CharactersDemo')),
       '/dev/textos': lazy(() => import('./dev/TextsReview')),
     }

@@ -38,7 +38,6 @@ const OUT_DIR = join(ROOT, 'src/assets/characters');
 // `inset` pixels of its own frame on every side.
 const IMAGES = [
   { name: 'null-sit', file: 'grandes/null.jpg', pitch: 10.75 },
-  { name: 'null-side', file: 'grandes/null_caminando.jpg' },
   // Null's HUD portrait: his square picture on its 7.5 px grid (the detection is fooled
   // by the gold frame, drawn on a coarser one), without that frame: the HUD's stone frames it.
   { name: 'null-portrait', file: 'portraits/portrait_null.jpg', pitch: 7.5, whole: true, inset: 11 },

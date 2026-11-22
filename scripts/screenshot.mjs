@@ -1,6 +1,6 @@
 // Phase-review screenshots at the three agreed viewport sizes.
 // Usage: npm run shots -- <url> <name>
-//   e.g. npm run shots -- http://localhost:5173/dev/specimen specimen
+//   e.g. npm run shots -- http://localhost:5173/dev/personajes personajes
 // Output: .screenshots/<name>-<width>.png (git-ignored)
 import { mkdirSync } from 'node:fs';
 import { SIZES, chromium } from './lib/browser.mjs';
