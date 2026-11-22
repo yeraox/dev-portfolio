@@ -20,6 +20,7 @@
     "characters": "node scripts/sprites/cutout.mjs",
     "icons": "node scripts/sprites/icons.mjs",
     "stack-icons": "node scripts/stack-icons.mjs",
+    "hobby-icons": "node scripts/hobby-icons.mjs",
     "scenes": "node scripts/sprites/scene.mjs",
     "media": "node scripts/media.mjs",
     "cv": "node scripts/cv-pdf.mjs",
