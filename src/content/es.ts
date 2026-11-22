@@ -25,7 +25,7 @@ export const ES: Content = {
   },
   title: {
     name: 'YERAY CATURLA',
-    credits: 'DESARROLLADOR BACKEND · NODE.JS · EXPRESS · JAVA · DOCKER · AWS',
+    credits: 'DESARROLLADOR BACKEND JUNIOR · DEVOPS',
     press: 'PRESS START',
     skip: 'SKIP INTRO',
   },
