@@ -112,7 +112,9 @@ for (const [lang, expected] of [
   await page.waitForTimeout(1200);
   const tabs = page.getByRole('tab');
   const heading = () => page.getByRole('tabpanel').locator('h3:visible').innerText();
-  check('PROJECTS lists the four projects', (await tabs.count()) === 4);
+  const tabTexts = await tabs.allInnerTexts(); // a tab's badge follows its name: "CapyroadDESTACADO"
+  const expectedTabs = ['Capyroad', "Pakito's Gambling", 'Portfolio'];
+  check("PROJECTS lists three projects: Capyroad, Pakito's Gambling and this portfolio (no Bosa)", tabTexts.length === 3 && expectedTabs.every((name, index) => tabTexts[index].startsWith(name)), tabTexts.join(' · '));
   check('Capyroad is chosen first', (await tabs.first().getAttribute('aria-selected')) === 'true');
   const video = page.locator('dialog video');
   const state = await video.evaluate((v) => ({ muted: v.muted, loop: v.loop, autoplay: v.autoplay, paused: v.paused, src: v.currentSrc }));
@@ -128,12 +130,24 @@ for (const [lang, expected] of [
   check('End on a tab reaches the last one: this portfolio, YOU ARE HERE', (await page.getByRole('tabpanel').innerText()).includes('ESTÁS AQUÍ'));
   check('…with the focus on its tab', (await page.evaluate(() => document.activeElement?.getAttribute('aria-selected'))) === 'true');
   await page.keyboard.press('ArrowLeft');
-  check('← goes back to Bosa Digital, marked CLASIFICADO', (await page.getByRole('tabpanel').innerText()).includes('CLASIFICADO'));
-  check('Bosa shows no images or video', (await page.getByRole('tabpanel').locator('img, video').count()) === 0);
+  check("← goes back to Pakito's Gambling", (await heading()).startsWith("Pakito's Gambling"));
   // From the close button too: the arrows work wherever the focus is in the window.
   await page.getByRole('dialog').getByRole('button', { name: /EXIT/ }).focus();
   await page.keyboard.press('ArrowRight');
   check('→ with the focus on ESC EXIT also changes project', (await heading()).startsWith('Este portfolio'));
+  // Every project tells why it exists right after what it is: summary → Por qué → Qué hice.
+  const order = [];
+  for (let index = 0; index < 3; index++) {
+    await tabs.nth(index).click();
+    order.push(
+      await page.getByRole('tabpanel').locator('article:visible').evaluate((article) => {
+        const headings = [...article.querySelectorAll('h4')];
+        const why = headings[0];
+        return `${why?.previousElementSibling?.tagName}>${why?.textContent}>${why?.nextElementSibling?.tagName}>${headings[1]?.textContent}`;
+      }),
+    );
+  }
+  check('each project has "Por qué" right after its summary, before "Qué hice"', order.every((item) => item === 'P>Por qué>P>Qué hice'), order.join(' | '));
   check('no console errors in PROJECTS', errors.length === 0, errors.join(' | '));
   await context.close();
 }
@@ -142,6 +156,14 @@ for (const [lang, expected] of [
   await page.waitForTimeout(800);
   const state = await page.locator('dialog video').evaluate((v) => ({ autoplay: v.autoplay, controls: v.controls, paused: v.paused }));
   check('with reduced motion the video waits, with controls', !state.autoplay && state.controls && state.paused, JSON.stringify(state));
+  await context.close();
+}
+
+// ---------- Bosa Digital: only in the profile's quest log ----------
+{
+  const { context, page } = await open('es', DESKTOP, '#profile');
+  const text = (await page.locator('dialog').textContent()) ?? '';
+  check('Bosa Digital is still in PROFILE (quest log), with its three CV sentences', text.includes('Sistemas de Innovación Bosa Digital SL') && text.includes('Herramientas en Python para automatizar procesos internos del área de ventas.'));
   await context.close();
 }
 
