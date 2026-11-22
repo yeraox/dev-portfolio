@@ -338,6 +338,11 @@ lonely last word.
   "why" (Yeray's reasons for the project, right after the summary: its story before its details),
   "what I did", facts (stack, notes, repo, demo). Bosa Digital is no longer a project (phase 8,
   block S): its NDA left nothing to show, and it lives in the profile's quest log.
+- **About me (JOURNAL):** two sections. Developer: five short paragraphs (where he comes from, what
+  hooks him, how he works, in a team, what he is looking for). Personal: a line, then six hobbies in
+  a list (two columns from 820 px of window), each with a 16×16 icon in `text` (`npm run
+  hobby-icons`: star, gamepad, dumbbell, basketball, frying pan, paw print, drawn in code like the
+  STACK's generic icons, same size), its name as a gold game label and two or three sentences.
 - **Stack (EQUIP):** one section per tier, rows of group → technologies, each with its 16×16
   icon before its name (phase 8, `npm run stack-icons`: Simple Icons logos without smoothing,
   generic pixel icons for SQL, REST APIs, Java, AWS, WSL and Oracle), in `text`, about as tall as
@@ -357,13 +362,14 @@ Gold rope nine-slice drawn 6u thick (`border-image-repeat: round`) around a `blu
 mouse-and-keyboard devices a `[← →] ROTATE · [ENTER] OPEN` hint.
 
 ### Ring menu (`RingMenu`, geometry in `src/game/ring.ts`)
-Six slots live (seven in development, with the ABOUT ME draft): projects, stack, profile, contact,
-CV, settings (a gear). Icons 28 scene px on their longest side, 1 icon pixel = 1 scene pixel, each with a
+Seven slots (phase 8, block U): projects, stack, profile, about me (a book), contact, CV, settings
+(a gear). Icons 28 scene px on their longest side, 1 icon pixel = 1 scene pixel, each with a
 hard 1-scene-pixel `stone-3` outline (zero-blur drop shadows) so the dark ones read on the earth.
-An egg around Yeray's middle (320, 255), not an ellipse: ry 88, and a half-width that grows evenly
-from the top (`rxTop` 56) to the bottom (`rxBottom` 156). The top and bottom slots stay above and
-below Yeray; with six slots the upper side ones sit 70 px from him, leaving the campfire and the
-dumbbells in view, and the lower ones 113 px, clear of Null. **Every slot shows its name above its
+An egg around Yeray's middle (320, 255), not an ellipse: a half-width that grows evenly from the
+top (`rxTop` 56) to the bottom (`rxBottom` 156), and a lower half deeper than the upper one
+(`ryTop` 88, `ryBottom` 101). The top slot stays over Yeray's head; with seven slots the upper side
+ones sit 58.5 px from him, leaving the campfire and the dumbbells in view, the side ones 114 px,
+beside Null, and the lower ones 91 px below the centre, their names under Null's paws. **Every slot shows its name above its
 icon, always:** Pixelify `--text-small` uppercase on an `ink` plate, `text-dim`; the active one
 sits at the top inside the blue brackets, its name in `green-1` above them. The ring is sized
 so the top name clears the banner, the bottom name fits between Yeray's boots and its icon and
@@ -397,7 +403,7 @@ game gauges, **HP** and **XP** (Jersey labels in `text-dim`, 24u ink tracks with
   pixels (115 CSS px on a 1440 laptop), up to 46 on portrait screens (57 or 77 CSS px on a
   phone), where the HUD sits in its own row below the scene.
 - **HP** (`red-1` fill) is always full: there is nothing real to measure, so screen readers
-  don't hear it. **XP** (`blue-3` fill) is the party's experience: a quarter for every live section
+  don't hear it. **XP** (`blue-3` fill) is the party's experience: a fifth for every live section (five since ABOUT ME)
   the visitor has opened, remembered in the browser (`explored`), heard as "Experiencia: 2 de 4
   secciones exploradas". It grows in 4 hard steps over 16 frames. Never a number about Yeray.
 - The profile window shows Yeray's face the same way in an ink screen, from the hair to the

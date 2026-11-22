@@ -1561,6 +1561,130 @@ leer, una rueda que no tape la hoguera y este portfolio como proyecto.
 - **`scrollBy` y el tipo de su opción:** `panel.scrollBy({ top: 40 })` recibe un `ScrollToOptions`
   (tipo del navegador); TypeScript avisa si escribes una opción que no existe.
 
+### U. Sobre mí: la sección que faltaba
+
+> Añadido el 22/11/2026, con tus respuestas. Confirmaciones hechas el 22/11. **Hecho el
+> 23/11/2026.** Informe: sección "Bloque U" al final de `docs/informes/fase-8-mejoras.md`.
+
+**Qué se construye**
+- **"Sobre mí" sale del borrador:** se ve en la web, con su icono (el libro) en la rueda y su
+  ventana "Diario — Sobre mí".
+- **Dos pestañas:** "Desarrollador" / "Developer" y "Personal" / "Personal" (decidido).
+  - **Desarrollador:** cinco párrafos cortos con lo que no está en el CV: de dónde vienes, qué te
+    engancha, cómo trabajas, cómo eres en equipo y qué buscas.
+  - **Personal:** una línea de entrada y seis aficiones (Anime, Videojuegos, Gym, Basket, Cocina y
+    Null), cada una con su icono y dos o tres frases.
+- **Iconos de 16×16** en el estilo del Stack, dibujados en código (decidido): una estrella para el
+  anime (un manga se confundiría con el libro de Sobre mí), un mando, una mancuerna, un balón, una
+  sartén y una huella.
+
+**Los textos** (de tus respuestas del 22/11, adaptados; pasan a `CONTENT.md`)
+
+*Desarrollador*
+1. "Siempre he estado rodeado de tecnología: mi tío, mi primo y mis amigos más cercanos se dedican
+   a esto, así que en cierto modo sentía que estaba destinado a ello. En la ESO tuve mi primer
+   ordenador y ahí empezó todo. Llegué por la FP: de los sistemas (SMR) al código (DAW), y ahora la
+   nube. Ese camino me ha dado algo que valoro mucho: entender el software desde la máquina hasta
+   que está desplegado."
+   / "I've always been surrounded by technology: my uncle, my cousin and my closest friends all work
+   in it, so in a way I felt this was meant to be. I got my first computer in secondary school and
+   that's where it all started. I came in through vocational training: from systems (SMR) to code
+   (DAW), and now the cloud. That path gave me something I value a lot: understanding software from
+   the machine to the deployed service."
+2. "Me gustan los retos y la parte técnica del backend, pero sabía que para destacar no bastaba con
+   una capa: quería cubrir el ciclo completo del software. Por eso ahora me estoy especializando en
+   la nube y DevOps."
+   / "I love the challenges and the technical side of the backend, but I knew one layer wasn't
+   enough to stand out: I wanted to cover the whole software lifecycle. That's why I'm now
+   specialising in cloud and DevOps."
+3. "Soy perseverante y trabajo duro. Mi tiempo libre también lo dedico a investigar sobre
+   desarrollo e inteligencia artificial, y ahora mismo lo que más me motiva es desarrollar con IA:
+   este portfolio, de hecho, lo he hecho con Claude Code."
+   / "I'm persistent and I work hard. I also spend my free time researching development and AI, and
+   right now what motivates me most is building with AI: in fact, I built this portfolio with
+   Claude Code."
+4. "En equipo me adapto: sé liderar y sé seguir. Donde trabajo suele haber buen rollo, y si no lo
+   hay, lo creo: se me da bien desescalar tensiones y mediar en los conflictos. En la cancha era el
+   base, el que organiza el juego, y en un equipo de trabajo hago algo parecido."
+   / "In a team I adapt: I can lead and I can follow. There's usually a good atmosphere wherever I
+   work, and if there isn't, I create it: I'm good at calming tense situations and mediating
+   conflicts. On the court I was the point guard, the one who runs the play, and at work I do
+   something similar."
+5. "Busco un puesto junior en backend, full stack, frontend o DevOps. El próximo año quiero
+   especializarme en DevOps."
+   / "I'm looking for a junior role in backend, full stack, frontend or DevOps. Over the next year I
+   want to specialise in DevOps."
+
+*Personal*
+- Entrada: "Fuera del código soy competitivo y muy constante. Esto es lo que me mueve:" / "Away from
+  code I'm competitive and very consistent. This is what drives me:"
+- **Anime:** "Me encantan los de deporte: mis favoritos son Haikyuu!! y Hajime no Ippo. Esa obsesión
+  de sus personajes por conseguir lo que quieren es lo que me define. Y Boku no Hero Academia, que
+  me ha acompañado desde que empecé a ver anime: para mí, una obra maestra." / "I love sports
+  anime: my favourites are Haikyuu!! and Hajime no Ippo. Their characters' obsession with getting
+  what they want is what defines me. And My Hero Academia, which has been with me since I started
+  watching anime: a masterpiece, for me."
+- **Videojuegos:** "Todo empezó con Secret of Evermore, junto a mi padre; de ahí sale este
+  portfolio. Tengo espíritu competitivo y juego mucho online, pero también me encantan los indies
+  como Hades o Sea of Stars, y la saga Persona." / "It all started with Secret of Evermore, with my
+  dad; that's where this portfolio comes from. I'm competitive and play a lot online, but I also
+  love indies like Hades or Sea of Stars, and the Persona series."
+- **Gym:** "Mi templo, mi lugar de tranquilidad. Entreno desde 2023, cuatro días a la semana, y me
+  encanta sentirme en forma. Si te fijas, en el campamento están mis pesas." / "My temple, my place
+  of calm. I've been training since 2023, four days a week, and I love feeling fit. Look closely and
+  you'll find my dumbbells at the camp."
+- **Basket:** "Jugué de los 6 a los 18 años, de base titular y capitán, y subía de categoría para
+  ayudar a los mayores: era el que orquestaba el juego. Las lesiones me obligaron a dejarlo, y así
+  encontré mi pasión en el gym." / "I played from 6 to 18, as starting point guard and captain, and
+  moved up to help the older teams: I was the one running the game. Injuries made me stop, and
+  that's how I found my passion for the gym."
+- **Cocina:** "Cocino de todo y he aprendido solo. Mi plato estrella: solomillo al roquefort. Y sí,
+  la paellera del campamento no está ahí por casualidad." / "I cook a bit of everything and I'm
+  self-taught. My signature dish: tenderloin with Roquefort sauce. And yes, the paella pan at the
+  camp isn't there by chance."
+- **Null:** "No es mi perro de verdad: como el chico de Secret of Evermore, yo también quería ir con
+  perro. Es un grifón de Bruselas, una raza que me encanta, y sus colores son un guiño al perro de
+  mi pareja. Se llama Null por el valor null de la programación." / "He isn't my real dog: like the
+  boy in Secret of Evermore, I wanted a dog by my side too. He's a Brussels Griffon, a breed I love,
+  and his colours are a nod to my partner's dog. He's called Null after the null value in
+  programming."
+
+**Lo que he cambiado de tus respuestas** (para que lo valides)
+- "Un puesto junior de lo que sea" → "backend, full stack, frontend o DevOps".
+- La lesión que te hizo dejar la universidad no aparece en "Desarrollador", solo en Basket.
+- La última frase del trabajo en equipo (el base) es mía: une dos respuestas tuyas.
+- "Mi tío fue de los primeros programadores Java en España" queda como "mi tío": es un dato de
+  otra persona.
+
+**Lo que has decidido (22/11/2026)**
+1. Gym: **cuatro días a la semana** (antes eran seis; `PRODUCT.md` corregido).
+2. **"Desde 2023"**.
+3. Los iconos, como se proponen.
+4. Pestañas: **"Desarrollador" y "Personal"**.
+5. **Sobre mí justo después de Perfil** en la rueda: Proyectos, Stack, Perfil, Sobre mí, Contacto,
+   CV y Ajustes.
+6. Las seis aficiones, sin cambios. Los textos, como están.
+
+**Cómo se hace**
+- **Contenido.** Un tipo nuevo, `About`: los párrafos de "Desarrollador" y, en "Personal", la
+  entrada y las aficiones `{ id, name, text }`. Un `HobbyId` (`'anime' | 'games' | …`) con un
+  `Record<HobbyId, …>` de iconos: una afición sin icono no compila.
+- **La ventana** `AboutWindow`, con `WindowSections` (las dos pestañas). Fuera `DraftWindow`,
+  que ya no usaría nada. El mecanismo de borrador se queda para el futuro.
+- **La rueda pasa a 7 iconos.** Con 7, algunos nombres tocaban a Null o a ti en desarrollo. Hay
+  que reajustar su forma y medirla en las 7 paradas, a los 3 tamaños y en los 2 idiomas, con
+  `check:camp` (ahora mira todas las paradas).
+- **La XP** cuenta 5 secciones (se ajusta sola, desde `SLOTS`).
+- **La captura del portfolio** (`npm run share` + `npm run media`) muestra ahora 7 iconos; su texto
+  alternativo pasa de "seis" a "siete".
+- **Comprobaciones:** `check:windows` añade Sobre mí (sus dos pestañas, los iconos, el cuerpo que no
+  se desplaza); `check:camp`, la rueda de 7 y la XP de 5.
+
+**TypeScript que aprenderás**
+- **Un `Record` para que cada afición tenga su icono**, como con el Stack.
+- **Un tipo con dos formas de contenido** (párrafos y una lista con icono), dentro de un mismo
+  objeto `About`.
+
 **💬 Tus comentarios:**
 
 ---

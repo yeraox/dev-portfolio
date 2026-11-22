@@ -33,7 +33,7 @@ A personal portfolio for Yeray Caturla, Junior Backend Developer, presented as a
 - **Full cycle:** he has walked the whole chain, from systems (SMR) to APIs (DAW) to cloud
   deployment (current specialization in cloud resources and services). He understands software
   from the machine to the deployed service, not just one layer.
-- **Consistency and discipline:** the same discipline as his six-days-a-week training, applied
+- **Consistency and discipline:** the same discipline as his gym training (four days a week, since 2023; it used to be six), applied
   to learning and work.
 
 The game framing is the memorable hook. The content inside it must stay plain, factual and fast
@@ -50,10 +50,12 @@ to scan.
 ## Capabilities and Constraints
 - Bilingual ES/EN with typed dictionaries; Spanish is the source language.
 - Keyboard, mouse and touch are all first-class inputs.
-- The camp's ring (phase 8): four sections — projects (ALCHEMY), tech stack (EQUIP), profile
-  (STATS: profile, education, experience) and contact (COMMS) — plus the CV (asks, then downloads
-  the PDF of the current language) and the language switch. Every slot shows its real, translated
-  name. An ABOUT ME section is planned and stays hidden until it has content. BUFFS and CRAFT were
+- The camp's ring (phase 8): five sections — projects (ALCHEMY), tech stack (EQUIP), profile
+  (STATS: profile, education, experience), about me (JOURNAL) and contact (COMMS) — plus the CV
+  (asks, then downloads the PDF of the current language) and SETTINGS (language, animations, back
+  to the title). Every slot shows its real, translated name. ABOUT ME (block U) tells, in his
+  words, the developer and the person: where he comes from, how he works, what he is looking for,
+  and his hobbies (anime, video games, gym, basketball, cooking) and Null. BUFFS and CRAFT were
   dropped in phase 8.
 - Performance budget and phase plan: `BRIEF.md` and `docs/plan-de-fases.md`.
 - Git is operated only by Yeray.

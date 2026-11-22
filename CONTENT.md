@@ -70,10 +70,10 @@ título del banner (y de la ventana) es "nombre de juego — qué es". Desde la 
 | Proyectos | PROYECTOS / PROJECTS | Alquimia — Proyectos | Alchemy — Projects |
 | Stack | STACK / STACK | Equipo — Stack técnico | Equipment — Tech Stack |
 | Perfil | PERFIL / PROFILE | Estadísticas — Perfil | Stats — Profile |
+| Sobre mí (desde el bloque U de la fase 8) | SOBRE MÍ / ABOUT ME | Diario — Sobre mí | Journal — About Me |
 | Contacto | CONTACTO / CONTACT | Configuración — Contacto | Config — Contact |
 | CV | CV / CV | Pergamino — Descargar CV | Scroll — Download CV |
 | Ajustes | AJUSTES / SETTINGS | Engranaje — Ajustes | Gear — Settings |
-| Sobre mí (borrador, solo en desarrollo) | SOBRE MÍ / ABOUT ME | Diario — Sobre mí | Journal — About Me |
 
 **La ventana del CV** (al elegir el CV en la rueda):
 
@@ -121,7 +121,7 @@ añade analítica, hay que revisarlo.
 
 Desde la ronda 2 de la fase 8 la rueda del ratón solo desplaza el texto: ya no cambia de sección.
 
-**HUD:** "Yeray" y "Null", con las barras **HP** y **XP** (etiquetas de juego, iguales en los dos idiomas). La XP se llena al explorar las secciones; un lector de pantalla oye "Experiencia: {n} de 4 secciones exploradas" / "Experience: {n} of 4 sections explored". **Encabezado de la página** (solo para lectores de pantalla):
+**HUD:** "Yeray" y "Null", con las barras **HP** y **XP** (etiquetas de juego, iguales en los dos idiomas). La XP se llena al explorar las secciones; un lector de pantalla oye "Experiencia: {n} de 5 secciones exploradas" / "Experience: {n} of 5 sections explored" (eran 4 antes de Sobre mí). **Encabezado de la página** (solo para lectores de pantalla):
 "Yeray Caturla · Desarrollador Backend Junior".
 
 ---
@@ -271,9 +271,45 @@ portfolio).
 
 ---
 
-## Sobre mí
-`status: draft`: sección nueva (fase 8), oculta en producción. Cómo se organiza y qué cuenta
-queda pendiente de decidir contigo. (BUFFS y CRAFT se quitaron en la fase 8.)
+## Sobre mí (DIARIO)
+
+Bloque U de la fase 8 (22–23/11/2026), con las respuestas de Yeray, adaptadas por mí y validadas
+por él. Va en la rueda justo después de Perfil. Solo cuenta lo que él ha escrito: nada más de su
+familia ni de dónde vive, más allá de Elda.
+
+**Pestañas:** Desarrollador / Developer · Personal / Personal.
+
+**Desarrollador** (cinco párrafos; lo que no está en el CV):
+1. Siempre he estado rodeado de tecnología: mi tío, mi primo y mis amigos más cercanos se dedican a
+   esto, así que en cierto modo sentía que estaba destinado a ello. En la ESO tuve mi primer
+   ordenador y ahí empezó todo. Llegué por la FP: de los sistemas (SMR) al código (DAW), y ahora la
+   nube. Ese camino me ha dado algo que valoro mucho: entender el software desde la máquina hasta
+   que está desplegado.
+2. Me gustan los retos y la parte técnica del backend, pero sabía que para destacar no bastaba con
+   una capa: quería cubrir el ciclo completo del software. Por eso ahora me estoy especializando en
+   la nube y DevOps.
+3. Soy perseverante y trabajo duro. Mi tiempo libre también lo dedico a investigar sobre
+   desarrollo e inteligencia artificial, y ahora mismo lo que más me motiva es desarrollar con IA:
+   este portfolio, de hecho, lo he hecho con Claude Code.
+4. En equipo me adapto: sé liderar y sé seguir. Donde trabajo suele haber buen rollo, y si no lo
+   hay, lo creo: se me da bien desescalar tensiones y mediar en los conflictos. En la cancha era el
+   base, el que organiza el juego, y en un equipo de trabajo hago algo parecido.
+5. Busco un puesto junior en backend, full stack, frontend o DevOps. El próximo año quiero
+   especializarme en DevOps.
+
+**Personal:** "Fuera del código soy competitivo y muy constante. Esto es lo que me mueve:", y seis
+aficiones, cada una con su icono de 16×16 (`npm run hobby-icons`):
+
+| Afición (icono) | Texto |
+|---|---|
+| Anime (estrella) | Me encantan los de deporte: mis favoritos son Haikyuu!! y Hajime no Ippo. Esa obsesión de sus personajes por conseguir lo que quieren es lo que me define. Y Boku no Hero Academia, que me ha acompañado desde que empecé a ver anime: para mí, una obra maestra. |
+| Videojuegos (mando) | Todo empezó con Secret of Evermore, junto a mi padre; de ahí sale este portfolio. Tengo espíritu competitivo y juego mucho online, pero también me encantan los indies como Hades o Sea of Stars, y la saga Persona. |
+| Gym (mancuerna) | Mi templo, mi lugar de tranquilidad. Entreno desde 2023, cuatro días a la semana, y me encanta sentirme en forma. Si te fijas, en el campamento están mis pesas. |
+| Basket (balón) | Jugué de los 6 a los 18 años, de base titular y capitán, y subía de categoría para ayudar a los mayores: era el que orquestaba el juego. Las lesiones me obligaron a dejarlo, y así encontré mi pasión en el gym. |
+| Cocina (sartén) | Cocino de todo y he aprendido solo. Mi plato estrella: solomillo al roquefort. Y sí, la paellera del campamento no está ahí por casualidad. |
+| Null (huella) | No es mi perro de verdad: como el chico de Secret of Evermore, yo también quería ir con perro. Es un grifón de Bruselas, una raza que me encanta, y sus colores son un guiño al perro de mi pareja. Se llama Null por el valor null de la programación. |
+
+(BUFFS y CRAFT se quitaron en la fase 8.)
 
 ---
 
@@ -309,6 +345,6 @@ barra lateral del navegador (correo, redes…), que no deben publicarse.
 | `capyroad-raw.mp4` | Partida de Capyroad, 26 s, H.264, ~11 MB | ✅ Hecho: 14 s, sin audio, solo la app, 208 KB |
 | `pakitos-ruleta.png` | Ruleta americana, tablero completo | ✅ Usar |
 | `pakitos-blackjack.png` | Blackjack con mano repartida | ✅ Usar |
-| `portfolio.png` | El campamento de este portfolio, quieto, a 1440 (escenario 1280×720) | ✅ Hecho por `npm run share` contra `npx vite preview` (sin el borrador de "Sobre mí"); rehacer si cambia el campamento |
+| `portfolio.png` | El campamento de este portfolio, quieto, a 1440 (escenario 1280×720) | ✅ Hecho por `npm run share` contra `npx vite preview` (la rueda de 7, con "Sobre mí"); rehacer si cambia el campamento |
 
 ffmpeg ya está instalado (lo usan también los scripts de personajes y escenas).

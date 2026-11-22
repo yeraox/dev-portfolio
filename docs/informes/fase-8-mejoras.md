@@ -26,6 +26,7 @@ para hasta que lo revisas.
 | R | Aviso legal y cookies: no hacen falta; una línea de privacidad en Ajustes | ✅ Hecho (21/11/2026), pendiente de tu revisión |
 | S | El porqué de cada proyecto, y fuera Bosa de Proyectos (añadido el 22/11) | ✅ Hecho (22/11/2026), pendiente de tu revisión |
 | T | Tu vídeo: la ventana en blanco, el contorno azul y el título (añadido el 22/11) | ✅ Hecho (22/11/2026), pendiente de tu revisión |
+| U | Sobre mí: la sección que faltaba (añadido el 22/11) | ✅ Hecho (23/11/2026), pendiente de tu revisión |
 
 El plan de cada bloque está en `docs/plan-de-fases.md`, "Fase 8 — Mejoras del portfolio".
 
@@ -2060,3 +2061,162 @@ Si aún no has hecho los commits del bloque S, `src/content/es.ts` y `en.ts` lle
 dos bloques. Haz primero los del S: su `git add src/content src/windows` se lleva también los de
 este bloque en esos archivos. Después, de estos solo quedarían el `og-image.png`, las
 comprobaciones y los documentos.
+
+---
+
+## Bloque U — Sobre mí: la sección que faltaba
+
+> 22–23/11/2026. Hecho con tus respuestas a mis preguntas y tus seis confirmaciones. Plan:
+> `docs/plan-de-fases.md`, bloque U.
+
+### Resumen
+- **"Sobre mí" ya se ve en la web.** Su icono (el libro) va en la rueda justo después de Perfil;
+  su ventana es "Diario — Sobre mí".
+- **Dos pestañas:**
+  - **Desarrollador:** cinco párrafos cortos (de dónde vienes, qué te engancha, cómo trabajas, en
+    equipo y qué buscas);
+  - **Personal:** una línea y tus seis aficiones (Anime, Videojuegos, Gym, Basket, Cocina y Null),
+    cada una con su icono de 16×16 y sus frases, con los guiños a las pesas y la paellera del
+    campamento.
+- **La rueda pasa a 7 iconos.** La de arriba se queda donde estaba, y la hoguera y las pesas siguen
+  a la vista. La mitad de abajo baja un poco para que los nombres pasen por debajo de las patas de
+  Null.
+- **La XP cuenta 5 secciones** (cada una, una quinta parte).
+
+Capturas en `.screenshots/fase-8-u/`:
+- `rueda-{es,en}-{390,768,1440}.png`;
+- `sobre-mi-desarrollador-…` y `sobre-mi-personal-…`, en los dos idiomas y los tres tamaños.
+
+### 1. Decisiones tomadas
+
+| Decisión | Por qué | Quién |
+|---|---|---|
+| Pestañas "Desarrollador" y "Personal" | Claras para quien no juega | Tú |
+| "Desarrollador" no repite Perfil | Perfil ya tiene estudios, stack y bio; aquí va lo que no está en el CV | Yo (aceptado) |
+| Los textos, adaptados a quien contrata, sin hechos nuevos | Regla de no inventar; lo que añadí (la frase del base) te lo marqué | Tú |
+| "Un puesto junior en backend, full stack, frontend o DevOps", no "de lo que sea" | "De lo que sea" puede sonar a que te da igual | Tú (aceptado) |
+| La lesión, solo en Basket; "mi tío", sin el detalle de Java | Lo sensible, donde encaja; el dato de otra persona, sin detalle | Tú (aceptado) |
+| Gym: "desde 2023, cuatro días a la semana" | Con el año, la frase no se queda vieja; ahora entrenas cuatro días | Tú |
+| Iconos de 16×16 dibujados en código, como los genéricos del Stack; estrella para el anime | Encajan con el resto, pesan casi nada y no tienes que hacer nada. Un manga se confundiría con el libro de Sobre mí | Tú (aceptado) |
+| Sobre mí, después de Perfil | Están relacionadas | Tú |
+| La rueda: arriba igual, la mitad de abajo más honda (`ryBottom` 101) | Con 7 iconos, el de abajo a la derecha caía sobre Null en las 7 paradas | Medido |
+| Fuera `DraftWindow` y el texto "Sección en preparación" | Ya no hay borradores; el mecanismo `status: 'draft'` se queda | Yo |
+
+### 2. Qué se ha hecho, paso a paso
+1. **Los iconos.**
+   - Seis rejillas de 16×16 dibujadas en `scripts/hobby-icons.mjs` (`npm run hobby-icons`), vistas
+     antes en texto: estrella, mando, mancuerna, balón, sartén y huella.
+   - Lo que comparten con los del Stack (el color `text`, las comprobaciones y el atlas PNG) pasa a
+     `scripts/lib/atlas.mjs`. El atlas del Stack sale idéntico byte a byte con la librería común.
+2. **El contenido.**
+   - En `types.ts`: el tipo `About` (`developer: { tab, paragraphs }`,
+     `personal: { tab, intro, hobbies }`) y `HobbyId`. `dog` es Null, para no confundirlo con el
+     valor `null`.
+   - Los textos, en `es.ts` y `en.ts`.
+   - `CONTENT.md`: la sección completa y la tabla de la rueda.
+3. **La ventana.**
+   - `AboutWindow.tsx`, con `WindowSections`: dos pestañas; en Personal, la lista de aficiones en
+     dos columnas desde 820 px de ventana.
+   - `TechIcon` pasa a ser `AtlasIcon`, un icono de cualquier atlas, que usan el Stack y Sobre mí.
+4. **La rueda.**
+   - `sections.ts`: `about` pasa a `ready` y va tras `profile`.
+   - Con 7 iconos, `check:camp` falló en las 42 paradas: el nombre del de abajo a la derecha pisaba
+     a Null.
+   - `ring.ts` separa el radio vertical de arriba (88, igual) y el de abajo (101). Los nombres de
+     abajo quedan a 2 px por debajo de las patas de Null, y los iconos terminan dentro de la escena.
+5. **El resto.**
+   - La ayuda de Sobre mí es la de las ventanas con secciones.
+   - La XP pasa a quintos (se ajusta sola, desde `SLOTS`).
+   - Las pruebas de la rueda y de la XP, al día.
+   - La captura del portfolio, rehecha con los 7 iconos (`npm run share` + `npm run media`); su
+     texto alternativo pasa de "seis" a "siete".
+6. **Documentos:** `CONTENT.md`, `DESIGN.md`, `BRIEF.md`, `PRODUCT.md`, `CLAUDE.md` y el plan.
+
+### 3. Cómo se ha comprobado
+
+| Comprobación | Resultado |
+|---|---|
+| `npm run typecheck`, `npm run lint` | ✓ |
+| `npm test` | ✓ **204 pruebas** (202 antes): la rueda de 7, la XP de 5, el contenido de Sobre mí, la forma de la rueda con 7 |
+| `npm run check:camp` (vite preview) | ✓ 115: la rueda de 7 en sus 7 paradas × 3 tamaños × 2 idiomas, sin tocar a Null ni a ti; la XP en quintos |
+| `npm run check:windows` (vite preview) | ✓ 45: las 30 ventanas (5 × 2 idiomas × 3 tamaños), Sobre mí con sus dos pestañas, cinco párrafos y seis aficiones con icono; ningún cuerpo de ventana se desplaza |
+| `npm run check:title`, `npm run check:intro` | ✓ 46 y 24 |
+| fps (rueda CPU ×1 / ×4, intro ×1 / ×4) | 60 / 60 / 60 / 59,6; respuesta más lenta 40 ms |
+| Lighthouse título | 99 · 100 · 100 · 100, LCP 1,9 s, 244 KiB |
+| Lighthouse campamento | 99 · 100 · 100 · 100, LCP 2,0 s, 255 KiB |
+| JavaScript inicial | **94,4 KB** comprimido (91,8 antes): los textos de Sobre mí en los dos idiomas. Presupuesto ≤ 100 KB |
+
+### 4. TypeScript en este bloque
+- **Un `Record` que obliga a que cada afición tenga icono.**
+  `HOBBY_ICONS … satisfies Record<HobbyId, number>`. Si añades una afición a `HobbyId` sin
+  regenerar el atlas, no compila, como con el Stack.
+- **Un tipo con dos formas de contenido.** `About` junta párrafos (`string[]`) y una lista de
+  objetos (`Hobby[]`), y cada pestaña lee solo lo suyo: `t.about.developer.paragraphs`,
+  `t.about.personal.hobbies`.
+- **Un componente que no sabe de qué atlas viene su icono.** `AtlasIcon` recibe un `Atlas`
+  (`{ src, size, count }`) y el número del icono. TypeScript comprueba que `STACK_ATLAS` y
+  `HOBBY_ATLAS` tienen esa forma sin declararla dos veces: es *tipado estructural*, cuenta la
+  forma, no el nombre.
+
+### 5. Problemas encontrados
+
+| Problema | Solución |
+|---|---|
+| Con 7 iconos, el nombre del de abajo a la derecha pisaba a Null en todas las paradas | Mitad de abajo más honda (101 en lugar de 88), medida contra la silueta de Null y el borde de la escena |
+| Las pruebas daban por hecho la rueda de 6 y "Sobre mí" en borrador | Actualizadas a la rueda de 7 y la XP de 5; una prueba nueva comprueba que en desarrollo se ve lo mismo que en la web |
+| Al renombrar `TechIcon` se me coló un `git mv -n` | Es una simulación y no cambió nada, pero va contra tu regla de no usar git. No se repetirá |
+
+### 6. Observaciones
+- **Los iconos de abajo** quedan cerca del borde inferior de la escena. Dentro, pero a ras.
+- **Inglés nuevo para revisar en `/dev/textos`:** toda la sección.
+- **`scripts/lib/atlas.mjs`** es nuevo: lo usan `stack-icons` y `hobby-icons`.
+
+### 7. Lo que necesito de ti
+- Leer Sobre mí en la web, en los dos idiomas, y decirme si algo no te representa.
+- Mirar la rueda de 7, sobre todo en el móvil.
+
+### 8. Archivos para tu commit
+
+| Archivo | Cambio |
+|---|---|
+| `scripts/lib/atlas.mjs` (nuevo), `scripts/stack-icons.mjs`, `scripts/hobby-icons.mjs` (nuevo), `package.json` | Los iconos de las aficiones y lo compartido con el Stack |
+| `src/assets/about/hobby-icons.png`, `hobby-icons.gen.ts` (nuevos) | El atlas de las aficiones |
+| `src/content/types.ts`, `es.ts`, `en.ts`, `sections.ts`, `content.test.ts` | `About`, `HobbyId`, los textos y Sobre mí en la rueda; fuera "Sección en preparación"; el texto alternativo de la captura |
+| `src/windows/AboutWindow.tsx`, `AboutWindow.module.css` (nuevos), `AtlasIcon.tsx`, `AtlasIcon.module.css` (antes `TechIcon`), `StackWindow.tsx`, `index.ts` | La ventana y el icono de atlas |
+| `src/windows/DraftWindow.tsx` | **Borrado** |
+| `src/game/ring.ts`, `ring.test.ts`, `state.test.ts`, `explored.test.ts` | La rueda de 7 y sus pruebas |
+| `src/scenes/camp/CampScene.tsx` | La ayuda de Sobre mí |
+| `media-src/projects/portfolio.png`, `src/assets/projects/portfolio-640.webp`, `portfolio-1280.webp` | La captura con 7 iconos |
+| `scripts/camp-check.mjs`, `scripts/windows-check.mjs`, `scripts/share-assets.mjs` | Comprobaciones con 7 iconos y Sobre mí |
+| `CONTENT.md`, `DESIGN.md`, `BRIEF.md`, `PRODUCT.md`, `CLAUDE.md`, `docs/plan-de-fases.md`, `docs/informes/fase-8-mejoras.md` | Documentación |
+
+### Commits recomendados
+
+```bash
+# 1. Hobby icons, sharing the atlas code with the STACK icons
+git add scripts/lib/atlas.mjs scripts/stack-icons.mjs scripts/hobby-icons.mjs package.json src/assets/about
+git commit -m "feat(about): draw the hobby icons and share the icon atlas code with the stack icons"
+
+# 2. The ABOUT ME window, its content and its place in the ring
+git add src/content src/windows src/scenes/camp/CampScene.tsx src/game/state.test.ts src/game/explored.test.ts
+git commit -m "feat(about): add the About me window with a developer and a personal section"
+
+# 3. A seven-slot ring that keeps its names clear of Null
+git add src/game/ring.ts src/game/ring.test.ts
+git commit -m "feat(ring): deepen the ring's lower half so seven slots clear Null"
+
+# 4. This portfolio's picture with the seven-slot ring
+git add media-src/projects/portfolio.png src/assets/projects/portfolio-640.webp src/assets/projects/portfolio-1280.webp
+git commit -m "chore(media): recapture the portfolio picture with the seven-slot ring"
+
+# 5. Checks
+git add scripts/camp-check.mjs scripts/windows-check.mjs scripts/share-assets.mjs
+git commit -m "test: check the seven-slot ring and the About me window"
+
+# 6. Docs
+git add CONTENT.md DESIGN.md BRIEF.md PRODUCT.md CLAUDE.md docs/plan-de-fases.md docs/informes/fase-8-mejoras.md
+git commit -m "docs: add About me and report block U"
+```
+
+`git add src/windows` también registra que se borró `DraftWindow.tsx` y el cambio de nombre de
+`TechIcon` a `AtlasIcon`.

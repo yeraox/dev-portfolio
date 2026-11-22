@@ -216,9 +216,8 @@ asks "Download the CV as a PDF?" (YES / NO) in a small window before downloading
 current language; the gear opens SETTINGS (phase 9): the language (Spain / UK flags) and the
 animations on or off (WCAG 2.2.2), both remembered. Each slot has a `status: 'ready' | 'draft'` field; `draft`
 slots are hidden in production builds and shown in dev, so the live site never shows an empty
-window. ABOUT ME is the next section (draft, content to be decided); BUFFS and CRAFT were
-dropped in phase 8. The live ring has 6 slots; with ABOUT ME it will have 7, whose layout is
-still to be checked.
+window (no section is a draft today). ABOUT ME joined in phase 8, block U, right after PROFILE;
+BUFFS and CRAFT were dropped in phase 8. The ring has 7 slots, its layout checked at every stop.
 
 **Downloadable CV:** one PDF per language, `references/cv_es_yeray_caturla.pdf` and
 `references/cv_en_yeray_caturla.pdf` (they include my phone — OK in the PDF, never on the web).
@@ -237,10 +236,10 @@ makes the page's head tags and a `<noscript>` note linking both PDFs; share imag
 | PROJECTS | Alchemy — Projects | Proyectos (ALCHEMY) | one section per project: pictures left, text right |
 | STACK | Equipment — Tech Stack | Stack técnico (EQUIP) | two tiers (Mastery / Worked with), grouped lists, each technology with its pixel icon (phase 8), no numeric levels or % |
 | PROFILE | Stats — Profile | Perfil (STATS: profile, education, quest log) | stats-sheet layout (label/value columns + dividers) |
+| ABOUT ME | Journal — About Me | Sobre mí (DIARIO) | two sections: as a developer (short paragraphs) and personal (six hobbies, each with its 16×16 icon) |
 | CONTACT | Config — Contact | Contacto (COMMS) | option list with links |
 | CV | Scroll — Download CV | — | small question window: YES downloads the PDF, NO closes |
 | SETTINGS | Gear — Settings | — | small window: language, animations (with a red note), BACK TO TITLE (camp only), privacy line |
-| ABOUT ME (draft) | Journal — About Me | Sobre mí | to be decided |
 
 ## Language — bilingual ES/EN with typed dictionaries (no i18n library)
 - One dictionary per locale: `src/content/es.ts` and `src/content/en.ts`, both typed against a
