@@ -8,13 +8,26 @@ describe('ring geometry', () => {
     expect(slotAngle(1, 0, 4)).toBe(0); // 4 slots: the next one sits to the right
   });
 
-  it('places slots on the ellipse', () => {
+  it('keeps the top and bottom slots above and below Yeray', () => {
     const top = slotOffset(0, 0, 4);
     expect(top.x).toBeCloseTo(0);
     expect(top.y).toBeCloseTo(-RING.ry);
+    const bottom = slotOffset(2, 0, 4);
+    expect(bottom.x).toBeCloseTo(0);
+    expect(bottom.y).toBeCloseTo(RING.ry);
     const right = slotOffset(1, 0, 4);
-    expect(right.x).toBeCloseTo(RING.rx);
+    expect(right.x).toBeCloseTo((RING.rxTop + RING.rxBottom) / 2); // halfway down: the middle width
     expect(right.y).toBeCloseTo(0);
+  });
+
+  it('brings the upper side slots closer to Yeray than the lower ones (6 slots)', () => {
+    const upperRight = slotOffset(1, 0, 6);
+    const lowerRight = slotOffset(2, 0, 6);
+    const upperLeft = slotOffset(5, 0, 6);
+    expect(upperRight.x).toBeCloseTo(70, 0); // the campfire (left) and the dumbbells (right) in view
+    expect(lowerRight.x).toBeCloseTo(113, 0); // the lower ones keep clear of Null
+    expect(upperLeft.x).toBeCloseTo(-upperRight.x); // and the ring stays symmetric
+    expect(upperRight.y).toBeCloseTo(-RING.ry / 2);
   });
 
   it.each([4, 5, 6, 7])('keeps %i slots from overlapping', (count) => {
@@ -56,6 +69,6 @@ describe('ring geometry', () => {
 
   it('starts the opening close to Yeray', () => {
     const start = openingOffset(0, 0, 4, openSpread(0));
-    expect(Math.hypot(start.x, start.y)).toBeLessThan(RING.rx / 4);
+    expect(Math.hypot(start.x, start.y)).toBeLessThan(RING.icon); // within one icon of his middle
   });
 });

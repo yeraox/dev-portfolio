@@ -1,10 +1,15 @@
 // Ring menu geometry (DESIGN.md §6), in scene pixels of the 640×360 scene. Pure functions.
 export const RING = {
-  // Each slot carries its name above its icon, so the ellipse leaves room for it: the top slot's
-  // name clears the banner, the bottom slot's name fits between Yeray's boots and its icon, and
-  // the lower side names pass beside Null (measured in check:camp at 390, 768 and 1440 px).
-  rx: 136, // horizontal radius of the ellipse
-  ry: 88, // vertical radius
+  // Each slot carries its name above its icon, so the ring leaves room for it: the top slot's name
+  // clears the banner, the bottom slot's name fits between Yeray's boots and its icon, and the
+  // lower side names pass beside Null (measured in check:camp at 390, 768 and 1440 px, in every
+  // position the ring can stop in).
+  // The ring is an egg, not an ellipse: its half-width grows from the top to the bottom. Up by
+  // Yeray's head there is room, so the upper side slots sit close to him and leave the campfire
+  // (left) and the dumbbells (right) in view; down by Null the lower ones keep their distance.
+  rxTop: 56, // half-width the ring would have at its very top…
+  rxBottom: 156, // …and at its very bottom (in between it changes evenly with the height)
+  ry: 88, // vertical radius: the top and bottom slots sit this far above and below the centre
   icon: 28, // the longest side of an icon (npm run icons), 1 icon pixel = 1 scene pixel
 } as const;
 // TS concept — `as const`: the values become read-only and keep their exact numbers.
@@ -19,10 +24,12 @@ export function slotAngle(index: number, turn: number, count: number): number {
   return -90 + ((index - turn) * 360) / count;
 }
 
-/** Where slot `index` sits, relative to the ring's centre. */
+/** Where slot `index` sits, relative to the ring's centre: round the ring's egg shape. */
 export function slotOffset(index: number, turn: number, count: number): Point {
   const radians = (slotAngle(index, turn, count) * Math.PI) / 180;
-  return { x: RING.rx * Math.cos(radians), y: RING.ry * Math.sin(radians) };
+  const height = Math.sin(radians); // -1 at the top … 1 at the bottom
+  const halfWidth = RING.rxTop + ((RING.rxBottom - RING.rxTop) * (height + 1)) / 2;
+  return { x: halfWidth * Math.cos(radians), y: RING.ry * height };
 }
 
 /** Fewest slots to turn from `from` to `to`: positive = towards the next slot. */
