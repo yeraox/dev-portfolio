@@ -17,15 +17,18 @@ type WindowSectionsProps = {
 };
 
 const SWIPE_MIN = 60; // CSS px a finger travels sideways to change section
+const ARROW_LINES = 2; // ↑ ↓ scroll the text two lines at a time
+const PAGE_SHARE = 0.85; // Page Up / Down scroll most of what is on screen, keeping a line or two
 // Elements that use the arrow keys themselves (a video's controls, form fields): left alone.
 const OWN_ARROWS = 'video, audio, input, select, textarea, [contenteditable="true"]';
 
 /**
  * A window's content split into sections, one on screen at a time, with tabs on top (ARIA
  * "tabs"). ← → change section from anywhere in the window (on a tab, Home and End too); a click or
- * tap on a tab goes to it; fingers can also swipe sideways. The mouse wheel and ↑ ↓ only scroll
- * the section's text, never change section. The text starts focused, so ↑ ↓ work at once. A
- * blinking arrow tells when there is more to read below. The other sections are there too,
+ * tap on a tab goes to it; fingers can also swipe sideways. The mouse wheel, ↑ ↓, Page Up / Down
+ * and (off the tabs) Home / End only scroll the section's text, from anywhere in the window too,
+ * so the text never needs the focus (nor its focus ring). A blinking arrow tells when there is
+ * more to read below. The other sections are there too,
  * hidden "until found": the browser's find-in-page (Ctrl+F) searches them and, on a match, its
  * section opens by itself.
  */
@@ -95,26 +98,52 @@ export function WindowSections({ label, sections }: WindowSectionsProps) {
     setSelected(index);
   }
 
+  // ↑ ↓, Page Up / Down and Home / End scroll the text. With the focus on a link inside it the
+  // browser already does that by itself; from anywhere else in the window (the window itself, a
+  // tab, ESC EXIT) it is done here.
+  function scrollText(key: string): boolean {
+    const panel = panelRef.current;
+    if (!panel) return false;
+    const line = parseFloat(getComputedStyle(panel).lineHeight) || 40;
+    const page = panel.clientHeight * PAGE_SHARE;
+    // How far each key scrolls, in CSS px (Home / End: as far as there is).
+    const steps: Record<string, number> = {
+      ArrowDown: ARROW_LINES * line,
+      ArrowUp: -ARROW_LINES * line,
+      PageDown: page,
+      PageUp: -page,
+      End: panel.scrollHeight,
+      Home: -panel.scrollHeight,
+    };
+    if (!(key in steps)) return false;
+    panel.scrollBy({ top: steps[key] });
+    return true;
+  }
+
   // ← → from anywhere in the window (the window is modal, so every key press comes from inside
   // it). On a tab, the focus follows to the new tab, and Home / End go to the first and last one
-  // (the ARIA tabs pattern). Elsewhere the focus goes to the text, so it is never left behind on a
-  // link of the section that just closed.
+  // (the ARIA tabs pattern). Elsewhere the focus goes back to the window, so it is never left
+  // behind on a link of the section that just closed. Other reading keys scroll the text.
   const onKeyDown = useEffectEvent((event: KeyboardEvent) => {
-    if (count < 2 || event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+    if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
     const target = event.target instanceof Element ? event.target : null;
     if (target?.closest(OWN_ARROWS)) return;
     const onTab = target?.getAttribute('role') === 'tab';
+    const inText = target !== null && panelRef.current?.contains(target) === true;
     const last = count - 1;
     let next: number;
-    if (event.key === 'ArrowRight') next = selected === last ? 0 : selected + 1;
-    else if (event.key === 'ArrowLeft') next = selected === 0 ? last : selected - 1;
+    if (count > 1 && event.key === 'ArrowRight') next = selected === last ? 0 : selected + 1;
+    else if (count > 1 && event.key === 'ArrowLeft') next = selected === 0 ? last : selected - 1;
     else if (onTab && event.key === 'Home') next = 0;
     else if (onTab && event.key === 'End') next = last;
-    else return;
+    else {
+      if (!inText && scrollText(event.key)) event.preventDefault();
+      return;
+    }
     event.preventDefault();
     select(next);
     if (onTab) tabs.current[next]?.focus();
-    else panelRef.current?.focus({ preventScroll: true });
+    else if (inText) panelRef.current?.closest('dialog')?.focus({ preventScroll: true });
   });
 
   useEffect(() => {
@@ -172,8 +201,6 @@ export function WindowSections({ label, sections }: WindowSectionsProps) {
           role={count > 1 ? 'tabpanel' : undefined}
           id={`${id}-panel`}
           aria-labelledby={count > 1 ? `${id}-tab-${selected}` : undefined}
-          tabIndex={0}
-          data-autofocus // the window opens with the focus here: ↑ ↓ scroll the text at once
           className={styles.panel}
           onScroll={measure}
           onTouchStart={onTouchStart}

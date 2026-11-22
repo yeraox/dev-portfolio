@@ -12,6 +12,12 @@
   background: none;
 }
 
+/* The window takes the focus when it opens, but it is not a control: no focus ring around it.
+   Its buttons, tabs and links keep theirs. */
+.dialog:focus-visible {
+  outline: none;
+}
+
 /* A scroll inside the window never carries on to the page behind it (both rules are needed:
    the backdrop is not a scroll container by itself). */
 .dialog:modal {

@@ -43,14 +43,14 @@ export function SectionDialog({ title, open, tall, compact = false, closable = !
   // With less motion there is no closing wipe to wait for.
   const reducedMotion = useReducedMotion();
 
-  // Open it. The browser focuses the window's first control (ESC EXIT); content that should start
-  // focused marks itself `data-autofocus` (a section's text, so ↑ ↓ scroll it at once). React does
-  // not write the real `autofocus` attribute, so the dialog would not find it by itself.
+  // Open it, with the focus on the window itself: nothing inside is marked (the browser would
+  // otherwise focus ESC EXIT), and the keys still reach it (← → and ↑ ↓ in WindowSections). The
+  // CV's question and SETTINGS then move it to their own first answer.
   useEffect(() => {
     const dialog = ref.current;
     if (!dialog || dialog.open) return;
     dialog.showModal();
-    dialog.querySelector<HTMLElement>('[data-autofocus]')?.focus({ preventScroll: true });
+    dialog.focus({ preventScroll: true });
   }, []);
 
   // Closing: wait for the wipe (or not, with less motion), then really close.
@@ -67,6 +67,7 @@ export function SectionDialog({ title, open, tall, compact = false, closable = !
   return (
     <dialog
       ref={ref}
+      tabIndex={-1} // focusable from code (when it opens), never a Tab stop
       className={styles.dialog}
       data-tall={tall && !compact}
       data-compact={compact}
