@@ -67,6 +67,7 @@ Si el proyecto se parase a mitad, lo que ya existiera seguiría sirviendo.
 | 6 | Intro: salida de la cueva | Tú y Null salís de la cueva y llegáis al campamento |
 | 7 | Vista CV, calidad y accesibilidad | Página CV en texto, auditorías y pruebas finales |
 | 8 | Mejoras del portfolio | CV en inglés, rueda con nombres reales, iconos nuevos, CV e idioma; retratos y favicon nuevos, piel más clara, Null caminando bien; iconos del stack, animaciones en reposo; fuera BUFFS, CRAFT y la vista CV web |
+| 8, ronda 2 | Mejoras 2 | Ajustes en el título y volver al título, ventanas de fondo plano que se manejan con ← →, la rueda sin tapar la hoguera, este portfolio como proyecto y una línea de privacidad |
 | 9 | Revisión, refactor y limpieza | El mismo resultado con menos código, menos archivos y nada de ruido |
 | 10 | Publicación | La web en internet con despliegue automático |
 
@@ -1258,11 +1259,185 @@ Luego se pueden añadir más sin tocar el código: cada acción es una línea de
 
 ---
 
+## Fase 8, ronda 2 — Mejoras 2
+
+> Añadida el 21/11/2026, antes de publicar: volvemos a la fase 8 con 9 mejoras tuyas (bloques
+> N–R). **Hecha el 21/11/2026**, los cinco bloques seguidos (lo pediste así). Informe: sección
+> "Ronda 2" de `docs/informes/fase-8-mejoras.md`. Lo que queda de la fase 9 (`code-review`,
+> `simplify` y regenerar `DESIGN.md`) va después de esta ronda.
+
+**Objetivo:** dejar la web a punto para publicarla: ajustes en el título, ventanas más cómodas de
+leer, una rueda que no tape la hoguera y este portfolio como proyecto.
+
+### N. AJUSTES en todas partes (tus puntos 1, 2 y 3)
+
+**1. El engranaje en el título**
+- El ES/EN de arriba a la derecha se cambia por el **engranaje con su nombre (AJUSTES)**, con el
+  mismo estilo que el pergamino del CV de la izquierda.
+- Abre **la misma ventana de Ajustes** que la rueda: idioma y animaciones.
+- Como el pergamino: ni el engranaje ni su ventana empiezan el juego.
+- **A tener en cuenta:** el idioma queda un paso más lejos. En la primera visita ya sale del
+  idioma del navegador, así que un reclutador inglés ve la web en inglés desde el principio.
+
+**2. Volver al título**
+- Un botón **VOLVER AL TÍTULO / BACK TO TITLE** dentro de Ajustes, como en los juegos.
+- **Solo en el campamento:** en los Ajustes del título no aparece.
+- Hace la transición de puntos al revés (campamento → título). Desde ahí, PRESS START vuelve a
+  poner la intro.
+- No pregunta antes: no se pierde nada (el idioma, las animaciones y la XP se quedan).
+
+**3. Aviso en rojo en Animaciones**
+- Debajo de la fila de Animaciones, una línea en rojo que cambia con la elección:
+  - **SÍ:** "Con animaciones: intro, transiciones, rueda girando, hoguera, Yeray y Null
+    moviéndose y el vídeo de Capyroad en bucle."
+  - **NO:** "Sin animaciones: sin intro ni transiciones; la rueda cambia al instante; la hoguera,
+    Yeray y Null se quedan quietos; el vídeo no arranca solo."
+- Los lectores de pantalla la leen al cambiar.
+- **Un rojo nuevo en la paleta:** el actual (`red-1`) sobre el gris de la ventana da unos 3,3:1,
+  por debajo del mínimo AA (4,5:1). Añado uno más claro (la paleta lleva 31 de 32 colores) y su
+  par en `CONTRAST_PAIRS`.
+- **Un fallo que arreglo de paso:** si tu sistema pide "reducir movimiento", hoy la ventana marca
+  SÍ con las animaciones apagadas. Pasará a marcar NO, y elegir SÍ mandará sobre el sistema.
+
+**Y una línea de privacidad** (tu punto 9, ver bloque R) al final de la ventana.
+
+### O. Ventanas: fondo plano, flechas y rueda del ratón (tus puntos 4, 5 y 6)
+
+**4. Fondo gris plano**
+- En todas las ventanas: las secciones, Ajustes y la pregunta del CV.
+- El mismo gris oscuro de ahora (`stone-0`), **sin la textura de piedra**.
+- Se quedan el bisel y la ranura del marco: sigue pareciendo una ventana de juego.
+- El HUD conserva la piedra: no tiene texto largo.
+
+**5. Las flechas: un fallo real**
+- Hoy ← → solo funcionan cuando el foco está en las pestañas.
+- Al abrir la ventana el foco no está ahí, y para llegar hay que usar Tab.
+
+**6. Cómo se maneja a partir de ahora**
+
+| Qué haces | Qué pasa |
+|---|---|
+| ← → | Cambias de sección o de proyecto, esté donde esté el foco dentro de la ventana |
+| Clic en una pestaña | Vas a ella |
+| Rueda, ↑ ↓, RePág/AvPág | Solo mueves el texto; **nunca** cambias de sección |
+| Móvil | Tocas la pestaña o deslizas a los lados (como ahora) |
+
+- Al abrir, el foco va al texto, así que ↑ ↓ funcionan desde el principio.
+- La línea de ayuda dice lo que funciona de verdad: "← → cambian de proyecto · Rueda o ↑ ↓
+  para leer · Esc vuelve al campamento".
+
+### P. La rueda: que no tape la hoguera (tu punto 7)
+
+- **La hoguera no se mueve:** es parte de tu imagen del campamento, y moverla sería repintarla.
+- **El icono de encima de tu cabeza se queda exactamente donde está**, y el de debajo de tus
+  botas también (21/11/2026, decisión tuya).
+- **Solo se acercan los de los lados:**
+  - **los de arriba**, hasta dejar la hoguera entera a la vista: de 118 a 70 px de escena de tu
+    centro (hecho: más de lo previsto, para que tampoco tapen el trípode). De paso se ven también
+    las pesas, que antes tapaba el de la derecha;
+  - **los de abajo**, un poco, lo que deje Null: de 118 a 113 px (hecho). En el móvil los nombres
+    son más anchos, y con la rueda girada PROYECTOS queda junto a Null: no hay sitio para más.
+- Por eso la rueda deja de ser una elipse: su anchura cambia con la altura. Cada icono sigue el
+  mismo camino al girar, sin saltos.
+- Mientras gira, los iconos siguen pasando por encima de todo. Lo que cambia es dónde se paran.
+- Cuando llegue "Sobre mí" (7 iconos), las posiciones cambian y lo vuelvo a medir.
+
+### Q. Este portfolio como proyecto, y TypeScript en el Stack (tu punto 8)
+
+**El proyecto** (decidido el 21/11/2026: entra, con tu papel y cómo se ha desarrollado)
+- Cuarta pestaña de Proyectos, con la etiqueta **ESTÁS AQUÍ / YOU ARE HERE**, al estilo de
+  DESTACADO y CLASIFICADO.
+- Una captura del campamento, hecha con el propio juego.
+- El enlace al repositorio cuando sea público (fase 10).
+- **Borrador para que lo corrijas** (pasa a `CONTENT.md`, y de ahí a `es.ts` y `en.ts`, solo con
+  tu OK):
+  - **Nombre:** Este portfolio.
+  - **Contexto:** Proyecto personal · nov. 2026 · desarrollado con Claude Code.
+  - **Resumen:** Portfolio con forma de RPG de 16 bits: pantalla de título, intro saliendo de la
+    cueva y un campamento con un menú en rueda que abre mi CV por secciones. Sin motor de
+    juegos: React, TypeScript y Canvas.
+  - **Qué hice:**
+    - La idea y la dirección del proyecto: el mundo, cada pantalla y cada decisión de diseño.
+    - Las referencias de arte: los personajes, los iconos y el fondo del campamento.
+    - El desarrollo, con Claude Code (un agente de IA), fase a fase: en cada una revisé el
+      resultado con capturas en móvil, tablet y escritorio antes de aprobarla. (Hecho: "fase a
+      fase" en lugar de "en 10 fases", porque son 11, de la 0 a la 10.)
+    - Aprendí TypeScript con este proyecto.
+  - **Stack:** React · TypeScript · Vite · Canvas · Vitest · Playwright.
+  - **Nota, Accesibilidad:** se maneja con teclado, ratón o pantalla táctil, con lector de
+    pantalla y sin animaciones.
+  - **Pendiente de ti:** si quieres contar cómo hiciste las referencias de arte, dímelo y lo
+    añado.
+- **Riesgo:** en el móvil, con cuatro pestañas cada una se encoge más. (Hecho: su pestaña dice
+  solo "Portfolio", como la de Bosa dice "Bosa Digital".)
+
+**TypeScript en el Stack**
+- Entra en **"He trabajado con" → Lenguajes**.
+- Su icono sale de Simple Icons con `npm run stack-icons`, como los demás.
+
+### R. Aviso legal, cookies y privacidad (tu punto 9)
+
+**Lo que dice la ley** (no soy abogado, pero tu caso es claro)
+- **Aviso legal (LSSI, art. 10): no hace falta.** Solo obliga a webs con actividad económica
+  (ventas, anuncios, servicios de pago). Si un día ofreces servicios como autónomo, sí.
+- **Banner de cookies (LSSI, art. 22.2, y guía de la AEPD, que incluye `localStorage`): no hace
+  falta.**
+  - La web no usa cookies.
+  - Solo guarda 4 cosas en tu navegador, que nunca salen de él: el idioma y las animaciones (las
+    eliges tú) y `visited` y `explored` (estado del propio juego, sin datos personales).
+  - Las fuentes se sirven desde la propia web (no desde Google Fonts) y no hay analítica.
+- **Política de privacidad (RGPD): no es obligatoria.** No recoges datos de nadie: no hay
+  formularios ni analítica.
+
+**Lo que se hace** (decidido el 21/11/2026)
+- **Una línea al final de Ajustes**, en el título y en el campamento:
+  - "Esta web no usa cookies ni analítica. Solo guarda en tu navegador tu idioma, tus ajustes y
+    tu progreso."
+  - "This site uses no cookies or analytics. It only keeps your language, settings and progress
+    in your browser."
+- Los créditos (licencias de las fuentes y Simple Icons) van al README, en la fase 10.
+- **En la fase 10:** si se añade analítica, esto se revisa. Google Analytics necesitaría banner;
+  Cloudflare Web Analytics no usa cookies y no lo necesita.
+
+### Qué verás al terminar
+- Capturas a 390, 768 y 1440 px, en español e inglés: el título con el engranaje, Ajustes en el
+  título y en el campamento (con el aviso rojo y la línea de privacidad), las ventanas con fondo
+  plano, la rueda con la hoguera a la vista y la pestaña del portfolio.
+- El informe, añadido a `docs/informes/fase-8-mejoras.md`.
+
+### Cómo compruebo que funciona
+- Todas las pruebas y comprobaciones en verde, actualizadas:
+  - `check:title`: el engranaje abre Ajustes y no empieza el juego; ya no hay ES/EN;
+  - `check:camp`: volver al título, el aviso de animaciones y los nombres de la rueda sin tocarse
+    ni tocar a Null;
+  - `check:windows`: ← → cambian de sección desde el texto; la rueda solo desplaza.
+- Contraste AA del rojo nuevo y de la línea de privacidad.
+- Sin desplazamiento horizontal, sin errores en la consola, los mismos 60 fps y el mismo
+  presupuesto de peso.
+
+### TypeScript que aprenderás
+- **Una prop opcional que es una función** (`onBackToTitle?: () => void`): el campamento se la
+  pasa a Ajustes y el título no, y el botón solo aparece si existe.
+- **Ampliar una unión con una etiqueta común:** la transición sabe ir también hacia el título
+  (`to: 'INTRO' | 'CAMP' | 'TITLE'`), y el compilador señala cada sitio que tiene que tratar el
+  caso nuevo.
+- **El `Record` que obliga a estar completo**, otra vez: añadir `'typescript'` a `TechId` hace
+  que el compilador exija su icono.
+
+### Orden de trabajo
+- Hecho en este orden, todo seguido y revisado al final (21/11/2026): **O**, **N**, **P**, **Q** y
+  **R**.
+
+**💬 Tus comentarios:**
+
+---
+
 ## Fase 9 — Revisión, refactor y limpieza
 
-> 20/11/2026: parte 1 hecha (revisión con la skill `modern-web-guidance` y cambios que no se ven;
-> capturas idénticas). La parte 2 (borrados y cuatro decisiones) espera tu OK. Informe:
-> `docs/informes/fase-9-revision.md`.
+> 20/11/2026: parte 1 (revisión con la skill `modern-web-guidance` y cambios que no se ven;
+> capturas idénticas) y parte 2 hechas: borrados, el contorno de las ventanas, el engranaje con
+> AJUSTES (idioma y animaciones), las pestañas en una fila y Ctrl+F en todas las secciones.
+> Informe: `docs/informes/fase-9-revision.md`.
 
 **Objetivo:** que el código que vea un reclutador en GitHub esté igual de cuidado que la web.
 

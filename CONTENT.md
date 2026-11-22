@@ -17,6 +17,11 @@ archivos (o pídemelo).
 | Créditos | DESARROLLADOR BACKEND · NODE.JS · EXPRESS · JAVA · DOCKER · AWS | BACKEND DEVELOPER · NODE.JS · EXPRESS · JAVA · DOCKER · AWS |
 | Botones | PRESS START · SKIP INTRO | PRESS START · SKIP INTRO |
 
+**Esquinas** (desde la fase 8): arriba a la izquierda el pergamino del CV (nombre "CV") y, desde
+la ronda 2 de la fase 8, arriba a la derecha el engranaje (nombre "AJUSTES" / "SETTINGS"), que
+abre la misma ventana de ajustes que la rueda, sin "Volver al título". Los botones ES/EN del
+título se quitaron: el idioma se elige en Ajustes.
+
 La línea de créditos se traduce según el idioma (el brief la daba solo en inglés). La línea del
 centro de estudios se quitó a petición tuya (12-11-2026): no es relevante en el título; PRESS START y
 SKIP INTRO son etiquetas de juego y se quedan en inglés en los dos idiomas.
@@ -65,7 +70,7 @@ título del banner (y de la ventana) es "nombre de juego — qué es". Desde la 
 | Perfil | PERFIL / PROFILE | Estadísticas — Perfil | Stats — Profile |
 | Contacto | CONTACTO / CONTACT | Configuración — Contacto | Config — Contact |
 | CV | CV / CV | Pergamino — Descargar CV | Scroll — Download CV |
-| Idioma | IDIOMA / LANGUAGE | Idioma — Cambiar a English | Language — Switch to Español |
+| Ajustes | AJUSTES / SETTINGS | Engranaje — Ajustes | Gear — Settings |
 | Sobre mí (borrador, solo en desarrollo) | SOBRE MÍ / ABOUT ME | Diario — Sobre mí | Journal — About Me |
 
 **La ventana del CV** (al elegir el CV en la rueda):
@@ -78,9 +83,41 @@ título del banner (y de la ventana) es "nombre de juego — qué es". Desde la 
 
 El peso tiene que coincidir con el PDF real: una prueba lo comprueba.
 
-**El idioma:** la bandera es la del idioma actual (España o Reino Unido). Al elegirla cambia al
-otro. Los lectores de pantalla oyen "IDIOMA: Idioma — Cambiar a English". También se cambia con
-el ES/EN del título; la ventana de Contacto ya no tiene elección de idioma (fase 8).
+**La ventana de ajustes** (al elegir el engranaje en la rueda):
+
+| Texto | Español | Inglés |
+|---|---|---|
+| Título | Ajustes | Settings |
+| Idioma | Idioma: 🇪🇸 Español · 🇬🇧 English | Language: 🇪🇸 Español · 🇬🇧 English |
+| Animaciones | Animaciones: SÍ · NO | Animations: ON · OFF |
+| Aviso (SÍ), en rojo | Con animaciones: intro, transiciones, rueda girando, hoguera, Yeray y Null moviéndose y el vídeo de Capyroad en bucle. | With animations: intro, transitions, the ring turning, the campfire, Yeray and Null moving and the Capyroad video on a loop. |
+| Aviso (NO), en rojo | Sin animaciones: sin intro ni transiciones; la rueda cambia al instante; la hoguera, Yeray y Null se quedan quietos; el vídeo no arranca solo. | Without animations: no intro or transitions; the ring changes at once; the campfire, Yeray and Null stand still; the video does not start by itself. |
+| Antes del aviso, si lo pide el sistema | Tu sistema pide menos movimiento. | Your system asks for less motion. |
+| Botón (solo en el campamento) | VOLVER AL TÍTULO | BACK TO TITLE |
+| Privacidad (al final) | Esta web no usa cookies ni analítica. Solo guarda en tu navegador tu idioma, tus ajustes y tu progreso. | This site uses no cookies or analytics. It only keeps your language, settings and progress in your browser. |
+
+Cada idioma lleva su bandera (España o Reino Unido) y la opción en uso se ve en dorado. Con
+"Animaciones: NO" se para todo lo que se mueve solo (la intro, las transiciones, el giro de la
+rueda, la hoguera, la respiración, los gestos, los parpadeos y la cortinilla de las ventanas).
+Si el visitante no ha elegido, manda su sistema (si pide menos movimiento, empieza en NO y el
+aviso lo dice); si elige, manda su elección. Las dos elecciones se recuerdan en la próxima visita.
+La misma ventana se abre desde el engranaje del título, sin "Volver al título" (ronda 2 de la
+fase 8). **Lo legal** (ronda 2): sin aviso legal ni banner de cookies, porque la web no tiene
+actividad económica, no usa cookies ni analítica y solo guarda en el navegador preferencias y
+estado del juego (`localStorage`: idioma, animaciones, `visited`, `explored`). Si algún día se
+añade analítica, hay que revisarlo.
+
+**Línea de ayuda de las ventanas** (abajo; con ratón y teclado / en pantallas táctiles):
+
+| Ventana | Español | Inglés |
+|---|---|---|
+| Con secciones | ← → cambian de sección · Rueda o ↑ ↓ para leer · Esc vuelve al campamento. | ← → change section · Wheel or ↑ ↓ to read · Esc returns to camp. |
+| (táctil) | Desliza a los lados o toca una pestaña para cambiar de sección. | Swipe sideways or tap a tab to change section. |
+| Proyectos | ← → cambian de proyecto · Rueda o ↑ ↓ para leer · Esc vuelve al campamento. | ← → change project · Wheel or ↑ ↓ to read · Esc returns to camp. |
+| (táctil) | Desliza a los lados o toca un proyecto para cambiar. | Swipe sideways or tap a project to change. |
+| Contacto | Esc vuelve al campamento. | Esc returns to camp. |
+
+Desde la ronda 2 de la fase 8 la rueda del ratón solo desplaza el texto: ya no cambia de sección.
 
 **HUD:** "Yeray" y "Null", con las barras **HP** y **XP** (etiquetas de juego, iguales en los dos idiomas). La XP se llena al explorar las secciones; un lector de pantalla oye "Experiencia: {n} de 4 secciones exploradas" / "Experience: {n} of 4 sections explored". **Encabezado de la página** (solo para lectores de pantalla):
 "Yeray Caturla · Desarrollador Backend Junior".
@@ -163,6 +200,30 @@ de vida del software, desde la API hasta su despliegue automatizado.
 - **Confidencial:** acuerdo de confidencialidad firmado. Mostrar solo lo de arriba, sin cifras,
   repo, demo ni capturas. En la ventana puede llevar una etiqueta tipo "[CLASIFICADO]" como guiño,
   sin insinuar más de lo que dice el CV.
+- **Pestaña:** "Bosa Digital" en los dos idiomas (el nombre completo es largo para una pestaña;
+  sigue entero en el encabezado de la sección).
+
+### Este portfolio — ESTÁS AQUÍ (ronda 2 de la fase 8)
+Decidido por Yeray el 21/11/2026: entra, con su papel y cómo se ha desarrollado. **Pendiente de su
+revisión** (texto escrito por mí a partir del plan).
+- **Pestaña:** "Portfolio" en los dos idiomas. **Etiqueta:** ESTÁS AQUÍ / YOU ARE HERE.
+- **Nombre:** Este portfolio / This portfolio.
+- **Contexto:** Proyecto personal · nov. 2026 · desarrollado con Claude Code.
+- **Resumen:** Portfolio con forma de RPG de 16 bits: pantalla de título, intro saliendo de la
+  cueva y un campamento con un menú en rueda que abre mi CV por secciones. Sin motor de juegos:
+  React, TypeScript y Canvas.
+- **Qué hice:**
+  - La idea y la dirección del proyecto: el mundo, cada pantalla y cada decisión de diseño.
+  - Las referencias de arte: los personajes, los iconos y el fondo del campamento.
+  - El desarrollo, con Claude Code (un agente de IA), fase a fase: en cada una revisé el
+    resultado con capturas en móvil, tablet y escritorio antes de aprobarla.
+  - Aprendí TypeScript con este proyecto.
+- **Stack:** React · TypeScript · Vite · Canvas · Vitest · Playwright.
+- **Accesibilidad:** se maneja con teclado, ratón o pantalla táctil, con lector de pantalla y sin
+  animaciones.
+- **Repo:** cuando sea público (fase 10). **Demo:** es esta misma web, así que no lleva enlace.
+- **Captura:** `media-src/projects/portfolio.png`, el campamento (ver "Material visual").
+- **Si quieres** contar cómo hiciste las referencias de arte, se añade a "Qué hice".
 
 ---
 
@@ -188,13 +249,15 @@ para SQL, APIs REST, Java, AWS, WSL y Oracle Database, que no tienen logo allí.
 
 | Grupo | Tecnologías |
 |---|---|
-| Lenguajes | PHP |
+| Lenguajes | PHP · TypeScript |
 | Backend | Django |
 | Frontend | HTML · CSS |
 | Bases de datos | Oracle Database · MongoDB |
 | DevOps y cloud | Terraform |
 
-Nota: AWS no aparece en el CV actual; lo ha confirmado Yeray.
+Nota: AWS no aparece en el CV actual; lo ha confirmado Yeray. TypeScript entra en "He trabajado
+con" en la ronda 2 de la fase 8 (decisión de Yeray, 21/11/2026: lo está aprendiendo con este
+portfolio).
 
 ---
 
@@ -236,5 +299,6 @@ barra lateral del navegador (correo, redes…), que no deben publicarse.
 | `capyroad-raw.mp4` | Partida de Capyroad, 26 s, H.264, ~11 MB | ✅ Hecho: 14 s, sin audio, solo la app, 208 KB |
 | `pakitos-ruleta.png` | Ruleta americana, tablero completo | ✅ Usar |
 | `pakitos-blackjack.png` | Blackjack con mano repartida | ✅ Usar |
+| `portfolio.png` | El campamento de este portfolio, quieto, a 1440 (escenario 1280×720) | ✅ Hecho por `npm run share` contra `npx vite preview` (sin el borrador de "Sobre mí"); rehacer si cambia el campamento |
 
 ffmpeg ya está instalado (lo usan también los scripts de personajes y escenas).

@@ -155,7 +155,7 @@ for all window text. Self-hosted via @fontsource.
   that list; nothing is hardcoded in components.
 - Section windows lazy-loaded with `React.lazy`.
 - Folders: `src/scenes` (camp), `src/components` (RingMenu, Hud, SectionDialog, Window,
-  BannerWindow, StatBar, HelpBar…), `src/engine` (game loop, input, screen hooks, sprite and
+  BannerWindow, HudBar, HelpBar…), `src/engine` (game loop, input, screen hooks, sprite and
   character drawing), `src/game` (pure logic: state machine, ring maths, stage layout),
   `src/content`, `src/styles`.
 
@@ -166,7 +166,11 @@ for all window text. Self-hosted via @fontsource.
   in the bracket style. Focus is trapped in an open window and returned to the ring on close.
 - "SKIP INTRO" is visible from the first frame. Returning visitors start at HUB
   (localStorage, wrapped in try/catch). `prefers-reduced-motion` → no walk sequence, instant
-  transitions.
+  transitions; SETTINGS' Animations switch can turn motion off (or back on: the visitor's choice
+  wins), with a red note on what it changes. In the camp, SETTINGS has BACK TO TITLE (to see the
+  title and the intro again).
+- Inside a window, ← → change section from anywhere in it and a click or tap on a tab opens it;
+  the mouse wheel and ↑ ↓ only scroll the text (phase 8, round 2).
 - A recruiter reaches projects + contact in under 10 seconds: the CV PDF from the title's parchment
   (top left) and from the ring's CV slot, both asking before downloading (see "Downloadable CV").
   The plain-text CV view of phase 7 was removed in phase 8.
@@ -203,12 +207,12 @@ C. HUB — the avatar stands at camp with the dog sitting beside him. The ring m
 All content lives in `CONTENT.md` (Spanish source of truth, extracted from my CV). Use it
 verbatim; `TODO` / `PREGUNTA` items there are still open.
 
-**The ring (phase 8):** projects, tech stack, profile and contact, then the CV and the language.
+**The ring (phase 8):** projects, tech stack, profile and contact, then the CV and SETTINGS.
 Every slot shows its real name above its icon, always, in the visitor's language; the game name
 stays in the window title. EQUIP (gear) is the tech stack and ALCHEMY the projects. The CV slot
 asks "Download the CV as a PDF?" (YES / NO) in a small window before downloading the PDF of the
-current language; the language slot shows the current language's flag (Spain / UK) and switches
-to the other one, without a window. Each slot has a `status: 'ready' | 'draft'` field; `draft`
+current language; the gear opens SETTINGS (phase 9): the language (Spain / UK flags) and the
+animations on or off (WCAG 2.2.2), both remembered. Each slot has a `status: 'ready' | 'draft'` field; `draft`
 slots are hidden in production builds and shown in dev, so the live site never shows an empty
 window. ABOUT ME is the next section (draft, content to be decided); BUFFS and CRAFT were
 dropped in phase 8. The live ring has 6 slots; with ABOUT ME it will have 7, whose layout is
@@ -231,9 +235,9 @@ makes the page's head tags and a `<noscript>` note linking both PDFs; share imag
 | PROJECTS | Alchemy — Projects | Proyectos (ALCHEMY) | one section per project: pictures left, text right |
 | STACK | Equipment — Tech Stack | Stack técnico (EQUIP) | two tiers (Mastery / Worked with), grouped lists, each technology with its pixel icon (phase 8), no numeric levels or % |
 | PROFILE | Stats — Profile | Perfil (STATS: profile, education, quest log) | stats-sheet layout (label/value columns + dividers) |
-| CONTACT | Config — Contact | Contacto (COMMS) | option list with links + ES/EN toggle |
+| CONTACT | Config — Contact | Contacto (COMMS) | option list with links |
 | CV | Scroll — Download CV | — | small question window: YES downloads the PDF, NO closes |
-| LANGUAGE | Language — Switch to Español | — | no window: switches the language |
+| SETTINGS | Gear — Settings | — | small window: language, animations (with a red note), BACK TO TITLE (camp only), privacy line |
 | ABOUT ME (draft) | Journal — About Me | Sobre mí | to be decided |
 
 ## Language — bilingual ES/EN with typed dictionaries (no i18n library)
@@ -243,8 +247,8 @@ makes the page's head tags and a `<noscript>` note linking both PDFs; share imag
   and `t` (the active dictionary).
 - Initial locale: saved choice (localStorage, try/catch) → else `navigator.language` starting
   with `es` → `es`, otherwise `en`. Update `<html lang>` on change.
-- ES/EN toggle on the TITLE screen and as the ring's language slot (phase 8; the CONFIG/COMMS
-  window no longer has one), keyboard accessible.
+- The language is chosen in SETTINGS, opened from the ring's gear and from the title's gear (top
+  right; the title's own ES/EN buttons were removed in phase 8, round 2), keyboard accessible.
 - Game labels stay English in both locales (PRESS START, SKIP INTRO, the key hints). The ring's
   names, banner titles, help lines, window content and meta description are translated.
 - Workflow: I write content in Spanish; you draft the English version and I review it. Never
@@ -256,9 +260,10 @@ Human-readable explanation of every phase: `docs/plan-de-fases.md` (keep both in
 
 0. Foundations: Vite + React + TS (strict), oxlint, Vitest, Playwright Chromium (dev), folder structure;
    write CLAUDE.md, PRODUCT.md, DESIGN.md (palette, fonts, frame/window specs, motion specs,
-   internal resolution 640×360 since phase 2); `/dev/specimen` page with palette + chosen fonts.
+   internal resolution 640×360 since phase 2); a `/dev/specimen` page with palette + chosen fonts
+   (removed in phase 9).
 1. Window look: tokens + fonts + `Window`, `BannerWindow`, `StatBar`, `Divider`, `HelpBar`,
-   `KeyHint`; the STATS window rendered statically on `/dev/windows`.
+   `KeyHint`; the STATS window rendered statically on `/dev/windows` (removed in phase 9).
 2. Characters: sprite renderer (with horizontal flip) + avatar + Null + portraits + ring icons.
    `/dev/sprites` preview at 1×, 4× and 8× next to the reference photos; iterate on likeness.
 3. Camp + ring menu: HUB scene (characters on a screen-pixel canvas, my generated camp

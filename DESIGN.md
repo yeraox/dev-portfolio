@@ -28,6 +28,7 @@ colors:
   green-1: "#6fdc5a"
   red-0: "#8a1a1a"
   red-1: "#d8483f"
+  red-2: "#ff6b5b"
   fire: "#e8742a"
   forest-0: "#0f2418"
   forest-1: "#1e3a24"
@@ -173,7 +174,8 @@ accents. Source of truth: `src/styles/palette.ts`.
 ### Tertiary
 - **Lime Label** (`green-1`): the ring's active label and the "in progress" status. **Moss**
   (`green-0`) is its shade. **Ember Red** (`red-1`) with **Blood** (`red-0`): stat-bar fills
-  only. **Campfire Orange** (`fire`): the scene's flame.
+  only. **Warning Red** (`red-2`): text, only the note under Animations in SETTINGS (5.2:1 on
+  `stone-0`; `red-1` there was 3.3:1). **Campfire Orange** (`fire`): the scene's flame.
 
 ### Neutral
 - **Midnight Ink** (`ink`): every outline, plate and track. Never pure black.
@@ -224,7 +226,7 @@ drawn on a 10 px grid, so its sizes stay multiples of 10.
   window titles, PRESS START.
 - **Title** (Jersey 10 400, `--display-size` = 10 × round(1.5 × scale), min 20: 30 px at 1440,
   letter-spacing 0.08em, uppercase): game labels, banner title, section headings, HUD names,
-  ES/EN, SKIP INTRO, the title's CV plate, the CV question's YES / NO, title credits
+  SKIP INTRO, the title's CV and SETTINGS plates, the CV question's YES / NO, title credits
   (10 × round(scale)).
 - **Body** (Pixelify Sans 400, `--text-size` = 13 scene px, min 16: 26 px at 1440, 39 at 1920;
   line-height 1.35; paragraphs ≤ 65ch): everything inside windows. Entry titles in 700.
@@ -257,9 +259,11 @@ sections (ALCHEMY, EQUIP, STATS, COMMS) live in the window titles, translated.
   the content changes. Inside: label/value rows with an 8.5em label column from 480 px (stacked
   below), two columns from 1024 px, section layouts by the window's own width (container queries).
 - **Title:** the landscape fills the screen; the name, credits and PRESS START sit in the sky
-  above the peak; ES/EN top right, SKIP INTRO bottom right, the CV's parchment top left (4u in):
-  the ring's icon at the scene's pixel size under a "CV" plate like ES/EN. It opens the same
-  question as the ring's CV slot and never starts the game. The intro and the camp have no corner
+  above the peak; SKIP INTRO bottom right, and in the top corners (4u in) the ring's own icons at
+  the scene's pixel size under their name plates: the CV's parchment (left) and the SETTINGS gear
+  (right). They open the same windows as the ring's CV and gear (SETTINGS without BACK TO TITLE)
+  and never start the game. (The title's ES/EN buttons were removed in phase 8, round 2: the
+  language is in SETTINGS.) The intro and the camp have no corner
   link: the camp's CV is in the ring.
 
 ## Elevation & Depth
@@ -273,10 +277,10 @@ dithered ellipses: half the pixels in `ink`, no alpha.
 ### Shadow Vocabulary
 - **Window bevel** (`inset var(--u) var(--u) 0 stone-3, inset calc(-1 * var(--u)) calc(-1 * var(--u)) 0 ink, 0 0 0 var(--u) ink`):
   every window and HUD panel.
-- **Plate underside** (`inset 0 calc(-1 * var(--u)) 0 stone-2`): ink plates of key caps, ES/EN,
-  SKIP INTRO, the title's CV plate and the CV question's answers.
+- **Plate underside** (`inset 0 calc(-1 * var(--u)) 0 stone-2`): ink plates of key caps,
+  SKIP INTRO, the title's CV and SETTINGS plates, SETTINGS' choices and the CV question's answers.
 - **Icon outline** (four zero-blur `drop-shadow`s of one scene pixel in `stone-3`): the ring's icons
-  and the title's parchment.
+  and the title's parchment and gear.
 - **Title extrusion** (`drop-shadow(0 var(--u) 0 gold-1) drop-shadow(0 var(--u) 0 gold-0) drop-shadow(var(--u) var(--u) 0 ink)`):
   the gold name only.
 
@@ -287,7 +291,7 @@ different era.
 ## Shapes
 
 Square everywhere: no border-radius on anything (`rounded.none`). Corners and edges are drawn
-as pixel art: the window granite is a 32×32 generated tile, the banner's gold rope is an 18×18
+as pixel art: the HUD's granite is a 32×32 generated tile, the banner's gold rope is an 18×18
 nine-slice (6-px cells: knot corners, twisted edges), the selection brackets an 8×8 nine-slice of
 four blue corners. Scaled pixel art always uses `image-rendering: pixelated`; bullets are 2u
 squares with a pixel shadow.
@@ -297,22 +301,31 @@ squares with a pixel shadow.
 ## Components
 
 ### Window (`src/components/Window`)
-Stone panel: 32×32 granite fill (mostly `stone-0`, `stone-1` flecks, rare `ink` pits), the
-window bevel, an engraved groove 3u inside the edge (`ink` top-left, `stone-3` bottom-right),
+Flat `stone-0` panel (phase 8, round 2: the granite tile behind long text was tiring to read; the
+HUD panels keep it), the window bevel, an engraved groove 3u inside the edge (`ink` top-left, `stone-3` bottom-right),
 padding 7u. Optional title (headline, `gold-3`), top-right hint slot, bottom help slot. Opens
-with a top-to-bottom `clip-path` wipe (18 frames in 9 steps), closes with a 10-frame reverse.
+with a top-to-bottom `clip-path` wipe (18 frames in 9 steps), closes with a 10-frame reverse;
+once open nothing stays clipped, so the 1u `ink` outline around it shows. Without motion (system
+preference or Animations OFF) it simply appears and disappears.
 
 ### Section window (`SectionDialog`)
-A native modal `<dialog>` holding a Window: Tab wraps inside, Esc or the `[ESC] EXIT` button
-closes it, then focus returns to the ring. No backdrop dimming. It only appears once its content
+A native modal `<dialog>` holding a Window (`showModal`: the rest of the page is inert, no focus
+trap of our own; scroll never chains to the page behind). Esc or the `[ESC] EXIT` button closes
+it, then focus returns to the ring. No backdrop dimming. It only appears once its content
 has downloaded, so nothing shifts. On touch screens the close button's hit area reaches 44 px.
 
 ### Window sections (`WindowSections`)
-Content split into sections, one at a time, with ARIA tabs on top (arrows, Home, End, click). The
-mouse wheel changes section after reading a long one to its end (one flick = one section: events
-within 200 ms are a burst; a trackpad must travel 30 px); a sideways swipe on touch. The selected
-tab sits on an `ink` plate in `gold-3` with the pixel bullet as cursor. A gold pixel arrow blinks
-(32 on / 16 off) while there is more below. Paragraphs, rows and list items wrap without a
+Content split into sections, one at a time, with ARIA tabs on top. ← → change section from
+anywhere in the window (on a tab the focus follows; Home and End too), a click or tap on a tab
+opens it, a sideways swipe on touch. The mouse wheel and ↑ ↓ only scroll the section's text, never
+change section (phase 8, round 2). The window opens with the focus on the text (its focus ring is
+drawn inside), so ↑ ↓ work at once. The selected
+tab sits on an `ink` plate in `gold-3` with the pixel bullet as cursor (an outline in Windows'
+high-contrast mode). The tabs stay on one row: the ones not chosen shrink and end in "…", the
+chosen one always shows its whole label (badges sit inside the label, so they are cut first).
+The other sections stay in the page hidden "until found": the browser's find-in-page searches
+them and a match opens its section. A gold pixel arrow blinks (32 on / 16 off) while there is
+more below. Paragraphs, rows and list items wrap without a
 lonely last word.
 
 ### Content windows (`src/windows/`)
@@ -326,8 +339,8 @@ lonely last word.
 - **Profile (STATS):** Profile (portrait in an ink screen at ×round(1.5 × scale), name, role, rows, bio),
   Education, Quest log.
 - **Contact (COMMS):** contact rows (web links open a new tab with a hidden "(opens in a new
-  tab)", the PDF downloads, email opens the mail app). No language choice since phase 8: the
-  ring's flag and the title's ES/EN do it.
+  tab)", the PDF downloads, email opens the mail app). No language choice: SETTINGS (the ring's
+  gear or the title's) does it.
 - **Media** inside windows is not pixelated: screenshots (WebP 640/1280, lazy, sizes reserved) and
   the 14 s muted Capyroad video sit crisp in a 1u `ink` + 1u `stone-3` frame, a screen within the
   screen. Autoplay and loop only without reduced motion.
@@ -339,19 +352,32 @@ mouse-and-keyboard devices a `[← →] ROTATE · [ENTER] OPEN` hint.
 
 ### Ring menu (`RingMenu`, geometry in `src/game/ring.ts`)
 Six slots live (seven in development, with the ABOUT ME draft): projects, stack, profile, contact,
-CV, language. Icons 28 scene px on their longest side, 1 icon pixel = 1 scene pixel, each with a
+CV, settings (a gear). Icons 28 scene px on their longest side, 1 icon pixel = 1 scene pixel, each with a
 hard 1-scene-pixel `stone-3` outline (zero-blur drop shadows) so the dark ones read on the earth.
-Ellipse rx 136, ry 88 around Yeray's middle (320, 255). **Every slot shows its name above its
+An egg around Yeray's middle (320, 255), not an ellipse: ry 88, and a half-width that grows evenly
+from the top (`rxTop` 56) to the bottom (`rxBottom` 156). The top and bottom slots stay above and
+below Yeray; with six slots the upper side ones sit 70 px from him, leaving the campfire and the
+dumbbells in view, and the lower ones 113 px, clear of Null. **Every slot shows its name above its
 icon, always:** Pixelify `--text-small` uppercase on an `ink` plate, `text-dim`; the active one
-sits at the top inside the blue brackets, its name in `green-1` above them. The ellipse is sized
+sits at the top inside the blue brackets, its name in `green-1` above them. The ring is sized
 so the top name clears the banner, the bottom name fits between Yeray's boots and its icon and
-the lower names pass beside Null (`check:camp` measures it at 390/768/1440 in both languages).
+the lower names pass beside Null (`check:camp` measures it at 390/768/1440 in both languages, in
+all six positions the ring can stop in, against Null's real outline).
 Turns in 8 whole frames, the short way round; after the intro it opens by spreading out from
 Yeray in 6 steps of 2 frames while turning one slot; the names appear once it has opened. ARIA
 `menu` with roving focus; ←/→ turn, Enter/Space open, a click or tap opens a slot, a sideways
 swipe turns. The CV slot opens a compact question window ("Download the CV as a PDF?", the file's
 language and size, YES / NO on `ink` plates, the chosen one `ink` on `gold-3`, YES first). The
-language slot shows the current language's flag and switches to the other at once.
+gear opens SETTINGS, a compact window with ESC EXIT: Language (Español / English, each with its
+flag) and Animations (ON / OFF), two toggle buttons per row on `ink` plates, the one in use `ink`
+on `gold-3`; it starts on the language in use. Under Animations, a note in `red-2` (a polite live
+region, the row's description) says what moves or what stands still. Animations OFF stops
+everything that moves by itself; without a choice, the system's reduced-motion preference decides
+(and the note says so), and a choice wins over it (`src/engine/motion.ts`, CSS
+`:root[data-motion='on']`); both choices are remembered. In the camp, a BACK TO TITLE plate
+closes SETTINGS and fades back to the title. At the bottom, after an engraved line, a `text-dim`
+line in `--text-small`: no cookies or analytics, only the language, settings and progress kept in
+the browser. The title's gear opens the same window, without BACK TO TITLE.
 
 ### HUD (`Hud`)
 Bottom corners of the scene: two stone panels (window bevel), Yeray's on the left and Null's on the
@@ -371,9 +397,9 @@ game gauges, **HP** and **XP** (Jersey labels in `text-dim`, 24u ink tracks with
 - The profile window shows Yeray's face the same way in an ink screen, from the hair to the
   collar, up to 48 UI pixels (about 140 CSS px on portrait screens).
 
-### Game labels on ink plates (ES/EN, SKIP INTRO, the title's CV, YES / NO, key caps)
-Jersey 10 `text-dim` on `ink` with the plate underside; hover turns the text `gold-3`; the active
-language is `ink` on `gold-3`. Key caps are `<kbd>` in `gold-3` on `ink`. On touch screens the hit
+### Game labels on ink plates (SKIP INTRO, the title's CV and SETTINGS, YES / NO, key caps)
+Jersey 10 `text-dim` on `ink` with the plate underside; hover turns the text `gold-3`; a chosen
+option (SETTINGS, the CV question) is `ink` on `gold-3`. Key caps are `<kbd>` in `gold-3` on `ink`. On touch screens the hit
 area grows to 44 px tall without changing the look.
 
 ### Title screen (`src/scenes/title/`)
@@ -382,7 +408,8 @@ stars, hard bands and checker dithers down to a `horizon` glow line, the cave mo
 `night-1` with the dark arch at its foot, and a dense treeline of pointed firs (one-pixel tips,
 four stepped tiers, bases wider than their spacing so they always overlap) with a clearing of
 whole trees before the cave. Any key, click or tap starts (not Tab, modifiers, Escape or the
-controls); PRESS START blinks 32 on / 16 off, never when focused or with reduced motion.
+controls); PRESS START blinks 32 on / 16 off, never when focused, with reduced motion or with
+Animations OFF.
 
 ### Camp scene and cave intro (`src/scenes/camp/`)
 Yeray's generated camp image as it is (re-encoded WebP, never snapped to a grid), filling the
@@ -415,7 +442,8 @@ drawing's own ramp).
 Every 3–6 s one plays once (0.7–1.6 s), whatever the visitor is doing (turning the ring does not
 stop it): in rounds where each of the six plays once in a random order and the two take turns, so
 none is left waiting and none plays twice in a row; never both at once; they keep breathing
-meanwhile; none while a window is open or with reduced motion. Each action's drawings download the
+meanwhile; none while a window is open, with reduced motion or with Animations OFF. Each action's
+drawings download the
 first time it plays.
 Ring icons (`npm run icons`, phase 8): Yeray's pixel-art references, cut out of their background
 and reduced to the scene grid, keeping their own colours like the characters: flask (projects),

@@ -18,6 +18,12 @@ para hasta que lo revisas.
 | K | Animaciones en reposo | ✅ Hecho (19–20/11/2026), pendiente de tu revisión |
 | L | Fuera el idioma de la ventana de Contacto (añadido el 19/11) | ✅ Hecho (19/11/2026), pendiente de tu revisión |
 | M | Barras de vida y experiencia en el HUD (añadido el 19/11) | ✅ Hecho (19/11/2026), pendiente de tu revisión |
+| **Ronda 2** | | |
+| N | AJUSTES en todas partes: el engranaje en el título, volver al título y el aviso rojo | ✅ Hecho (21/11/2026), pendiente de tu revisión |
+| O | Ventanas: fondo gris plano, ← → desde cualquier sitio y la rueda solo desplaza | ✅ Hecho (21/11/2026), pendiente de tu revisión |
+| P | La rueda deja la hoguera a la vista | ✅ Hecho (21/11/2026), pendiente de tu revisión |
+| Q | Este portfolio como proyecto y TypeScript en el Stack | ✅ Hecho (21/11/2026), **el texto pendiente de tu revisión** |
+| R | Aviso legal y cookies: no hacen falta; una línea de privacidad en Ajustes | ✅ Hecho (21/11/2026), pendiente de tu revisión |
 
 El plan de cada bloque está en `docs/plan-de-fases.md`, "Fase 8 — Mejoras del portfolio".
 
@@ -1438,3 +1444,330 @@ git commit -m "feat(camp): play idle actions every few seconds, in rounds"
 git add CLAUDE.md DESIGN.md BRIEF.md docs/plan-de-fases.md docs/informes/fase-8-mejoras.md
 git commit -m "docs: describe the idle actions and report block K"
 ```
+
+---
+
+# Ronda 2 — Mejoras 2 (bloques N–R)
+
+> 21/11/2026. Volvimos a la fase 8 antes de publicar, con tus 9 mejoras. Pediste hacer todos los
+> bloques seguidos y revisarlo todo al final, así que esta sección los cuenta juntos. El plan está
+> en `docs/plan-de-fases.md`, "Fase 8, ronda 2 — Mejoras 2".
+
+## Resumen
+- **N. AJUSTES en todas partes.**
+  - En el título, el ES/EN de arriba a la derecha es ahora el **engranaje**. Abre la misma ventana
+    de Ajustes que la rueda.
+  - En el campamento, Ajustes tiene **VOLVER AL TÍTULO**. Desde el título, PRESS START vuelve a
+    poner la intro.
+  - Bajo "Animaciones", **un aviso en rojo** dice qué se mueve o qué se queda quieto.
+  - Si tu sistema pide menos movimiento, la ventana ahora marca NO y lo dice. Elegir SÍ manda.
+- **O. Ventanas.**
+  - **Fondo gris plano**, sin la textura de piedra.
+  - **← → funcionan** desde cualquier sitio de la ventana (antes solo con el foco en las pestañas).
+  - **La rueda del ratón solo desplaza el texto**: ya no cambia de sección.
+- **P. La rueda deja la hoguera a la vista.** El icono de encima de tu cabeza y el de debajo de tus
+  botas no se mueven. Los de los lados de arriba se acercan de 118 a 70 px de escena; los de abajo,
+  de 118 a 113 (Null no deja más).
+- **Q. Este portfolio es el cuarto proyecto**, "ESTÁS AQUÍ", con una captura del campamento y tu
+  papel contado tal cual. **TypeScript** entra en el Stack, en "He trabajado con".
+- **R. Lo legal.** No hace falta aviso legal ni banner de cookies. Al final de Ajustes hay una
+  línea: "Esta web no usa cookies ni analítica. Solo guarda en tu navegador tu idioma, tus ajustes
+  y tu progreso."
+
+### Capturas
+En `.screenshots/fase-8-r2/`, a 390, 768 y 1440 px:
+- `titulo-*`, `ajustes-titulo-*` y `ajustes-campamento-*`;
+- `campamento-*`: la rueda nueva;
+- `proyectos-*`, `stack-*` y `perfil-*`: las ventanas planas, la pestaña del portfolio y TypeScript.
+
+Las comprobaciones guardan además las suyas:
+- `.screenshots/fase-8/rueda-{es,en}-*`;
+- `.screenshots/fase-8/titulo-ajustes-*`;
+- `.screenshots/fase-9/ajustes-1440.png`;
+- `.screenshots/fase-4/`: las 24 ventanas.
+
+## 1. Decisiones tomadas
+
+| Decisión | Por qué | Quién |
+|---|---|---|
+| El engranaje del título abre **la misma ventana** de Ajustes que la rueda | Un solo sitio para el idioma y las animaciones; el título ya no tiene botones sueltos | Tú |
+| VOLVER AL TÍTULO **dentro de Ajustes**, solo en el campamento, sin pregunta | Como en los juegos; no se pierde nada (idioma, animaciones y XP se quedan) | Tú (propuesta aceptada) |
+| Ajustes se cierra **antes** de la transición al título | La ventana es una capa superior: se quedaría encima del fundido | Yo |
+| Aviso **en rojo**, con un rojo nuevo (`red-2`, `#ff6b5b`) | `red-1` sobre el gris da 3,3:1, por debajo del AA (4,5:1); el nuevo da 5,2:1. La paleta tenía sitio (31 → 32 colores) | Tú (el rojo) y yo (el tono) |
+| Sin elección propia manda el sistema; **tu elección manda sobre el sistema** | Antes, con "reducir movimiento" en el sistema, la ventana marcaba SÍ con todo parado | Tú (propuesta aceptada) |
+| Fondo de las ventanas: el **mismo gris de antes** (`stone-0`), plano | Mismo aspecto y mismos contrastes, sin el ruido de la piedra detrás del texto | Tú (propuesta aceptada) |
+| El HUD **conserva la piedra** | No tiene texto largo y sigue pareciendo un marco de juego | Yo (propuesta aceptada) |
+| ← → cambian de sección **desde cualquier sitio** de la ventana; en una pestaña, también Inicio y Fin | Lo que dice la línea de ayuda, y que funcione nada más abrir | Tú |
+| **↑ ↓ ya no cambian de pestaña** | Ahora desplazan el texto, como la rueda (en el patrón de pestañas horizontales de ARIA, ↑ ↓ no se usan) | Yo |
+| Al abrir, **el foco va al texto** | Así ↑ ↓ y RePág/AvPág desplazan desde el principio | Yo |
+| **Deslizar en el móvil se queda** | Es lo natural con el dedo | Tú (propuesta aceptada) |
+| La rueda: **arriba y abajo fijos**, los lados más cerca | Tu decisión del 21/11 | Tú |
+| Los de arriba a **70 px**, más cerca de lo previsto (236 → 250) | Así tampoco tapan el trípode | Yo |
+| Los de abajo a **113 px** | En el móvil los nombres son más anchos y, con la rueda girada, PROYECTOS acaba junto a Null | Medido |
+| La pestaña del portfolio dice **"Portfolio"** | Con cuatro pestañas, en el móvil se encogían a "Ca… / Pa… / Bo…" | Yo |
+| "Qué hice": **"fase a fase"**, no "en 10 fases" | Son 11 fases (de la 0 a la 10) | Yo |
+| La captura del portfolio la hace **`npm run share`** | Se puede repetir cuando cambie el campamento, y siempre sale igual | Yo |
+| TypeScript en **"He trabajado con" → Lenguajes** | Tu decisión del 21/11 | Tú |
+| Privacidad: **una línea en Ajustes**, en el título y en el campamento | Transparencia sin banner | Tú |
+
+## 2. Qué se ha hecho, paso a paso
+
+### O. Ventanas (primero, porque era un fallo)
+1. **Fondo plano.** `Window` ya no pinta la textura de piedra; `Window.module.css` deja solo
+   `stone-0`. Los pares de contraste (`contrast.ts`) cambian a lo que se usa de verdad: el texto de
+   las ventanas sobre `stone-0` y el texto del HUD sobre la piedra. Se añade `green-1` sobre
+   `stone-0` ("En curso").
+2. **El fallo de las flechas.** Las flechas solo se escuchaban en la fila de pestañas. Al abrir una
+   ventana, el navegador pone el foco en su primer control (ESC EXIT), así que no hacían nada
+   hasta llegar a una pestaña con Tab.
+3. **La solución.** `WindowSections` escucha las teclas en toda la página mientras está abierta
+   (la ventana es modal, así que todas vienen de dentro):
+   - ← → cambian de sección;
+   - en una pestaña, Inicio y Fin también, y el foco pasa a la pestaña nueva;
+   - en cualquier otro sitio, el foco vuelve al texto, para no quedarse en un enlace que se acaba
+     de ocultar;
+   - no se tocan las teclas de un vídeo con controles ni las de los campos de texto, ni las que van
+     con Alt, Ctrl, Cmd o Mayús (Alt+← es "atrás" en el navegador).
+4. **El foco al abrir.** El texto lleva `data-autofocus`, y `SectionDialog` lo enfoca justo después
+   de `showModal()`. Su contorno de foco se dibuja por dentro: el cuerpo de la ventana recortaba el
+   de fuera.
+5. **La rueda solo desplaza.** Fuera todo el código que la convertía en "siguiente sección" (ráfagas
+   de 200 ms, 30 px de trackpad, entrar por el final al volver). El navegador desplaza solo.
+6. **La línea de ayuda dice la verdad:** "← → cambian de sección · Rueda o ↑ ↓ para leer · Esc vuelve
+   al campamento" (y "de proyecto" en Proyectos), en español e inglés.
+
+### N. AJUSTES en todas partes
+1. **Animaciones (`src/engine/motion.ts`).**
+   - Se guarda tu elección (`'on'`, `'off'` o ninguna).
+   - Lo que se aplica es tu elección o, si no hay, lo que pide el sistema.
+   - `<html data-motion>` lleva siempre el valor que manda. Cambia solo si cambias el ajuste del
+     sistema con la web abierta.
+   - En CSS, cada animación pasa de "`prefers-reduced-motion: no-preference` y no apagado" a
+     `:root[data-motion='on']`. Así tu SÍ puede encenderlas aunque el sistema pida menos. Son 7
+     reglas en 5 archivos.
+   - Nuevo hook: `useSystemReducesMotion()`, para que la ventana diga "Tu sistema pide menos
+     movimiento."
+2. **Ajustes (`SettingsDialog`).**
+   - El aviso rojo: un párrafo bajo la fila de Animaciones, con `aria-live="polite"`, y la
+     descripción del grupo (`aria-describedby`).
+   - El botón VOLVER AL TÍTULO solo aparece si quien abre la ventana le pasa `onBackToTitle`.
+   - Al final, tras una línea grabada, la línea de privacidad.
+3. **Volver al título.**
+   - `screens.ts` tiene una acción nueva, `BACK_TO_TITLE`: del campamento a una transición hacia el
+     título (`to: 'TITLE'`).
+   - `titleOnScreen()` decide qué pantalla se ve en cada mitad del fundido.
+   - En el campamento, el botón marca que se vuelve al título y cierra Ajustes. Cuando la ventana ha
+     terminado de cerrarse, avisa a `App`.
+   - Durante el fundido, el campamento queda `inert` y la rueda no escucha teclas.
+4. **El título.**
+   - El componente nuevo `TitleCorner` sustituye a `CvScroll`: el pergamino a la izquierda y el
+     engranaje a la derecha, con el mismo estilo.
+   - El título guarda qué ventana está abierta (`{ name: 'cv' | 'settings', open }` o `null`).
+   - Mientras hay una abierta, ninguna tecla ni clic empieza el juego. Al cerrarla, el foco vuelve a
+     la esquina que la abrió.
+   - Fuera los botones ES/EN y sus estilos.
+
+### P. La rueda
+1. **Medí los nombres en píxeles de escena.** En el escritorio PROYECTOS mide 65 px; en el móvil, 85
+   (allí la letra no baja tanto).
+2. **La forma.** `ring.ts` pasa de una elipse (`rx` 136) a un huevo: el semiancho crece de forma
+   uniforme de arriba (`rxTop` 56) a abajo (`rxBottom` 156). El de arriba y el de abajo no se mueven
+   (su anchura no cuenta). Con 6 iconos, los de arriba a los lados quedan a 70 px de tu centro y los
+   de abajo a 113. Al girar, cada icono sigue el mismo camino, sin saltos.
+3. **`check:camp` mira ahora las 6 paradas de la rueda**, no solo la primera. Cada parada pone cada
+   nombre en otro sitio, a 3 tamaños y en 2 idiomas: 36 casos.
+4. **Así salió un roce que ya existía:** en el móvil, con PROYECTOS abajo (bajo tus botas), su
+   nombre tocaba la caja de Null. Medí los píxeles reales de Null: era la esquina vacía de su
+   rectángulo, porque a esa altura (las patas) Null empieza 5 px más a la derecha. La comprobación
+   usa ahora su silueta real (orejas, cuerpo y patas).
+5. **Afiné con los 36 casos en verde:** los de abajo pasaron de 114 a 117 y luego a 113 con la
+   silueta real.
+
+### Q. Este portfolio como proyecto, y TypeScript
+1. **La captura.** `npm run share` hace también `media-src/projects/portfolio.png`: el escenario del
+   campamento a 1440 (1280×720), quieto y sin el borrador de "Sobre mí" (por eso se ejecuta contra
+   `npx vite preview`). Sale idéntica en cada ejecución. `npm run media` la pasa a WebP 640/1280
+   (37 y 82 KB).
+2. **El texto**, en español e inglés: el borrador del plan, con "fase a fase". La pestaña dice
+   "Portfolio" y la etiqueta, ESTÁS AQUÍ / YOU ARE HERE. No lleva repositorio hasta la fase 10.
+3. **Los tipos.** `'portfolio'` entra en el `id` de `Project` y en los de las capturas, y
+   `'typescript'` en `TechId`.
+4. **El icono.** `npm run stack-icons` añade el logo de TypeScript de Simple Icons (217 píxeles
+   encendidos, pasa sus comprobaciones). El atlas tiene ahora 23 iconos.
+5. **Otra vez el vídeo.** `npm run media` vuelve a codificar todos los archivos. El WebM (VP9) no sale
+   byte a byte igual, así que restauré el anterior: es el mismo vídeo y así no aparece como
+   cambiado.
+
+### R. Lo legal
+- La línea de privacidad, en Ajustes, en los dos idiomas. Lo que dice la ley está en el plan
+  (bloque R) y en `CONTENT.md`.
+
+### Documentación
+- `CONTENT.md`: las esquinas del título, los textos nuevos de Ajustes, la línea de ayuda, el
+  proyecto del portfolio, TypeScript y la captura.
+- `DESIGN.md`: `red-2`, las ventanas planas, las secciones con flechas, el huevo de la rueda,
+  Ajustes y las esquinas del título.
+- `BRIEF.md`: Ajustes y el manejo de las ventanas.
+- `CLAUDE.md`: las comprobaciones, `share` y `media`.
+- `docs/plan-de-fases.md`: la ronda 2, hecha.
+
+## 3. Cómo se ha comprobado
+
+| Comprobación | Resultado |
+|---|---|
+| `npm run typecheck`, `npm run lint` | ✓ sin errores ni avisos |
+| `npm test` | ✓ **200 pruebas** (196 en la fase 9): la vuelta al título, `titleOnScreen`, la forma de la rueda y el rojo nuevo |
+| `npm run check:windows` (vite preview) | ✓ 37: foco en el texto al abrir, → desde el texto, ↓ en una pestaña ya no cambia, Fin llega al portfolio, ← vuelve a Bosa, → desde ESC EXIT, clic en una pestaña, la rueda desplaza sin cambiar de proyecto y la sección nueva empieza arriba |
+| `npm run check:camp` (vite preview) | ✓ 109: los nombres en las 6 paradas × 3 tamaños × 2 idiomas, el aviso rojo (texto, color y descripción), VOLVER AL TÍTULO y la vuelta entera, la línea de privacidad, el sistema con menos movimiento y tu SÍ mandando |
+| `npm run check:title` (vite preview) | ✓ 46: Tab llega al engranaje sin empezar, Enter abre Ajustes sin VOLVER AL TÍTULO, teclas y clics dentro no empiezan, inglés desde Ajustes, Esc devuelve el foco al engranaje, ya no hay ES/EN, el engranaje no tapa nada y se toca en el móvil |
+| `npm run check:intro` (vite preview) | ✓ 24 |
+| `npm run shots` | Sin desplazamiento horizontal ni errores de consola en las 15 capturas |
+| `npm run share` dos veces | La imagen para compartir, el favicon, el icono de iPhone y la captura del portfolio salen idénticos |
+
+**Rendimiento** (vite preview; Lighthouse móvil, desde el scratchpad):
+
+| Métrica | Fase 9 | Ahora | Presupuesto |
+|---|---|---|---|
+| JavaScript inicial | 89,4 KB | **91,0 KB** comprimido | ≤ 100 KB |
+| Lighthouse título | 99 · 100 · 100 · 100, LCP 1,7 s, 237 KB | 99 · 100 · 100 · 100, LCP 1,8 s, 241 KiB | ≥ 95 |
+| Lighthouse campamento | 99 · 100 · 100 · 100, LCP 1,9–2,0 s | 98–99 · 100 · 100 · 100, LCP 2,0–2,3 s, 247 KiB (3 pasadas) | ≥ 95, LCP ≤ 2,5 s |
+| fps (rueda CPU ×1 / ×4, intro ×1 / ×4) | 60 / 60 / 60 / 59,5 | 60 / 60 / 60 / 59,6 | 60; ≥ 30 con ×4 |
+| Respuesta más lenta a una tecla o clic | — | 24 ms (×1), 32 ms (×4) | < 200 ms |
+
+Los 1,6 KB de JavaScript de más son Ajustes en el título, los textos nuevos y el proyecto del
+portfolio. La captura del portfolio solo se descarga al abrir Proyectos.
+
+## 4. TypeScript en esta ronda
+- **Un tipo del navegador y uno de React con el mismo nombre.** Antes, `onTabKey` recibía el
+  `KeyboardEvent` de React (`import { type KeyboardEvent } from 'react'`). Ahora la tecla llega por
+  `window.addEventListener`, que da el `KeyboardEvent` del navegador. Sin el `import`, TypeScript
+  usa el del navegador. El nombre es el mismo; lo que decide cuál es el `import`.
+- **`null` para decir "todavía nada".** En `motion.ts`, `let choice: Animations | null`. Tras
+  `if (choice) return choice;` TypeScript sabe que debajo `choice` es `null`. Lo mismo en el título:
+  `useState<{ name: TitleWindow; open: boolean } | null>(null)` es "ninguna ventana". `shown?.name`
+  lee el nombre solo si hay una.
+- **Ampliar una unión con etiqueta.**
+  - `to: 'INTRO' | 'CAMP' | 'TITLE'`, y una acción nueva, `{ type: 'BACK_TO_TITLE' }`.
+  - `{ name: screen.to }` sigue compilando: los tres valores son nombres de pantalla válidos.
+  - En `titleOnScreen`, tras `if (screen.name !== 'TRANSITION') return false;`, TypeScript sabe que
+    `screen` tiene `half` y `to`.
+- **Una prop opcional que es una función**, `onBackToTitle?: () => void`.
+  `{onBackToTitle && <button …>}` pinta el botón solo si existe: el campamento la pasa y el título
+  no.
+- **El `Record` que obliga a estar completo**, otra vez. Al añadir `'typescript'` a `TechId`,
+  `STACK_ICONS … satisfies Record<TechId, number>` deja de compilar hasta que `npm run stack-icons`
+  genera su icono. Con `'portfolio'` pasa igual: el `id` de la captura tiene que existir en
+  `SCREENSHOTS` (`keyof typeof SCREENSHOTS`).
+- **`useSyncExternalStore` con valores simples.** Cada hook devuelve un `string` o un `boolean`,
+  nunca un objeto nuevo en cada lectura. React compara con `===`, y un objeto nuevo le haría creer
+  que algo ha cambiado cada vez.
+
+## 5. Problemas encontrados y cómo se resolvieron
+
+| Problema | Solución |
+|---|---|
+| Las flechas solo funcionaban con el foco en las pestañas, y al abrir el foco está en ESC EXIT | Un listener de teclas en toda la ventana, y el foco al texto al abrir |
+| React no escribe el atributo `autofocus`: lo simula con `focus()` al montar, y `showModal()` (que va después) se lo quita | `data-autofocus` y `focus()` en `SectionDialog` justo después de `showModal()`. (Los efectos de los hijos van antes que los del padre: el hijo no puede hacerlo solo) |
+| El contorno de foco del texto solo se veía como una raya arriba | Se dibuja por dentro (`outline-offset: -2px`) |
+| Con "reducir movimiento" en el sistema, Ajustes marcaba SÍ con todo parado | El valor que manda vive en JS (`data-motion` siempre `on` u `off`) y el CSS lo lee de ahí |
+| `check:camp` solo miraba la rueda en su primera parada | Ahora gira y mira las 6 |
+| Al mirar las 6 paradas salió PROYECTOS tocando a Null (abajo, en el móvil) | Era la esquina vacía del rectángulo de Null; la comprobación usa su silueta real. No hay nada tapado |
+| En el móvil, los de abajo no pueden acercarse mucho | Los nombres son más anchos allí: de 118 a 113 px, no más |
+| Con cuatro pestañas, en el móvil las no elegidas se quedaban en "Ca… / Pa… / Bo…" | Pestaña corta "Portfolio": ahora "Cap… / Pak… / Bosa…" |
+| `npm run media` vuelve a codificar el WebM de Capyroad con otros bytes | Restauré el anterior: es el mismo vídeo |
+| Lighthouse del campamento dio 98 en 2 de 3 pasadas (LCP 2,2–2,3 s) | Ya pasaba en la fase 9 (98 una vez). Sigue dentro del presupuesto. La captura del portfolio no entra en la primera carga |
+
+## 6. Observaciones y TODOs
+- **En el móvil**, cuando AJUSTES se para arriba a la izquierda, su nombre roza la punta de una pata
+  del trípode. La hoguera y la olla se ven enteras. En la tablet y el escritorio no toca nada.
+- **"Sobre mí" (7 iconos):** las posiciones cambian. Cuando se publique, hay que volver a medir la
+  rueda (la comprobación ya mira todas las paradas).
+- **Fase 10:**
+  - el enlace al repositorio en el proyecto del portfolio;
+  - si se añade analítica, revisar lo legal;
+  - los créditos (fuentes OFL, Simple Icons) en el README.
+- **Fase 9, pendiente:** `code-review`/`simplify` y regenerar `DESIGN.md` y `.impeccable/design.json`
+  con impeccable.
+- **Inglés nuevo para revisar en `/dev/textos`:** el aviso de animaciones, BACK TO TITLE, la línea
+  de privacidad, la línea de ayuda y el proyecto del portfolio.
+- **Al empezar esta sesión** `git status` mostraba `skills-lock.json` modificado y
+  `.agents/skills/modern-web-guidance/` y `.claude/skills/modern-web-guidance` sin seguimiento. No
+  son de esta ronda; míralos tú.
+
+## 7. Lo que necesito de ti
+1. **Revisar el texto del portfolio** (Proyectos → Portfolio, en los dos idiomas). Si quieres contar
+   cómo hiciste las referencias de arte, dímelo y lo añado.
+2. **Mirar la rueda nueva**, sobre todo en el móvil, y decirme si los de abajo te bastan así.
+3. **El aviso rojo y la línea de privacidad:** si quieres cambiar alguna palabra.
+4. **El inglés nuevo** en `/dev/textos`.
+
+## 8. Archivos para tu commit
+
+| Archivo | Cambio |
+|---|---|
+| `src/components/Window.tsx`, `Window.module.css` | Fondo plano |
+| `src/components/SectionDialog.tsx` | Enfoca `[data-autofocus]` al abrir |
+| `src/windows/WindowSections.tsx`, `WindowSections.module.css` | ← → desde cualquier sitio, la rueda solo desplaza, foco en el texto |
+| `src/windows/ProjectsWindow.tsx` | Comentario al día |
+| `src/engine/motion.ts` | Tu elección manda; sin ella, el sistema |
+| `src/components/HudBar.module.css`, `PixelSprite.module.css`, `src/scenes/title/TitleScreen.module.css`, `src/styles/global.css` | Las animaciones, con `:root[data-motion='on']` |
+| `src/components/SettingsDialog.tsx`, `SettingsDialog.module.css` | Aviso rojo, VOLVER AL TÍTULO y privacidad |
+| `src/components/TitleCorner.tsx`, `TitleCorner.module.css` | **Nuevos**: las esquinas del título |
+| `src/components/CvScroll.tsx`, `CvScroll.module.css` | **Borrados**: ahora es `TitleCorner` |
+| `src/scenes/title/TitleScreen.tsx` | El engranaje y su ventana; fuera ES/EN |
+| `src/game/screens.ts`, `screens.test.ts`, `src/App.tsx`, `src/scenes/camp/CampScene.tsx` | Volver al título |
+| `src/game/ring.ts`, `ring.test.ts` | La rueda en forma de huevo |
+| `src/styles/palette.ts`, `tokens.css`, `contrast.ts` | `red-2` y los contrastes de las ventanas planas |
+| `src/content/types.ts`, `es.ts`, `en.ts` | Textos de Ajustes, ayuda, el proyecto del portfolio y TypeScript |
+| `scripts/share-assets.mjs`, `scripts/media.mjs`, `scripts/stack-icons.mjs` | La captura del portfolio y el icono de TypeScript |
+| `media-src/projects/portfolio.png` | **Nueva**: la captura del campamento |
+| `src/assets/projects/portfolio-640.webp`, `portfolio-1280.webp`, `media.gen.ts` | **Nuevas** y su índice |
+| `src/assets/stack/stack-icons.png`, `stack-icons.gen.ts` | Con TypeScript |
+| `scripts/camp-check.mjs`, `scripts/windows-check.mjs`, `scripts/title-check.mjs` | Las comprobaciones nuevas |
+| `CLAUDE.md`, `DESIGN.md`, `BRIEF.md`, `CONTENT.md`, `docs/plan-de-fases.md`, `docs/informes/fase-8-mejoras.md` | Documentación |
+
+### Commits recomendados
+
+**Importante:** la parte 2 de la fase 9 aún no está en un commit, y casi todos los archivos de esta
+ronda los tocó también ella (`SettingsDialog`, `motion.ts`, `WindowSections`, los textos…). No se
+pueden separar archivo a archivo. Propongo:
+
+1. **Primero**, los commits **1 y 2** de la parte 2 en `docs/informes/fase-9-revision.md` (código
+   muerto y el icono del engranaje), tal cual. Esta ronda no toca sus archivos.
+2. **Después**, en lugar de los commits 3, 4 y 5 de esa parte 2, estos seis. Juntan lo de las dos.
+
+```bash
+# 1. The ring: an egg shape that leaves the campfire in view
+git add src/game/ring.ts src/game/ring.test.ts
+git commit -m "feat(ring): bring the upper side slots closer so the campfire stays in view"
+
+# 2. Windows: flat background, ← → from anywhere, the wheel only scrolls (with phase 9's window work)
+git add src/components/Window.tsx src/components/Window.module.css src/components/SectionDialog.tsx src/windows
+git commit -m "feat(windows): flatten the window background and change sections with the arrow keys" -m "The text starts focused, ← → work from anywhere in a window and the mouse wheel only scrolls. Also from phase 9: windows show their outline once open, tabs stay on one row and find-in-page reaches every section."
+
+# 3. This portfolio as a project and TypeScript in the stack (the content files carry the new texts too)
+git add scripts/share-assets.mjs scripts/media.mjs scripts/stack-icons.mjs media-src/projects/portfolio.png src/assets/projects src/assets/stack src/content
+git commit -m "feat(projects): add this portfolio as a project and TypeScript to the stack" -m "The content files also bring the new SETTINGS texts and the windows' help line."
+
+# 4. SETTINGS from the ring and the title (phase 9's SETTINGS and this round's)
+git add src/engine src/App.tsx src/game src/components src/scenes src/styles
+git commit -m "feat(settings): open SETTINGS from the title too and add back to title, a motion note and a privacy line" -m "Language and an animations switch (phase 9); the visitor's choice now wins over the system's reduced motion, a red note says what it changes, the camp can go back to the title and the title's ES/EN buttons are gone."
+
+# 5. Checks
+git add scripts/camp-check.mjs scripts/windows-check.mjs scripts/title-check.mjs
+git commit -m "test: check SETTINGS on the title, going back to it, arrow-driven windows and every ring stop"
+
+# 6. Docs
+git add CLAUDE.md DESIGN.md BRIEF.md CONTENT.md docs/plan-de-fases.md docs/informes/fase-8-mejoras.md docs/informes/fase-9-revision.md
+git commit -m "docs: describe SETTINGS, flat windows and the egg-shaped ring; report phase 9 part 2 and phase 8 round 2"
+```
+
+`git add src/components` también registra que se borró `CvScroll`. La imagen para compartir, el
+favicon y el icono de iPhone se regeneraron, pero salen byte a byte iguales: no deberían aparecer
+como cambiados.
+
+## 9. Siguiente fase
+Con tu OK a esta ronda:
+1. lo que queda de la fase 9 (`code-review`/`simplify` y regenerar `DESIGN.md` y
+   `.impeccable/design.json` con impeccable);
+2. la **fase 10, publicación**.

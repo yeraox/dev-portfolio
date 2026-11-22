@@ -66,6 +66,11 @@ intro → camp hub with a ring menu → SNES-style windows with real CV content)
   `Record`, `satisfies`, simple generics only where React needs them.
 - No conditional/mapped types; avoid `as` and `any` — explain when unavoidable.
 - Let inference work. First time a concept appears, one short `// TS concept — …` comment.
+- **Functions:** `function` declarations for everything named at module level, components
+  included (`export function X()`, `export default function X()`; never
+  `export const X = () => …`), so each file reads top-down with its helpers below. Arrow
+  functions only for values passed around inside them: event handlers, callbacks (`.map`,
+  listeners) and short local helpers (`const close = () => …`).
 - When reviewing his TS, explain the compiler error before the fix.
 
 ## Styling
@@ -94,15 +99,15 @@ open that window), and so does a returning visitor (localStorage
 | `npm run characters` | Rebuild the character PNGs from `references/grandes/` and `references/portraits/` on their native pixel grid, walk cycles and idle actions (`reposo/`, laid over the still drawing) included, with Yeray's skin tone (`-- --skin=1\|2\|3\|none` to try another), and run their quality checks (needs ffmpeg) |
 | `npm run icons` | Cut the ring icons out of `references/icons/*.jpg` and reduce them to the scene grid (28 px) into `src/assets/icons/`, with their checks |
 | `npm run stack-icons` | The STACK window's 16×16 technology icons: Simple Icons logos (CC0 dev dependency) without smoothing in the `text` colour, plus generic pixel icons for those without one, in one atlas `src/assets/stack/` |
-| `npm run media` | Project screenshots → WebP 640/1280 and the Capyroad video → 14 s MP4 + WebM + poster in `src/assets/projects/` (fails over 2 MB) |
+| `npm run media` | Project screenshots (this portfolio's own, `portfolio.png`, comes from `npm run share`) → WebP 640/1280 and the Capyroad video → 14 s MP4 + WebM + poster in `src/assets/projects/` (fails over 2 MB) |
 | `npm run cv` | Copy Yeray's CV PDFs (Spanish and English) as they are from `references/` to `public/cv/yeray-caturla-cv-{es,en}.pdf` |
-| `npm run share -- [url]` | Share image `public/og-image.png` (1200×630 capture of the title, needs `npm run dev`) + favicon and apple-touch-icon from Yeray's face as it is (his in-game front drawing: head and collar, ×1 and ×3) |
+| `npm run share -- [url]` | Share image `public/og-image.png` (1200×630 capture of the title) + favicon and apple-touch-icon from Yeray's face as it is (his in-game front drawing: head and collar, ×1 and ×3) + this portfolio's picture for PROJECTS, `media-src/projects/portfolio.png` (the still camp at 1440; then `npm run media`). Run it against `npx vite preview` (port 4173, the default): the dev ring has the ABOUT ME draft |
 | `npm run scenes` | Re-encode Yeray's scene backgrounds (`references/grandes/campamento.jpg`) as WebP into `src/assets/scenes/`, as they are, and report their pixel grid (needs ffmpeg) |
 | `npm run shots -- <url> <name>` | Playwright screenshots at 390/768/1440 (phone and tablet as touch devices) into `.screenshots/` + overflow and console-error check |
-| `npm run check:camp -- [url]` | Camp walkthrough: keyboard only (1440) and touch only (phone); the ring's names on top of nothing at 390/768/1440 in ES/EN (screenshots in `.screenshots/fase-8/`; run it against `npx vite preview`: the dev ring has the ABOUT ME draft); the CV question (YES downloads, NO/Esc don't), the language slot, the HUD's XP and the idle actions (`data-idle` on the canvas) |
-| `npm run check:title -- [url]` | Title screen in ES/EN at 390/768/1440 (`.screenshots/fase-5/`) + what starts it (key, click, tap, SKIP INTRO) and what doesn't (Tab, ES/EN, the CV), the dithered transition, camp preloading, reduced motion; the CV parchment and its question (`.screenshots/fase-8/`), head tags, icons, both PDFs and the no-JavaScript note |
+| `npm run check:camp -- [url]` | Camp walkthrough: keyboard only (1440) and touch only (phone); the ring's names on top of nothing (nor Null's real outline) at 390/768/1440 in ES/EN, in all six stops of the ring (screenshots in `.screenshots/fase-8/`; run it against `npx vite preview`: the dev ring has the ABOUT ME draft); the CV question (YES downloads, NO/Esc don't), SETTINGS (language, animations on/off with the red note, the system's reduced motion and a choice that wins over it, remembered, the privacy line, BACK TO TITLE), the HUD's XP and the idle actions (`data-idle` on the canvas) |
+| `npm run check:title -- [url]` | Title screen in ES/EN at 390/768/1440 (`.screenshots/fase-5/`) + what starts it (key, click, tap, SKIP INTRO) and what doesn't (Tab, the SETTINGS gear and its window, the CV), the dithered transition, camp preloading, reduced motion; the CV parchment and its question (`.screenshots/fase-8/`), head tags, icons, both PDFs and the no-JavaScript note |
 | `npm run check:intro -- [url]` | Cave intro: screenshots at 390/768/1440 (`.screenshots/fase-6/`), 4–6 s long, SKIP at any moment (button, Escape, any key, click, tap), returning visitors, `/#title`, reduced motion, hidden-tab pause |
-| `npm run check:windows -- [url]` | The 4 content windows in ES/EN at 390/768/1440 (screenshots in `.screenshots/fase-4/`) + links, language switch, project tabs, video, lazy downloads |
+| `npm run check:windows -- [url]` | The 4 content windows in ES/EN at 390/768/1440 (screenshots in `.screenshots/fase-4/`) + tabs on one row, windows unclipped, find-in-page across sections, links, the 4 project tabs, ← → from anywhere in a window (focus starts on the text), the wheel that only scrolls, the swipe, video, lazy downloads |
 | `npm run fps -- [url]` | Frames per second while the ring turns and during the intro, CPU ×1 and ×4, plus the slowest answer to a key/click (run against `npx vite preview`) |
 
 **Lighthouse** (one-off, not a dependency): run it from the scratchpad, never from the repo — on

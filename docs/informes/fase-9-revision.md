@@ -1,8 +1,9 @@
 # Informe · Fase 9 — Revisión, refactor y limpieza
 
 **Fecha:** 20 de noviembre de 2026
-**Estado:** 🟡 parte 1 hecha: la revisión y todos los cambios que no se ven. La parte 2 (borrados y
-cuatro decisiones) espera tu OK.
+**Estado:** ✅ terminada, pendiente de tu revisión y tu commit.
+- **Parte 1:** la revisión y todos los cambios que no se ven.
+- **Parte 2:** los borrados y tus cuatro decisiones (A–D). Ver "Parte 2", al final.
 
 ## Resumen
 - **He revisado todo el código** con las guías de la skill `modern-web-guidance` (diálogos,
@@ -265,9 +266,209 @@ git commit -m "docs: add the phase 9 review report (part 1)"
 ## 8. Lo que necesito de ti
 1. **OK o cambios a la lista de borrados** (punto 4).
 2. **Las cuatro decisiones del punto 3:**
-   - A: contorno y movimiento reducido;
+   - A: contorno y movimiento reducido; 
    - B: botón de pausa;
    - C: pestañas de Proyectos;
    - D: buscar en la página.
 3. **Si paso las revisiones automáticas** `code-review` y `simplify` en la parte 2, sobre el código
    ya limpio.
+
+---
+
+# Parte 2 (20/11): borrados y decisiones A–D
+
+## Resumen
+- **Borrado lo que sobraba**, dejando lo necesario para futuros cambios. Se quedan los generadores,
+  `/dev/textos`, `/dev/personajes`, los dos documentos de análisis (`CLAUDE.md` cita
+  `animacion-caminar.md` como especificación del "sello") y tu carpeta `references/` entera.
+- **A:** las ventanas enseñan por fin su contorno de tinta, y "menos movimiento" se trata
+  animación por animación, sin el ajuste global.
+- **B:** el engranaje sustituye a la bandera en la rueda y abre **AJUSTES**:
+  - el idioma, cada uno con su bandera;
+  - las animaciones, SÍ o NO.
+
+  Con NO se para todo lo que se mueve solo, y las dos elecciones se recuerdan.
+- **C:** las pestañas de Proyectos ya no se parten en dos filas.
+- **D:** Ctrl+F encuentra texto en todas las secciones de todas las ventanas y abre la suya.
+
+## 1. Lo borrado
+
+| Qué | Por qué |
+|---|---|
+| `src/engine/grid.ts`, `src/engine/sprites.ts` y `src/engine/engine.test.ts` | El dibujante antiguo de iconos: solo lo usaban sus pruebas |
+| `ROPE_SLICE` (en `textures.ts`) | No lo usaba nadie (`ROPE_FRAME` sí se usa: es el marco de cuerda del cartel) |
+| `/dev/specimen` y `/dev/windows` (`Specimen.*`, `WindowsDemo.*`), y `StatBar.*` | Páginas de las fases 0, 1 y 4, desfasadas; `StatBar` solo vivía en `/dev/windows` |
+| El trote de lado de Null: la pose `trotSide`, sus 6 PNG `null-side-*`, su entrada en el generador y su sombra | Sin uso desde que camina de frente. Tu `null_caminando.jpg` sigue en `references/` por si un día vuelve |
+| Capturas viejas de `.screenshots/` (de 86 a 33 MB) | Las regeneran los scripts. Quedan `fase-8/` y `fase-9/` |
+
+`.impeccable/design.json` está desfasado, pero no lo he tocado: lo propongo regenerar con
+`impeccable` cuando cerremos la web, junto a `DESIGN.md`.
+
+## 2. A — El contorno de las ventanas y el movimiento reducido
+- **El contorno:** la animación de apertura ya no deja su recorte puesto al terminar
+  (`animation-fill-mode: backwards`), así que el contorno de tinta de 1u aparece alrededor de cada
+  ventana.
+- **La animación de las ventanas solo se activa si hay movimiento.** Sin él (preferencia del sistema
+  o animaciones en NO), la ventana aparece y desaparece al instante, y `SectionDialog` se cierra sin
+  esperar los 400 ms del cierre.
+- **Fuera el ajuste global** `animation-duration: 0.01ms !important`, que la guía `motion`
+  desaconseja.
+
+## 3. B — El engranaje y la ventana de AJUSTES
+- **El icono:** tu `references/icons/engranaje.jpg` pasa por `npm run icons` como los demás:
+  recortado, reducido a 28 px y sin repintar.
+  - Es el sexto hueco de la rueda, después del CV.
+  - Banner: "Engranaje — Ajustes" / "Gear — Settings".
+- **La ventana**, compacta como la pregunta del CV, pero con su botón ESC EXIT:
+  - **Idioma:** "🇪🇸 Español" y "🇬🇧 English", con tus banderas en píxeles enteros (nítidas).
+  - **Animaciones:** SÍ / NO (ON / OFF en inglés).
+  - Cada fila es un grupo de dos botones; el que está en uso, pulsado (`aria-pressed`) y en dorado.
+  - Empieza con el foco en el idioma en uso.
+- **Animaciones NO** para la hoguera, la respiración, los gestos, los parpadeos (PRESS START y la
+  flecha), la cortinilla de las ventanas, el giro de la rueda, el fundido del título y la intro.
+  - Es exactamente lo mismo que pedir "menos movimiento" al sistema.
+  - Con esto se cumple WCAG 2.2.2 (pausar lo que se mueve solo).
+- **Cómo funciona:**
+  - `src/engine/motion.ts` guarda la elección en el navegador y la expone a React
+    (`useReducedMotion`, `useAnimations`) y al CSS (`<html data-motion="off">`).
+  - Cada animación se activa con
+    `@media (prefers-reduced-motion: no-preference) { :root:not([data-motion='off']) … }`.
+- **El idioma se sigue cambiando también en el título** (ES/EN). La rueda ya no tiene hueco de
+  idioma.
+
+## 4. C — Las pestañas en una fila
+- Las pestañas ya no se parten (estrategia 3 de la guía `tabs`):
+  - las no elegidas pueden encogerse y acabar en "…";
+  - la elegida se ve siempre entera.
+- **La etiqueta va dentro del nombre**, detrás: al recortar, se pierde antes la etiqueta que el
+  nombre.
+- **La pestaña de Bosa se llama "Bosa Digital"** (dato nuevo `tab` en los textos). El nombre completo
+  sigue en el encabezado de su sección.
+- **Mira:** `.screenshots/fase-9/pestanas-proyectos-1-fila-390.png` (antes:
+  `pestanas-proyectos-2-filas-390.png`).
+
+## 5. D — Buscar en toda la página
+- **Las secciones no elegidas siguen en la página**, ocultas con `hidden="until-found"`:
+  - el buscador del navegador (Ctrl+F) las encuentra;
+  - al encontrar algo, el navegador muestra esa sección y la ventana cambia de pestaña sola.
+- **Si la sección encontrada estaba debajo de una larga**, la ventana corrige el scroll para que el
+  texto no se mueva de su sitio.
+- **Proyectos no carga fotos ni vídeo** de las secciones ocultas: solo su texto.
+- Funciona en Chrome, Edge y Firefox. En Safari, Ctrl+F solo busca en la sección abierta, como
+  antes.
+- **Mira:** `.screenshots/fase-9/buscar-terraform-1440.png` (buscando "Terraform" se abre "He
+  trabajado con").
+
+## 6. Comprobaciones
+- **Tipos, lint y 196 pruebas** en verde. Hay 13 pruebas menos porque eran las del dibujante borrado;
+  las del hueco del idioma ahora prueban el engranaje.
+- **Capturas** de la parte 1 comparadas con las de ahora:
+  - **título: idéntico** en los 2 idiomas y los 3 tamaños;
+  - **Stack, Perfil, Contacto y la pregunta del CV:** solo cambia el contorno (0 píxeles fuera de
+    él);
+  - **Proyectos:** además, la pestaña de Bosa y, en móvil y tableta, el contenido sube una fila;
+  - **campamento:** el engranaje en lugar de la bandera.
+- **`check:windows`**, comprobaciones nuevas:
+  - las pestañas caben siempre en una fila (4 ventanas × 2 idiomas × 3 tamaños);
+  - las ventanas abiertas no quedan recortadas;
+  - las secciones ocultas están "hasta que se encuentren";
+  - buscar "Terraform" abre su sección (con la maquinaria real de búsqueda del navegador).
+- **`check:camp`**, comprobaciones nuevas:
+  - el engranaje abre AJUSTES con el foco en el idioma en uso;
+  - English cambia la página, la ventana y la rueda a la vez;
+  - Animaciones NO pone `data-motion="off"`, cierra al instante y para los gestos;
+  - las dos elecciones se recuerdan al recargar;
+  - en el móvil, a toques.
+- **`check:title` y `check:intro`:** todo ✓.
+- **fps:** 60 con la rueda girando (CPU ×1 y ×4); intro 60 / 59,5.
+- **Lighthouse:**
+  - título: 99 · 100 · 100 · 100, LCP 1,7 s, 237 KB;
+  - campamento: 99 · 100 · 100 · 100, LCP 1,9–2,0 s, 245 KB.
+- **JavaScript inicial:** 89,4 KB comprimido.
+
+**Antes y después de toda la fase 9:**
+
+| | Antes | Después |
+|---|---|---|
+| Archivos en `src/` (TS / CSS) | 163 (95 / 32) | 152 (91 / 30) |
+| Líneas de TypeScript (sin generados) / pruebas | 6.069 / 981 | 5.611 / 919 |
+| Líneas de CSS | 1.921 | 1.693 |
+| Líneas de scripts | 2.900 | 2.907 (con la librería común y las comprobaciones nuevas) |
+| JavaScript inicial | 89,25 KB | 89,4 KB (con la ventana de ajustes) |
+| Lighthouse campamento | 99 · 100 · 100 · 100 | 99 · 100 · 100 · 100 |
+
+## 7. TypeScript en la parte 2
+
+**Una unión con una función** (`WindowSections.tsx`):
+
+```ts
+content: ReactNode | ((shown: boolean) => ReactNode);
+// …
+typeof item.content === 'function' ? item.content(index === selected) : item.content
+```
+
+- Una sección da su contenido tal cual, o una función que recibe si está a la vista.
+- `typeof … === 'function'` le dice a TypeScript cuál de los dos es. Dentro del `?` sabe que se
+  puede llamar.
+
+**Dejar que el compilador encuentre los cambios:**
+- Al cambiar `SlotId` de `'language'` a `'settings'`, `tsc` marcó, uno por uno, todos los sitios que
+  aún esperaban el idioma: los textos de los dos idiomas, los iconos y la prueba del estado.
+- `Record<SlotId, string>` obliga a que cada hueco tenga su nombre en cada idioma.
+
+**Un tipo de dos valores con nombre propio:** `type Animations = 'on' | 'off'`. Con
+`useSyncExternalStore`, React vuelve a dibujar todo lo que lo lee cuando cambia.
+
+## 8. Archivos para tu commit
+
+| Archivo | Cambio |
+|---|---|
+| `src/engine/grid.ts`, `sprites.ts`, `engine.test.ts`; `src/dev/Specimen.*`, `WindowsDemo.*`; `src/components/StatBar.*` | **Borrados** |
+| `src/Root.tsx`, `src/assets/textures.ts`, `scripts/screenshot.mjs` | Sin las páginas y la constante borradas |
+| `src/assets/characters/` (6 PNG `null-side-*` borrados, `characters.gen.ts`, `characters.ts`), `scripts/sprites/cutout.mjs`, `src/scenes/camp/CampCanvas.tsx`, `src/dev/CharactersDemo.tsx` | Sin el trote de lado |
+| `scripts/sprites/icons.mjs`, `src/assets/icons/settings.png` (nuevo), `icons.gen.ts`, `icons.ts` | El engranaje |
+| `src/engine/motion.ts` (nuevo), `src/engine/useScreen.ts`, `src/App.tsx` | Menos movimiento: sistema o ajustes |
+| `src/components/SettingsDialog.tsx` + `.module.css` (nuevos), `SectionDialog.tsx`, `RingMenu.tsx`, `src/scenes/camp/CampScene.tsx` | AJUSTES desde el engranaje |
+| `src/content/sections.ts`, `types.ts`, `es.ts`, `en.ts`, `src/game/state.ts`, `state.test.ts` | El hueco `settings`, sus textos y la pestaña corta de Bosa |
+| `src/components/Window.module.css`, `src/styles/global.css`, `HudBar.module.css`, `PixelSprite.module.css`, `src/scenes/title/TitleScreen.module.css` | El contorno y el movimiento por animación |
+| `src/windows/WindowSections.tsx` + `.module.css`, `src/windows/ProjectsWindow.tsx` | Pestañas en una fila y búsqueda en todas las secciones |
+| `scripts/camp-check.mjs`, `scripts/windows-check.mjs` | Las comprobaciones nuevas |
+| `CLAUDE.md`, `DESIGN.md`, `BRIEF.md`, `CONTENT.md`, `docs/plan-de-fases.md`, `docs/informes/fase-9-revision.md` | Documentación |
+
+### Commits recomendados (parte 2)
+
+Si aún no has hecho los diez de la parte 1, hazlos primero (están más arriba).
+
+```bash
+# 1. Dead code, old dev pages and Null's unused side trot
+git add src/engine/grid.ts src/engine/sprites.ts src/engine/engine.test.ts src/dev src/components/StatBar.tsx src/components/StatBar.module.css src/Root.tsx src/assets/textures.ts scripts/screenshot.mjs src/assets/characters scripts/sprites/cutout.mjs src/scenes/camp/CampCanvas.tsx
+git commit -m "chore: remove dead code, outdated dev pages and Null's unused side trot"
+
+# 2. The gear icon
+git add scripts/sprites/icons.mjs src/assets/icons
+git commit -m "feat(icons): add the gear icon from Yeray's reference"
+
+# 3. SETTINGS, the window outline, motion per animation, one-row tabs and find-in-page
+git add src/engine/motion.ts src/engine/useScreen.ts src/App.tsx src/components src/scenes src/content src/game src/styles/global.css src/windows
+git commit -m "feat(ui): add a SETTINGS gear with language and an animations switch" -m "Windows show their ink outline once open; motion is opted into per animation (system preference or the switch); tabs stay on one row; find-in-page reaches every window section."
+
+# 4. Checks
+git add scripts/camp-check.mjs scripts/windows-check.mjs
+git commit -m "test: check SETTINGS, one-row tabs, window outlines and find-in-page"
+
+# 5. Docs
+git add CLAUDE.md DESIGN.md BRIEF.md CONTENT.md docs/plan-de-fases.md docs/informes/fase-9-revision.md
+git commit -m "docs: describe SETTINGS and report phase 9 part 2"
+```
+
+Algunos archivos llevan cambios de varias decisiones a la vez (por ejemplo, `es.ts` tiene los
+textos de AJUSTES y la pestaña de Bosa), por eso el commit 3 los junta.
+
+## 9. Lo que necesito de ti
+1. **Mira AJUSTES** en http://localhost:5173/#camp: el engranaje es el último hueco de la rueda.
+   Prueba el idioma, las animaciones en NO y recarga.
+2. **Mira las pestañas de Proyectos en el móvil** y prueba **Ctrl+F** en una ventana: por ejemplo,
+   "Terraform" en Stack.
+3. **Lo que queda de la fase 9:** pasar las revisiones automáticas `code-review` y `simplify` sobre
+   el código ya limpio, y regenerar `.impeccable/design.json` y `DESIGN.md` con `impeccable`. Dime si
+   lo hago, o si pasamos a la fase 10 (publicar).
