@@ -39,7 +39,7 @@ export const ES: Content = {
       contact: 'CONTACTO',
       about: 'SOBRE MÍ',
       cv: 'CV',
-      language: 'IDIOMA',
+      settings: 'AJUSTES',
     },
   },
   // Banner titles: "game name — what it is" (BRIEF.md table), in Spanish.
@@ -61,8 +61,22 @@ export const ES: Content = {
     legend: 'Idioma',
     es: 'Español',
     en: 'English',
-    banner: 'Idioma — Cambiar a English',
-    switchTo: 'Cambiar a English',
+  },
+  settings: {
+    banner: 'Engranaje — Ajustes',
+    title: 'Ajustes',
+    animations: {
+      legend: 'Animaciones',
+      on: 'SÍ',
+      off: 'NO',
+      notes: {
+        on: 'Con animaciones: intro, transiciones, rueda girando, hoguera, Yeray y Null moviéndose y el vídeo de Capyroad en bucle.',
+        off: 'Sin animaciones: sin intro ni transiciones; la rueda cambia al instante; la hoguera, Yeray y Null se quedan quietos; el vídeo no arranca solo.',
+      },
+      system: 'Tu sistema pide menos movimiento.',
+    },
+    backToTitle: 'VOLVER AL TÍTULO',
+    privacy: 'Esta web no usa cookies ni analítica. Solo guarda en tu navegador tu idioma, tus ajustes y tu progreso.',
   },
   window: {
     close: 'Cerrar ventana',
@@ -72,11 +86,11 @@ export const ES: Content = {
   help: {
     back: 'Esc vuelve al campamento.',
     sections: {
-      pointer: 'Rueda o ← → cambian de sección · Esc vuelve al campamento.',
+      pointer: '← → cambian de sección · Rueda o ↑ ↓ para leer · Esc vuelve al campamento.',
       touch: 'Desliza a los lados o toca una pestaña para cambiar de sección.',
     },
     projects: {
-      pointer: 'Rueda o ← → cambian de proyecto · Esc vuelve al campamento.',
+      pointer: '← → cambian de proyecto · Rueda o ↑ ↓ para leer · Esc vuelve al campamento.',
       touch: 'Desliza a los lados o toca un proyecto para cambiar.',
     },
   },
@@ -202,12 +216,38 @@ export const ES: Content = {
       {
         id: 'bosa',
         name: 'Herramientas internas · Bosa Digital',
+        tab: 'Bosa Digital',
         tag: 'CLASIFICADO',
         context: 'Prácticas · mar. 2026 – jun. 2026',
         did: BOSA_TASKS,
         stack: ['Python', 'Django', 'APIs externas', 'Git'],
         notes: [{ label: 'Confidencial', value: 'Acuerdo de confidencialidad: sin capturas, cifras, código ni demo.' }],
         media: { kind: 'classified' },
+      },
+      {
+        id: 'portfolio',
+        name: 'Este portfolio',
+        tab: 'Portfolio',
+        tag: 'ESTÁS AQUÍ',
+        context: 'Proyecto personal · nov. 2026 · desarrollado con Claude Code',
+        summary:
+          'Portfolio con forma de RPG de 16 bits: pantalla de título, intro saliendo de la cueva y un ' +
+          'campamento con un menú en rueda que abre mi CV por secciones. Sin motor de juegos: React, ' +
+          'TypeScript y Canvas.',
+        did: [
+          'La idea y la dirección del proyecto: el mundo, cada pantalla y cada decisión de diseño.',
+          'Las referencias de arte: los personajes, los iconos y el fondo del campamento.',
+          'El desarrollo, con Claude Code, fase a fase: en cada una revisé el resultado con capturas en móvil, tablet y escritorio antes de aprobarla asi como el codigo realizado en esa fase.',
+          'Aprendí TypeScript mientras realizaba el proyecto.',
+        ],
+        stack: ['React', 'TypeScript', 'Vite', 'Canvas', 'Vitest', 'Playwright'],
+        notes: [
+          { label: 'Accesibilidad', value: 'Se maneja con teclado, ratón o pantalla táctil, con lector de pantalla y sin animaciones.' },
+        ],
+        media: {
+          kind: 'screenshots',
+          shots: [{ id: 'portfolio', alt: 'El campamento: Yeray y Null junto a la hoguera, con el menú en rueda y sus seis iconos alrededor de Yeray.' }],
+        },
       },
     ],
   },
@@ -228,7 +268,7 @@ export const ES: Content = {
       {
         title: 'He trabajado con',
         groups: [
-          { name: 'Lenguajes', items: [{ id: 'php', name: 'PHP' }] },
+          { name: 'Lenguajes', items: [{ id: 'php', name: 'PHP' }, { id: 'typescript', name: 'TypeScript' }] },
           { name: 'Backend', items: [{ id: 'django', name: 'Django' }] },
           { name: 'Frontend', items: [{ id: 'html', name: 'HTML' }, { id: 'css', name: 'CSS' }] },
           { name: 'Bases de datos', items: [{ id: 'oracle', name: 'Oracle Database' }, { id: 'mongodb', name: 'MongoDB' }] },

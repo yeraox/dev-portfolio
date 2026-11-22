@@ -3,7 +3,7 @@
 import type { TechId } from '../../content/types';
 import atlas from './stack-icons.png';
 
-export const STACK_ATLAS = { src: atlas, size: 16, count: 22 };
+export const STACK_ATLAS = { src: atlas, size: 16, count: 23 };
 
 // TS concept — `satisfies Record<TechId, number>`: every technology must have its icon; a new
 // TechId without one is a compile error here.
@@ -24,10 +24,11 @@ export const STACK_ICONS = {
   git: 13,
   github: 14,
   php: 15,
-  django: 16,
-  html: 17,
-  css: 18,
-  oracle: 19,
-  mongodb: 20,
-  terraform: 21,
+  typescript: 16,
+  django: 17,
+  html: 18,
+  css: 19,
+  oracle: 20,
+  mongodb: 21,
+  terraform: 22,
 } satisfies Record<TechId, number>;

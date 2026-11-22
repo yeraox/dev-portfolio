@@ -27,12 +27,13 @@ export type Quest = {
 // of media, and `kind` tells TypeScript which fields exist.
 export type ProjectMedia =
   | { kind: 'video'; videoLabel: string; screenshot: { id: 'capyroad'; alt: string } }
-  | { kind: 'screenshots'; shots: { id: 'pakitosRuleta' | 'pakitosBlackjack'; alt: string }[] }
+  | { kind: 'screenshots'; shots: { id: 'pakitosRuleta' | 'pakitosBlackjack' | 'portfolio'; alt: string }[] }
   | { kind: 'classified' }; // NDA: no media at all
 
 export type Project = {
-  id: 'capyroad' | 'pakitos' | 'bosa';
+  id: 'capyroad' | 'pakitos' | 'bosa' | 'portfolio';
   name: string;
+  tab?: string; // a shorter name for its tab, when `name` is long (the section's heading has it whole)
   tag?: string; // a small badge: FEATURED, CLASSIFIED…
   context: string;
   summary?: string;
@@ -63,6 +64,7 @@ export type TechId =
   | 'git'
   | 'github'
   | 'php'
+  | 'typescript'
   | 'django'
   | 'html'
   | 'css'
@@ -76,6 +78,22 @@ export type Tech = { id: TechId; name: string };
 export type Tier = {
   title: string;
   groups: { name: string; items: Tech[] }[];
+};
+
+/** SETTINGS, what the gear opens (in the ring and on the title): the language, the animations on
+ *  or off with a note on what that changes, BACK TO TITLE (camp only) and a privacy line. */
+export type Settings = {
+  banner: string;
+  title: string;
+  animations: {
+    legend: string;
+    on: string;
+    off: string;
+    notes: { on: string; off: string }; // what is moving, or what stands still (in red)
+    system: string; // put before the note when the system asked for less motion
+  };
+  backToTitle: string;
+  privacy: string; // no cookies, no analytics: what the site keeps in the browser
 };
 
 /** The CV slot of the ring: it asks before downloading the PDF of the current language. */
@@ -104,8 +122,9 @@ export type Content = {
   // Banner and window titles: "game name — what it is" (BRIEF.md table).
   sections: Record<SectionId, { title: string }>;
   cvDownload: CvDownload;
-  // The language switch: the title's ES/EN, the ring's flag and CONTACT's radio buttons.
-  language: { legend: string; es: string; en: string; banner: string; switchTo: string };
+  // The language switch: the flags in SETTINGS.
+  language: { legend: string; es: string; en: string };
+  settings: Settings;
   window: { close: string; draft: string; newTab: string };
   // Help line at the bottom of a window: with a mouse/keyboard, and on touch screens.
   help: {

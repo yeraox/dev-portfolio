@@ -5,12 +5,15 @@
 //   and collar of his in-game drawing (the front walk's still image, skin tone included), exactly
 //   as it is — cut out, padded to a square, and for the phone icon enlarged ×3 pixel by pixel on
 //   the night sky (phones don't show transparency).
-// Usage: npm run share -- [url]   (needs the dev server: npm run dev; and ffmpeg)
+// And this portfolio's own picture for the PROJECTS window, into media-src/projects/portfolio.png
+// (then `npm run media` makes it light): the camp with its ring, still (animations off), at 1440.
+// Usage: npm run share -- [url]   (needs a running site with no drafts: npx vite preview, at
+// http://localhost:4173/; the dev ring has the ABOUT ME draft. And ffmpeg)
 import { execFileSync } from 'node:child_process';
 import { statSync } from 'node:fs';
 import { chromium } from 'playwright';
 
-const url = (process.argv[2] ?? 'http://localhost:5173/').replace(/#.*$/, '');
+const url = (process.argv[2] ?? 'http://localhost:4173/').replace(/#.*$/, '');
 // Yeray's still front drawing is the first image (113 rows) of the front walk sheet.
 const SHEET = 'src/assets/characters/yeray-front-walk.png';
 const FACE = 46; // the head and collar: the drawing's full width, and as many rows from the hair
@@ -28,6 +31,15 @@ await page.evaluate(() => {
   }
 });
 await page.screenshot({ path: 'public/og-image.png', animations: 'disabled' });
+
+// ---------- This portfolio in the PROJECTS window: the camp ----------
+const camp = await browser.newPage({ viewport: { width: 1440, height: 900 }, deviceScaleFactor: 1, locale: 'es-ES', reducedMotion: 'reduce' });
+await camp.goto(`${url}#camp`, { waitUntil: 'networkidle' });
+await camp.evaluate(() => document.fonts.ready);
+const slots = await camp.getByRole('menuitem').count();
+if (slots !== 6) throw new Error(`The ring has ${slots} slots: run this against the build (npx vite preview), not the dev server.`);
+// The stage only (scene, ring, banner and HUD: 1280×720 at 1440), without the page around it.
+await camp.locator('main canvas').first().locator('..').screenshot({ path: 'media-src/projects/portfolio.png', animations: 'disabled' });
 await browser.close();
 
 // ---------- Icons: Yeray's face as it is ----------
@@ -49,6 +61,6 @@ ffmpeg(
   'public/apple-touch-icon.png',
 );
 
-for (const file of ['public/og-image.png', 'public/favicon.png', 'public/apple-touch-icon.png']) {
+for (const file of ['public/og-image.png', 'public/favicon.png', 'public/apple-touch-icon.png', 'media-src/projects/portfolio.png']) {
   console.log(`✓ ${file} (${(statSync(file).size / 1024).toFixed(1)} KB)`);
 }

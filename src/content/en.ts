@@ -39,7 +39,7 @@ export const EN: Content = {
       contact: 'CONTACT',
       about: 'ABOUT ME',
       cv: 'CV',
-      language: 'LANGUAGE',
+      settings: 'SETTINGS',
     },
   },
   // Banner titles from the BRIEF.md table.
@@ -61,8 +61,22 @@ export const EN: Content = {
     legend: 'Language',
     es: 'Español',
     en: 'English',
-    banner: 'Language — Switch to Español',
-    switchTo: 'Switch to Español',
+  },
+  settings: {
+    banner: 'Gear — Settings',
+    title: 'Settings',
+    animations: {
+      legend: 'Animations',
+      on: 'ON',
+      off: 'OFF',
+      notes: {
+        on: 'With animations: intro, transitions, the ring turning, the campfire, Yeray and Null moving and the Capyroad video on a loop.',
+        off: 'Without animations: no intro or transitions; the ring changes at once; the campfire, Yeray and Null stand still; the video does not start by itself.',
+      },
+      system: 'Your system asks for less motion.',
+    },
+    backToTitle: 'BACK TO TITLE',
+    privacy: 'This site uses no cookies or analytics. It only keeps your language, settings and progress in your browser.',
   },
   window: {
     close: 'Close window',
@@ -72,11 +86,11 @@ export const EN: Content = {
   help: {
     back: 'Esc returns to camp.',
     sections: {
-      pointer: 'Wheel or ← → change section · Esc returns to camp.',
+      pointer: '← → change section · Wheel or ↑ ↓ to read · Esc returns to camp.',
       touch: 'Swipe sideways or tap a tab to change section.',
     },
     projects: {
-      pointer: 'Wheel or ← → change project · Esc returns to camp.',
+      pointer: '← → change project · Wheel or ↑ ↓ to read · Esc returns to camp.',
       touch: 'Swipe sideways or tap a project to change.',
     },
   },
@@ -202,12 +216,36 @@ export const EN: Content = {
       {
         id: 'bosa',
         name: 'Internal tools · Bosa Digital',
+        tab: 'Bosa Digital',
         tag: 'CLASSIFIED',
         context: 'Internship · Mar 2026 – Jun 2026',
         did: BOSA_TASKS,
         stack: ['Python', 'Django', 'External APIs', 'Git'],
         notes: [{ label: 'Confidential', value: 'Non-disclosure agreement: no screenshots, figures, code or demo.' }],
         media: { kind: 'classified' },
+      },
+      {
+        id: 'portfolio',
+        name: 'This portfolio',
+        tab: 'Portfolio',
+        tag: 'YOU ARE HERE',
+        context: 'Personal project · Nov 2026 · built with Claude Code',
+        summary:
+          'A portfolio shaped as a 16-bit RPG: a title screen, an intro out of the cave and a camp with ' +
+          'a ring menu that opens my CV section by section. No game engine: React, TypeScript and ' +
+          'Canvas.',
+        did: [
+          'The idea and the direction: the world, every screen and every design decision.',
+          'The art references: the characters, the icons and the camp background.',
+          'The development, with Claude Code (an AI agent), phase by phase: I reviewed each one with screenshots on phone, tablet and desktop before approving it.',
+          'I learnt TypeScript with this project.',
+        ],
+        stack: ['React', 'TypeScript', 'Vite', 'Canvas', 'Vitest', 'Playwright'],
+        notes: [{ label: 'Accessibility', value: 'Works with keyboard, mouse or touch, with a screen reader and without animations.' }],
+        media: {
+          kind: 'screenshots',
+          shots: [{ id: 'portfolio', alt: 'The camp: Yeray and Null by the campfire, with the ring menu and its six icons around Yeray.' }],
+        },
       },
     ],
   },
@@ -228,7 +266,7 @@ export const EN: Content = {
       {
         title: 'Worked with',
         groups: [
-          { name: 'Languages', items: [{ id: 'php', name: 'PHP' }] },
+          { name: 'Languages', items: [{ id: 'php', name: 'PHP' }, { id: 'typescript', name: 'TypeScript' }] },
           { name: 'Backend', items: [{ id: 'django', name: 'Django' }] },
           { name: 'Frontend', items: [{ id: 'html', name: 'HTML' }, { id: 'css', name: 'CSS' }] },
           { name: 'Databases', items: [{ id: 'oracle', name: 'Oracle Database' }, { id: 'mongodb', name: 'MongoDB' }] },

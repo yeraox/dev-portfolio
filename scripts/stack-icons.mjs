@@ -158,6 +158,7 @@ const ICONS = [
   ['git', 'git'],
   ['github', 'github'],
   ['php', 'php'],
+  ['typescript', 'typescript'],
   ['django', 'django'],
   ['html', 'html5'],
   ['css', 'css'],

@@ -1,4 +1,5 @@
-// Project media for the EQUIP window: Yeray's screenshots and the Capyroad video, made light.
+// Project media for the PROJECTS window: Yeray's screenshots, the Capyroad video and this
+// portfolio's own picture (made by `npm run share`), made light.
 // These are NOT pixel art: they are shown crisp, as "a screen inside the screen" (DESIGN.md §10).
 //
 //   node scripts/media.mjs   → src/assets/projects/*.webp|mp4|webm + media.gen.ts
@@ -13,7 +14,7 @@ const OUT = join(ROOT, 'src/assets/projects');
 const VIDEO_BUDGET = 2 * 1024 * 1024;
 
 // Screenshots: two widths each, so phones download the small one (srcset).
-const SCREENSHOTS = ['capyroad', 'pakitos-ruleta', 'pakitos-blackjack'];
+const SCREENSHOTS = ['capyroad', 'pakitos-ruleta', 'pakitos-blackjack', 'portfolio'];
 const WIDTHS = [640, 1280];
 
 // The Capyroad video: only the app (the recording also shows the browser's tabs, bookmarks and

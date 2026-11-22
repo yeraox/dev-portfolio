@@ -6,6 +6,8 @@ import pakitosRuleta640 from './pakitos-ruleta-640.webp';
 import pakitosRuleta1280 from './pakitos-ruleta-1280.webp';
 import pakitosBlackjack640 from './pakitos-blackjack-640.webp';
 import pakitosBlackjack1280 from './pakitos-blackjack-1280.webp';
+import portfolio640 from './portfolio-640.webp';
+import portfolio1280 from './portfolio-1280.webp';
 import capyroadMp4 from './capyroad.mp4';
 import capyroadWebm from './capyroad.webm';
 import capyroadPoster from './capyroad-poster.webp';
@@ -17,6 +19,7 @@ export const SCREENSHOTS = {
   capyroad: { small: capyroad640, large: capyroad1280, width: 1865, height: 909 },
   pakitosRuleta: { small: pakitosRuleta640, large: pakitosRuleta1280, width: 1860, height: 905 },
   pakitosBlackjack: { small: pakitosBlackjack640, large: pakitosBlackjack1280, width: 1864, height: 912 },
+  portfolio: { small: portfolio640, large: portfolio1280, width: 1280, height: 720 },
 } satisfies Record<string, Screenshot>;
 
 export const CAPYROAD_VIDEO: Video = { mp4: capyroadMp4, webm: capyroadWebm, poster: capyroadPoster, width: 1280, height: 586 };
