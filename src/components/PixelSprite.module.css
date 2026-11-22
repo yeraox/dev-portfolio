@@ -9,16 +9,14 @@
   transform: scaleX(-1);
 }
 
-/* Breathing: down 1 unit for half the cycle, in a hard step (no easing). Only for visitors who
-   haven't asked for less motion. */
-@media (prefers-reduced-motion: no-preference) {
-  .bob {
-    animation: bob 1.3s steps(1) infinite;
-  }
+/* Breathing: down 1 unit for half the cycle, in a hard step (no easing). Only with animations
+   on. */
+:root[data-motion='on'] .bob {
+  animation: bob 1.3s steps(1) infinite;
+}
 
-  .bob.flip {
-    animation-name: bob-flipped;
-  }
+:root[data-motion='on'] .bob.flip {
+  animation-name: bob-flipped;
 }
 
 @keyframes bob {

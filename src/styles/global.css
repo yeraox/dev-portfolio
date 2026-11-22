@@ -42,15 +42,9 @@ img.pixel {
   image-rendering: pixelated;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-}
+/* Less motion is handled animation by animation: each one only runs under <html data-motion="on">
+   (src/engine/motion.ts: the visitor's choice in SETTINGS or, without one, the system's
+   prefers-reduced-motion), never with a global reset. */
 
 /* Without JavaScript the game can't run: a short note with the CV PDFs instead (src/site/html.ts).
    Browsers with JavaScript never show it. */

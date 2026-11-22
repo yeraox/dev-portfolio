@@ -7,12 +7,14 @@ import { HelpBar } from '../../components/HelpBar';
 import { KeyHint } from '../../components/KeyHint';
 import { RingMenu, type RingItem } from '../../components/RingMenu';
 import { SectionDialog } from '../../components/SectionDialog';
+import { SettingsDialog } from '../../components/SettingsDialog';
 import { SkipIntro } from '../../components/SkipIntro';
 import { useLocale } from '../../content/useLocale';
 import { isSection, visibleSlots, type SectionId, type SlotId } from '../../content/sections';
 import { isAnyKey } from '../../engine/anyKey';
 import { useInput } from '../../engine/useInput';
-import { useReducedMotion, useStageLayout } from '../../engine/useScreen';
+import { useReducedMotion } from '../../engine/motion';
+import { useStageLayout } from '../../engine/useScreen';
 import { XP_SECTIONS, addExplored, readExplored, saveExplored } from '../../game/explored';
 import { gameReducer, initialState, sectionFromHash } from '../../game/state';
 import { WINDOWS, preloadWindow } from '../../windows';
@@ -27,39 +29,41 @@ const SECTIONS = RING.filter(isSection);
 
 type CampSceneProps = {
   intro: boolean; // Yeray and Null are still walking out of the cave: no menu yet
+  leaving: boolean; // going back to the title: the camp darkens and takes no more input
   onIntroEnd: () => void; // the intro finished, or the visitor skipped it
+  onBackToTitle: () => void; // SETTINGS' BACK TO TITLE, once its window has closed
 };
 
 /** HUB: Yeray and Null at the camp, the ring menu around Yeray, the banner and the HUD. First,
  *  if `intro`, the two walk out of the cave to their places; then the ring opens. */
-export function CampScene({ intro, onIntroEnd }: CampSceneProps) {
+export function CampScene({ intro, leaving, onIntroEnd, onBackToTitle }: CampSceneProps) {
   const layout = useStageLayout();
   const reducedMotion = useReducedMotion();
-  const { t, locale, setLocale } = useLocale();
-  // What each slot is: its title for the banner and screen readers, and its icon. The language
-  // slot shows the flag of the language in use and says which one it switches to.
+  const { t } = useLocale();
+  // What each slot is: its title for the banner and screen readers, and its icon.
   const titleOf = (slot: SlotId) => {
     if (slot === 'cv') return t.cvDownload.banner;
-    if (slot === 'language') return t.language.banner;
+    if (slot === 'settings') return t.settings.banner;
     return t.sections[slot].title; // TypeScript knows: by now `slot` is a SectionId
   };
   const items: RingItem[] = RING.map((slot) => ({
     id: slot,
     name: t.ring.names[slot],
     title: titleOf(slot),
-    icon: slot === 'language' ? ICONS[locale] : ICONS[slot],
-    opensWindow: slot !== 'language',
+    icon: ICONS[slot],
   }));
-  const switchLanguage = () => setLocale(locale === 'es' ? 'en' : 'es');
   // TS concept — useReducer(reducer, argument, init): the state's type comes from the reducer, so
   // `state.scene` can only be 'HUB' or 'WINDOW' and `state.section` only exists in 'WINDOW'.
   // A link like /#projects opens that window straight away.
   const [state, dispatch] = useReducer(gameReducer, RING, (ring) =>
     initialState(ring, sectionFromHash(window.location.hash, ring)),
   );
-  const [shownSection, setShownSection] = useState<SectionId | 'cv' | null>(null);
+  const [shownSection, setShownSection] = useState<SlotId | null>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+  // BACK TO TITLE was chosen: SETTINGS closes first (a window would stay above the transition),
+  // then the camp hands over to the title.
+  const toTitle = useRef(false);
   // The ring spreads out when it appears after an intro (with reduced motion there is none).
   const [afterIntro] = useState(intro);
 
@@ -76,7 +80,7 @@ export function CampScene({ intro, onIntroEnd }: CampSceneProps) {
   // browser's storage only once, on the first render.
   const [explored, setExplored] = useState(readExplored);
   // Like `shownSection` above: when a new section opens, React re-renders straight away with it.
-  if (openSection && openSection !== 'cv') {
+  if (openSection && isSection(openSection)) {
     const next = addExplored(explored, openSection);
     if (next !== explored) setExplored(next);
   }
@@ -84,9 +88,9 @@ export function CampScene({ intro, onIntroEnd }: CampSceneProps) {
   const xpText = t.hud.explored.replace('{n}', String(explored.length)).replace('{total}', String(XP_SECTIONS.length));
 
   // The address follows the open section (#projects…), so it can be shared or reloaded. The CV's
-  // question has no address of its own.
+  // question and SETTINGS have no address of their own.
   useEffect(() => {
-    const hash = openSection && openSection !== 'cv' ? `#${openSection}` : '';
+    const hash = openSection && isSection(openSection) ? `#${openSection}` : '';
     if (window.location.hash !== hash) {
       window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}${hash}`);
     }
@@ -103,12 +107,9 @@ export function CampScene({ intro, onIntroEnd }: CampSceneProps) {
     return () => window.clearTimeout(timer);
   }, []);
 
-  // Opening a slot (a click, a tap or Enter). The state machine brings it to the top and opens its
-  // window; the language slot opens none: it switches the language right here.
-  const pick = (index: number) => {
-    if (RING[index] === 'language') switchLanguage();
-    dispatch({ type: 'PICK', index });
-  };
+  // Opening a slot (a click, a tap or Enter): the state machine brings it to the top and opens its
+  // window.
+  const pick = (index: number) => dispatch({ type: 'PICK', index });
 
   // Idle actions: only while the camp is on screen with no window, after the intro, and
   // never with reduced motion.
@@ -137,7 +138,7 @@ export function CampScene({ intro, onIntroEnd }: CampSceneProps) {
   }, [intro, afterIntro]);
 
   useInput(stageRef, (action) => {
-    if (intro || state.scene !== 'HUB') return false; // an open window handles its own keys
+    if (intro || leaving || state.scene !== 'HUB') return false; // an open window handles its own keys
     if (action === 'LEFT') dispatch({ type: 'ROTATE', step: -1 });
     else if (action === 'RIGHT') dispatch({ type: 'ROTATE', step: 1 });
     else if (action === 'CONFIRM') pick(state.active);
@@ -159,7 +160,7 @@ export function CampScene({ intro, onIntroEnd }: CampSceneProps) {
           <KeyHint
             items={[
               { key: '← →', action: 'ROTATE' },
-              { key: 'ENTER', action: activeSlot === 'language' ? 'SWITCH' : 'OPEN' },
+              { key: 'ENTER', action: 'OPEN' },
             ]}
           />
         </span>
@@ -173,7 +174,7 @@ export function CampScene({ intro, onIntroEnd }: CampSceneProps) {
   // The banner and the HUD keep their room during the intro (nothing moves when they appear).
   const waiting = intro ? styles.waiting : undefined;
 
-  // Help line: windows with sections explain the wheel (mouse) or the swipe (touch).
+  // Help line: windows with sections explain the arrows and the wheel (mouse) or the swipe (touch).
   const sectionHelp = shownSection === 'projects' ? t.help.projects : t.help.sections;
   const help =
     shownSection === 'contact' || shownSection === 'about' ? (
@@ -186,7 +187,13 @@ export function CampScene({ intro, onIntroEnd }: CampSceneProps) {
     );
 
   return (
-    <main className={styles.camp} data-mode={layout.mode} data-scene={intro ? 'intro' : 'hub'} onClick={intro ? onIntroEnd : undefined}>
+    <main
+      className={styles.camp}
+      data-mode={layout.mode}
+      data-scene={intro ? 'intro' : 'hub'}
+      inert={leaving}
+      onClick={intro ? onIntroEnd : undefined}
+    >
       <h1 className={styles.srOnly}>{t.page.heading}</h1>
       {!wide && (
         <div className={`${styles.row} ${waiting ?? ''}`} style={{ width: stageWidth }}>
@@ -229,10 +236,25 @@ export function CampScene({ intro, onIntroEnd }: CampSceneProps) {
           onClosed={afterClose}
         />
       )}
+      {shownSection === 'settings' && (
+        <SettingsDialog
+          open={openSection === 'settings'}
+          onRequestClose={() => dispatch({ type: 'CLOSE' })}
+          onBackToTitle={() => {
+            toTitle.current = true;
+            dispatch({ type: 'CLOSE' });
+          }}
+          onClosed={() => {
+            if (!toTitle.current) return afterClose();
+            setShownSection(null);
+            onBackToTitle();
+          }}
+        />
+      )}
 
       {/* The window only appears once its content has downloaded, so it opens at its final size
           (nothing jumps). Usually it is already there, preloaded. */}
-      {shownSection && shownSection !== 'cv' && (
+      {shownSection && isSection(shownSection) && (
         <Suspense fallback={null}>
           <SectionDialog
             key={shownSection}

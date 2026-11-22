@@ -1,9 +1,8 @@
-/* Top left of the title, opposite the language buttons: the parchment with its name above it, as
-   in the ring (DESIGN.md §6), but on the title's own plate. */
-.scroll {
+/* The title's two corners: the CV's parchment (top left) and the SETTINGS gear (top right), each
+   with its name above it, as in the ring (DESIGN.md §6), but on the title's own plate. */
+.corner {
   position: absolute;
   top: calc(4 * var(--u));
-  left: calc(4 * var(--u));
   z-index: 1;
   display: flex;
   flex-direction: column;
@@ -15,7 +14,15 @@
   cursor: pointer;
 }
 
-/* The same plate as the ES / EN buttons in the opposite corner: a control of the same weight. */
+.corner[data-side='left'] {
+  left: calc(4 * var(--u));
+}
+
+.corner[data-side='right'] {
+  right: calc(4 * var(--u));
+}
+
+/* The same plate as SKIP INTRO: a control of the same weight. */
 .name {
   padding: var(--u) calc(3 * var(--u)) 0;
   font-family: var(--font-display);
@@ -27,8 +34,8 @@
   box-shadow: inset 0 calc(-1 * var(--u)) 0 var(--stone-2);
 }
 
-.scroll:hover .name,
-.scroll:focus-visible .name {
+.corner:hover .name,
+.corner:focus-visible .name {
   color: var(--gold-3);
 }
 
@@ -39,7 +46,7 @@
 
 /* Touch screens: the finger target reaches 44 px wide too (it is already that tall). */
 @media (pointer: coarse) {
-  .scroll::after {
+  .corner::after {
     content: '';
     position: absolute;
     inset: 0 -8px;

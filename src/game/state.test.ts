@@ -6,10 +6,10 @@ const RING_ALL = visibleSlots(true);
 const RING_LIVE = visibleSlots(false);
 
 describe('ring slots', () => {
-  it('shows the four sections, then the CV and the language; ABOUT ME only while developing', () => {
+  it('shows the four sections, then the CV and SETTINGS; ABOUT ME only while developing', () => {
     expect(RING_ALL).toHaveLength(SLOTS.length);
     expect(RING_ALL).toContain('about');
-    expect(RING_LIVE).toEqual(['projects', 'stack', 'profile', 'contact', 'cv', 'language']);
+    expect(RING_LIVE).toEqual(['projects', 'stack', 'profile', 'contact', 'cv', 'settings']);
   });
 
   it('tells the sections apart from the two actions', () => {
@@ -20,7 +20,7 @@ describe('ring slots', () => {
 describe('gameReducer', () => {
   const hub = initialState(RING_LIVE);
   const CV = RING_LIVE.indexOf('cv');
-  const LANGUAGE = RING_LIVE.indexOf('language');
+  const SETTINGS = RING_LIVE.indexOf('settings');
 
   it('starts at the camp with the first slot at the top', () => {
     expect(hub).toEqual({ scene: 'HUB', ring: RING_LIVE, active: 0 });
@@ -49,10 +49,10 @@ describe('gameReducer', () => {
     expect(gameReducer(hub, { type: 'PICK', index: CV })).toEqual({ scene: 'WINDOW', ring: RING_LIVE, active: CV, section: 'cv' });
   });
 
-  it('never opens a window for the language: its slot only comes to the top', () => {
-    expect(gameReducer(hub, { type: 'PICK', index: LANGUAGE })).toEqual({ scene: 'HUB', ring: RING_LIVE, active: LANGUAGE });
-    const atTop: GameState = { scene: 'HUB', ring: RING_LIVE, active: LANGUAGE };
-    expect(gameReducer(atTop, { type: 'OPEN' })).toEqual(atTop);
+  it('opens SETTINGS from the gear, by click or with Enter at the top', () => {
+    expect(gameReducer(hub, { type: 'PICK', index: SETTINGS })).toEqual({ scene: 'WINDOW', ring: RING_LIVE, active: SETTINGS, section: 'settings' });
+    const atTop: GameState = { scene: 'HUB', ring: RING_LIVE, active: SETTINGS };
+    expect(gameReducer(atTop, { type: 'OPEN' })).toMatchObject({ scene: 'WINDOW', section: 'settings' });
   });
 
   it('keeps the ring still while a window is open', () => {
@@ -67,7 +67,7 @@ describe('gameReducer', () => {
       { type: 'ROTATE', step: 1 },
       { type: 'ROTATE', step: -1 },
       { type: 'PICK', index: 2 },
-      { type: 'PICK', index: LANGUAGE },
+      { type: 'PICK', index: SETTINGS },
       { type: 'OPEN' },
       { type: 'CLOSE' },
     ];
@@ -79,7 +79,6 @@ describe('gameReducer', () => {
         expect(state.active).toBeLessThan(ring.length);
         if (state.scene === 'WINDOW') {
           expect(state.section).toBe(ring[state.active]);
-          expect(state.section).not.toBe('language');
         }
       }
     }

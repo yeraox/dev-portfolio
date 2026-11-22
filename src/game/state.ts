@@ -4,10 +4,11 @@ import { isSection, type SectionId, type SlotId } from '../content/sections';
 
 // TS concept — discriminated union: both states share the `scene` field with a different literal
 // value. After `if (state.scene === 'WINDOW')`, TypeScript knows `state.section` exists.
-// The open window is a section's, or the CV's question ("Download the CV?").
+// The open window is a section's, the CV's question ("Download the CV?") or SETTINGS: every slot
+// opens one.
 export type GameState =
   | { scene: 'HUB'; ring: SlotId[]; active: number }
-  | { scene: 'WINDOW'; ring: SlotId[]; active: number; section: SectionId | 'cv' };
+  | { scene: 'WINDOW'; ring: SlotId[]; active: number; section: SlotId };
 
 export type GameAction =
   | { type: 'ROTATE'; step: 1 | -1 } // ← / → / swipe: the next or previous slot comes to the top
@@ -24,7 +25,7 @@ export function initialState(ring: SlotId[], opened: SectionId | null = null): G
 }
 
 /** The section named by a link's hash (#projects → 'projects'), if the ring shows it. The CV and
- *  the language have no link of their own. */
+ *  SETTINGS have no link of their own. */
 export function sectionFromHash(hash: string, ring: SlotId[]): SectionId | null {
   for (const slot of ring) {
     if (isSection(slot) && `#${slot}` === hash) return slot;
@@ -37,13 +38,10 @@ export function wrap(index: number, length: number): number {
   return ((index % length) + length) % length;
 }
 
-/** Opening a slot: a section shows its window and the CV asks before downloading. The language
- *  slot only comes to the top: the camp switches the language itself, without a window. */
+/** Opening a slot: it comes to the top and opens its window (a section, the CV's question or
+ *  SETTINGS). */
 function activate(state: GameState, index: number): GameState {
-  const slot = state.ring[index];
-  if (slot === 'language') return { scene: 'HUB', ring: state.ring, active: index };
-  // Here TypeScript has narrowed `slot` to SectionId | 'cv': the `if` above ruled 'language' out.
-  return { scene: 'WINDOW', ring: state.ring, active: index, section: slot };
+  return { scene: 'WINDOW', ring: state.ring, active: index, section: state.ring[index] };
 }
 
 export function gameReducer(state: GameState, action: GameAction): GameState {

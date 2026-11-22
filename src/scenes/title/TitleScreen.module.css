@@ -69,15 +69,10 @@
   cursor: pointer;
 }
 
-/* PRESS START blinks only for visitors who haven't asked for less motion. */
-@media (prefers-reduced-motion: no-preference) {
-  .press {
-    animation: blink calc(48 * var(--frame)) steps(1) infinite;
-  }
-}
-
-.press:focus-visible {
-  animation: none; /* a focused button never disappears */
+/* PRESS START blinks only with animations on, and never while focused: a focused button never
+   disappears. */
+:root[data-motion='on'] .press:not(:focus-visible) {
+  animation: blink calc(48 * var(--frame)) steps(1) infinite;
 }
 
 @keyframes blink {
@@ -90,59 +85,3 @@
     visibility: hidden;
   }
 }
-
-/* Language buttons (top right): small game labels on ink plates, like SKIP INTRO. */
-.languages {
-  position: absolute;
-  top: calc(4 * var(--u));
-  right: calc(4 * var(--u));
-  display: flex;
-  gap: calc(2 * var(--u));
-}
-
-.language {
-  position: relative;
-  padding: var(--u) calc(3 * var(--u)) 0;
-  font-family: var(--font-display);
-  font-size: var(--display-size);
-  line-height: 1.1;
-  letter-spacing: 0.08em;
-  color: var(--text-dim);
-  background: var(--ink);
-  border: 0;
-  box-shadow: inset 0 calc(-1 * var(--u)) 0 var(--stone-2);
-  cursor: pointer;
-}
-
-.language[aria-pressed='true'] {
-  color: var(--ink);
-  background: var(--gold-3);
-}
-
-.language:hover {
-  color: var(--gold-3);
-}
-
-.language[aria-pressed='true']:hover {
-  color: var(--ink);
-}
-
-.srOnly {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-}
-
-/* Touch screens: the finger target reaches 44 px tall (WCAG 2.5.8 asks 24; phones want ~44)
-   without changing how it looks. */
-@media (pointer: coarse) {
-  .language::after {
-    content: '';
-    position: absolute;
-    inset: -10px 0;
-  }
-}
-

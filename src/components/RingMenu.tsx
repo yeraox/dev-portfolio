@@ -60,7 +60,6 @@ export type RingItem = {
   name: string; // shown above its icon, always: PROYECTOS, STACK…
   title: string; // what it is, for the banner and screen readers: "Alquimia — Proyectos"
   icon: IconImage;
-  opensWindow: boolean; // a section or the CV's question (the language slot opens nothing)
 };
 
 type RingMenuProps = {
@@ -114,7 +113,7 @@ export function RingMenu({ items, active, center, layout, label, reducedMotion, 
             type="button"
             role="menuitem"
             tabIndex={isActive ? 0 : -1}
-            aria-haspopup={item.opensWindow ? 'dialog' : undefined}
+            aria-haspopup="dialog"
             // The accessible name starts with the visible one (WCAG 2.5.3 "label in name").
             aria-label={`${item.name}: ${item.title}`}
             data-active={isActive}

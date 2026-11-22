@@ -20,16 +20,3 @@ export function useStageLayout(): StageLayout {
     return stageLayout(width, height, dpr);
   }, [key]);
 }
-
-const REDUCED_MOTION = '(prefers-reduced-motion: reduce)';
-
-function onMotionPreference(notify: () => void) {
-  const query = window.matchMedia(REDUCED_MOTION);
-  query.addEventListener('change', notify);
-  return () => query.removeEventListener('change', notify);
-}
-
-/** True when the visitor asked their system for less motion. */
-export function useReducedMotion(): boolean {
-  return useSyncExternalStore(onMotionPreference, () => window.matchMedia(REDUCED_MOTION).matches);
-}

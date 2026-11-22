@@ -1,19 +1,21 @@
 // Which screen the site shows (BRIEF.md: TITLE → TRANSITION → INTRO → HUB). Pure functions →
 // tested in screens.test.ts.
 
-// TS concept — another discriminated union: only a TRANSITION has a `half` (fading out of the
-// title, then fading into the camp) and a `to` (what the fade reveals).
+// TS concept — another discriminated union: only a TRANSITION has a `half` (fading out of one
+// screen, then fading into the next) and a `to` (what the fade reveals). It goes from the title to
+// the intro or the camp, or back from the camp to the title.
 export type Screen =
   | { name: 'TITLE' }
-  | { name: 'TRANSITION'; half: 'out' | 'in'; to: 'INTRO' | 'CAMP' }
+  | { name: 'TRANSITION'; half: 'out' | 'in'; to: 'INTRO' | 'CAMP' | 'TITLE' }
   | { name: 'INTRO' }
   | { name: 'CAMP' };
 
 export type ScreenAction =
   | { type: 'START'; intro: boolean } // PRESS START (intro), SKIP INTRO (no intro)
-  | { type: 'MIDPOINT' } // the screen is fully dark: swap the title for the camp
-  | { type: 'DONE' } // the camp is fully visible
-  | { type: 'INTRO_END' }; // the intro finished, or was skipped
+  | { type: 'MIDPOINT' } // the screen is fully dark: swap one screen for the other
+  | { type: 'DONE' } // the new screen is fully visible
+  | { type: 'INTRO_END' } // the intro finished, or was skipped
+  | { type: 'BACK_TO_TITLE' }; // SETTINGS' BACK TO TITLE, in the camp
 
 export type ScreenStart = {
   hash: string; // the address's #part: a window link (/#equip) skips the title
@@ -45,6 +47,15 @@ export function screenReducer(screen: Screen, action: ScreenAction): Screen {
     case 'INTRO':
       return action.type === 'INTRO_END' ? { name: 'CAMP' } : screen;
     case 'CAMP':
-      return screen;
+      return action.type === 'BACK_TO_TITLE' ? { name: 'TRANSITION', half: 'out', to: 'TITLE' } : screen;
   }
+}
+
+/** True when the title is the screen on view: on its own, while it darkens before the intro or the
+ *  camp, and while it appears again after BACK TO TITLE. */
+export function titleOnScreen(screen: Screen): boolean {
+  if (screen.name === 'TITLE') return true;
+  if (screen.name !== 'TRANSITION') return false;
+  const leavingTitle = screen.to !== 'TITLE';
+  return screen.half === 'out' ? leavingTitle : !leavingTitle;
 }

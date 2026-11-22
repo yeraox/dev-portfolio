@@ -24,15 +24,15 @@ export type ContrastPair = {
 // Every foreground/background combination the UI is allowed to use.
 // palette.test.ts fails if any of them drops below its minimum.
 export const CONTRAST_PAIRS: ContrastPair[] = [
-  { fg: 'text', bg: 'stone-0', min: 4.5, use: 'Window text on dark stone; the STACK icons' },
-  { fg: 'text', bg: 'stone-1', min: 4.5, use: 'Window text and STACK icons on stone (worst texture pixel)' },
-  { fg: 'text-dim', bg: 'stone-1', min: 4.5, use: 'Secondary window text; the HUD\'s HP and XP labels' },
-  { fg: 'text-dim', bg: 'stone-0', min: 4.5, use: 'The HUD\'s HP and XP labels on the darkest stone pixels' },
-  { fg: 'gold-3', bg: 'stone-1', min: 4.5, use: 'Window headings' },
-  { fg: 'green-1', bg: 'stone-1', min: 4.5, use: 'Status "in progress" in windows' },
+  { fg: 'text', bg: 'stone-0', min: 4.5, use: 'Window text on the flat dark stone; the STACK icons' },
+  { fg: 'text-dim', bg: 'stone-1', min: 4.5, use: 'The HUD\'s HP and XP labels on the stone texture\'s light pixels' },
+  { fg: 'text-dim', bg: 'stone-0', min: 4.5, use: 'Secondary window text; the HUD\'s HP and XP labels on its dark pixels' },
+  { fg: 'gold-3', bg: 'stone-1', min: 4.5, use: 'HUD names on the stone texture\'s light pixels' },
+  { fg: 'green-1', bg: 'stone-0', min: 4.5, use: 'Status "in progress" in windows' },
+  { fg: 'red-2', bg: 'stone-0', min: 4.5, use: 'SETTINGS: the red note on what the animations switch changes' },
   { fg: 'gold-3', bg: 'ink', min: 4.5, use: 'Key caps in KeyHint; the title\'s CV name, hovered or focused' },
   { fg: 'ink', bg: 'gold-3', min: 4.5, use: 'Key cap of the close button, hovered or focused; the chosen CV answer (YES / NO)' },
-  { fg: 'gold-3', bg: 'stone-0', min: 4.5, use: 'HUD names and gold headings on the darkest stone pixels' },
+  { fg: 'gold-3', bg: 'stone-0', min: 4.5, use: 'Window titles and headings; HUD names on the dark stone pixels' },
   { fg: 'text', bg: 'blue-1', min: 4.5, use: 'Banner title' },
   { fg: 'text', bg: 'blue-2', min: 4.5, use: 'Banner title (dither light pixel)' },
   { fg: 'gold-3', bg: 'night-0', min: 4.5, use: 'Title lettering; the CV links of the no-JavaScript note' },

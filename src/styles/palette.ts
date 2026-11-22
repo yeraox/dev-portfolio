@@ -49,6 +49,7 @@ export const UI_PALETTE = {
   'green-1': '#6fdc5a',
   'red-0': '#8a1a1a',
   'red-1': '#d8483f',
+  'red-2': '#ff6b5b', // red text on the window's dark stone (the note under Animations)
   fire: '#e8742a',
 
   // Forest + earth (camp scene)

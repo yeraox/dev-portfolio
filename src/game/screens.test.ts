@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { initialScreen, screenReducer, type Screen, type ScreenAction } from './screens';
+import { initialScreen, screenReducer, titleOnScreen, type Screen, type ScreenAction } from './screens';
 
 const ALL_ACTIONS: ScreenAction[] = [
   { type: 'START', intro: true },
@@ -7,6 +7,7 @@ const ALL_ACTIONS: ScreenAction[] = [
   { type: 'MIDPOINT' },
   { type: 'DONE' },
   { type: 'INTRO_END' },
+  { type: 'BACK_TO_TITLE' },
 ];
 
 describe('initial screen', () => {
@@ -59,8 +60,39 @@ describe('screen flow', () => {
     expect(screenReducer(out, { type: 'INTRO_END' })).toBe(out);
   });
 
-  it('never leaves the camp', () => {
+  it('leaves the camp only for BACK TO TITLE', () => {
     const camp: Screen = { name: 'CAMP' };
-    for (const action of ALL_ACTIONS) expect(screenReducer(camp, action)).toBe(camp);
+    for (const action of ALL_ACTIONS) {
+      if (action.type !== 'BACK_TO_TITLE') expect(screenReducer(camp, action)).toBe(camp);
+    }
+  });
+
+  it('BACK TO TITLE: camp → dark → title, and the title starts again from there', () => {
+    let screen: Screen = { name: 'CAMP' };
+    screen = screenReducer(screen, { type: 'BACK_TO_TITLE' });
+    expect(screen).toEqual({ name: 'TRANSITION', half: 'out', to: 'TITLE' });
+    expect(screenReducer(screen, { type: 'BACK_TO_TITLE' })).toBe(screen); // a second click changes nothing
+    expect(screenReducer(screen, { type: 'INTRO_END' })).toBe(screen);
+    screen = screenReducer(screen, { type: 'MIDPOINT' });
+    screen = screenReducer(screen, { type: 'DONE' });
+    expect(screen).toEqual({ name: 'TITLE' });
+    expect(screenReducer(screen, { type: 'BACK_TO_TITLE' })).toBe(screen); // only from the camp
+    expect(screenReducer(screen, { type: 'START', intro: true })).toEqual({ name: 'TRANSITION', half: 'out', to: 'INTRO' });
+  });
+});
+
+describe('which screen is on view', () => {
+  it('the title until it is dark, then the camp or the intro', () => {
+    expect(titleOnScreen({ name: 'TITLE' })).toBe(true);
+    expect(titleOnScreen({ name: 'TRANSITION', half: 'out', to: 'INTRO' })).toBe(true);
+    expect(titleOnScreen({ name: 'TRANSITION', half: 'in', to: 'INTRO' })).toBe(false);
+    expect(titleOnScreen({ name: 'TRANSITION', half: 'in', to: 'CAMP' })).toBe(false);
+    expect(titleOnScreen({ name: 'INTRO' })).toBe(false);
+    expect(titleOnScreen({ name: 'CAMP' })).toBe(false);
+  });
+
+  it('back to the title: the camp until it is dark, then the title', () => {
+    expect(titleOnScreen({ name: 'TRANSITION', half: 'out', to: 'TITLE' })).toBe(false);
+    expect(titleOnScreen({ name: 'TRANSITION', half: 'in', to: 'TITLE' })).toBe(true);
   });
 });
