@@ -1,5 +1,5 @@
 /* The title's two corners: the CV's parchment (top left) and the SETTINGS gear (top right), each
-   with its name above it, as in the ring (DESIGN.md §6), but on the title's own plate. */
+   with its name above it, as in the ring (DESIGN.md, "Ring menu"), but on the title's own plate. */
 .corner {
   position: absolute;
   top: calc(4 * var(--u));

@@ -76,7 +76,7 @@ export type TechId =
  *  and a missing one is a compile error there. `dog` is Null. */
 export type HobbyId = 'anime' | 'games' | 'gym' | 'basket' | 'cooking' | 'dog';
 
-export type Hobby = { id: HobbyId; name: string; text: string };
+type Hobby = { id: HobbyId; name: string; text: string };
 
 /** ABOUT ME: two sections. As a developer, a few short paragraphs (what the CV doesn't say); the
  *  personal side, a line and the hobbies, each with its icon. */
@@ -88,7 +88,7 @@ export type About = {
 /** A technology: which icon (`id`) and how it is written (`name`). */
 export type Tech = { id: TechId; name: string };
 
-export type Tier = {
+type Tier = {
   title: string;
   groups: { name: string; items: Tech[] }[];
 };
@@ -110,7 +110,7 @@ export type Settings = {
 };
 
 /** The CV slot of the ring: it asks before downloading the PDF of the current language. */
-export type CvDownload = {
+type CvDownload = {
   banner: string; // the camp banner while the CV slot is at the top of the ring
   question: string; // the confirmation window's title
   file: string; // which file it is: format, language and size (no surprises on mobile data)
@@ -132,7 +132,7 @@ export type Content = {
   title: { name: string; credits: string; press: string; skip: string };
   // `names` = what each slot is called under its icon, always visible (PROYECTOS, STACK…).
   ring: { label: string; names: Record<SlotId, string> };
-  // Banner and window titles: "game name — what it is" (BRIEF.md table).
+  // Banner and window titles: "game name — what it is" (CONTENT.md, "Campamento").
   sections: Record<SectionId, { title: string }>;
   cvDownload: CvDownload;
   // The language switch: the flags in SETTINGS.

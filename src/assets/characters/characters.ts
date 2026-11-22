@@ -17,7 +17,7 @@ export type Pose = {
 };
 
 // Walk cycles: 8 frames, 120 ms each (0.96 s for two steps). Contact → down → passing → up, then
-// the same with the other leg (docs/animacion-caminar.md §3). The front step with the right leg
+// the same with the other leg (docs/sprites.md, "Walk cycles"). The front step with the right leg
 // is the left step mirrored; "passing" and "up" reuse the idle drawing 1 px lower / as it is.
 const WALK_DOWN: CharacterImageName[] = [
   'yeray-front-step-left',

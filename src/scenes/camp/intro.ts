@@ -1,4 +1,4 @@
-// The intro's script (BRIEF.md): Yeray and Null come out of the cave at the
+// The intro's script (DESIGN.md, "Camp scene and cave intro"): Yeray and Null come out of the cave at the
 // top of the camp image and walk down to their places; then the ring opens. It is the camp scene
 // itself, so no other transition is needed. Change the timings here: the player
 // (game/script.ts) only follows this list.

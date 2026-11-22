@@ -35,7 +35,7 @@
   /* + a light outline one scene pixel wide: `filter`, set by RingMenu (it depends on the scale) */
 }
 
-/* Every slot's name, always visible, centred above its icon on an ink plate (DESIGN.md §6): the
+/* Every slot's name, always visible, centred above its icon on an ink plate (DESIGN.md, "Ring menu"): the
    active one in green, the rest in the dim text colour. It is part of the button, so it can be
    clicked or tapped too (a bigger target on phones). */
 .name {

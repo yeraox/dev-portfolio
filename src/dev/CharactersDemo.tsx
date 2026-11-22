@@ -15,7 +15,7 @@ import styles from './CharactersDemo.module.css';
 const SCENE_UNIT = 2; // the scene scale on a 1440 px screen (640×360 ×2)
 const REVIEW_UNIT = 3;
 
-// What each of the 8 walk frames is, and how many pixels the body is lowered (docs/animacion-caminar.md).
+// What each of the 8 walk frames is, and how many pixels the body is lowered (docs/sprites.md, "Walk cycles").
 const STEPS = ['Contacto +1', 'Bajada +2', 'Paso +1', 'Arriba 0', 'Contacto +1', 'Bajada +2', 'Paso +1', 'Arriba 0'];
 
 // TS concept — object spread `{ ...a, ms }`: a copy of `a` with one field changed.
@@ -33,7 +33,7 @@ type Row = { label: string; reference: string; pose: Pose; unit: number };
 
 const ROWS: Row[] = [{ label: 'Null sentado', reference: refNull, pose: NULL_DOG.sit, unit: 7 }];
 
-// The HUD portraits (phase 8): Null's picture without its gold frame, and Yeray's in-game face
+// The HUD portraits: Null's picture without its gold frame, and Yeray's in-game face
 // (twice Null's zoom, as in the HUD), next to their references, 3 screen pixels per pixel
 // of Null's portrait.
 const PORTRAITS = [
@@ -45,7 +45,7 @@ export default function CharactersDemo() {
   return (
     <main className={styles.page}>
       <header className={styles.intro}>
-        <h1>Personajes · Fase 2</h1>
+        <h1>Personajes</h1>
         <p>
           Tus referencias tal cual: cada imagen en su rejilla de píxeles original, con sus colores,
           ampliada por un número entero. Los paseos usan el sello: la misma cabeza en todos los

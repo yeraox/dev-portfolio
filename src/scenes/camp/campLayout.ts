@@ -1,4 +1,4 @@
-// Where things stand in the 640×360 camp, in scene pixels (DESIGN.md §6–6b).
+// Where things stand in the 640×360 camp, in scene pixels (DESIGN.md, "Camp scene").
 import { SCENE_IMAGES } from '../../assets/scenes/scenes.gen';
 import type { Point } from '../../game/ring';
 

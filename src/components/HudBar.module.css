@@ -13,7 +13,7 @@
   color: var(--text-dim);
 }
 
-/* An ink track with a 1u inner margin (DESIGN.md §6). */
+/* An ink track with a 1u inner margin (DESIGN.md, "Ring menu"). */
 .track {
   width: calc(24 * var(--u));
   height: calc(4 * var(--u));

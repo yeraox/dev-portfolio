@@ -1,8 +1,8 @@
-// How the 640×360 scene fits the screen (DESIGN.md §2). Pure functions → unit tests.
+// How the 640×360 scene fits the screen (DESIGN.md, "Layout"). Pure functions → unit tests.
 export const SCENE = { width: 640, height: 360 } as const;
 
 /** The part of the scene that is visible, in scene pixels. */
-export type Camera = { x: number; y: number; width: number; height: number };
+type Camera = { x: number; y: number; width: number; height: number };
 
 export type StageLayout = {
   mode: 'wide' | 'tall'; // tall = portrait screens: banner above the scene, HUD below it

@@ -43,7 +43,7 @@
 
 /* ---- Measures ----------------------------------------------------------------------
    --u = one "UI pixel": the size of one art pixel in frames, bevels and gaps.
-   It follows the scene's integer zoom (DESIGN.md §2), clamped to 2–4 CSS px. JavaScript sets
+   It follows the scene's integer zoom (DESIGN.md, "Layout"), clamped to 2–4 CSS px. JavaScript sets
    the exact value (engine/useUiTokens.ts); these breakpoints are its first guess, before the
    script runs. */
 :root {

@@ -7,7 +7,7 @@
 
 // TS concept — `Record<K, V>`: an object whose keys are of type K and values of type V.
 // Here: any string name → a hex color string.
-export type Palette = Record<string, string>;
+type Palette = Record<string, string>;
 
 export const UI_PALETTE = {
   // Outline / darkest ink (never pure black)

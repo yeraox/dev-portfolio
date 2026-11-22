@@ -2,7 +2,7 @@ import { Fragment } from 'react';
 import styles from './KeyHint.module.css';
 
 // TS concept — an array type: `KeyHintItem[]` means "a list of KeyHintItem objects".
-export type KeyHintItem = {
+type KeyHintItem = {
   key: string; // e.g. "ENTER"
   action: string; // e.g. "SELECT"
 };

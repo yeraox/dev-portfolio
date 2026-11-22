@@ -1,7 +1,7 @@
 import { useEffect, useEffectEvent, useId, useLayoutEffect, useRef, useState, type ReactNode, type TouchEvent } from 'react';
 import styles from './WindowSections.module.css';
 
-export type WindowSection = {
+type WindowSection = {
   id: string;
   label: string;
   tag?: string; // small badge next to the label (FEATURED, YOU ARE HERE…)

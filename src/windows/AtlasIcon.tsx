@@ -2,7 +2,7 @@ import styles from './AtlasIcon.module.css';
 
 /** A one-row atlas of square pixel icons, as the icon scripts make it (`npm run stack-icons`,
  *  `npm run hobby-icons`): its png, the icons' side in pixels and how many there are. */
-export type Atlas = { src: string; size: number; count: number };
+type Atlas = { src: string; size: number; count: number };
 
 type AtlasIconProps = {
   atlas: Atlas;

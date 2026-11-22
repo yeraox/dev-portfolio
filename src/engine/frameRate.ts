@@ -1,4 +1,4 @@
-// The safety net of the performance budget (BRIEF.md): if a device can't keep 60 fps, the game
+// The safety net of the performance budget (CLAUDE.md): if a device can't keep 60 fps, the game
 // drops to a steady 30 (the game loop then runs every other screen refresh) instead of stuttering.
 // Animations are timed by the clock, not by counting frames, so they keep their speed. Pure
 // function → tested in frameRate.test.ts.

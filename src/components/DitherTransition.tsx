@@ -4,7 +4,7 @@ import { useGameLoop } from '../engine/useGameLoop';
 import styles from './DitherTransition.module.css';
 
 const FRAME_MS = 1000 / 60;
-const FRAMES_PER_STEP = 4; // 5 steps × 4 frames ≈ 0.33 s each way (DESIGN.md §8: 12–20 frames)
+const FRAMES_PER_STEP = 4; // 5 steps × 4 frames ≈ 0.33 s each way (DESIGN.md, "Title screen": 12–20 frames)
 const SOLID = 4;
 
 type DitherTransitionProps = {

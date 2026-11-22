@@ -1,4 +1,4 @@
-// Ring menu geometry (DESIGN.md §6), in scene pixels of the 640×360 scene. Pure functions.
+// Ring menu geometry (DESIGN.md, "Ring menu"), in scene pixels of the 640×360 scene. Pure functions.
 export const RING = {
   // Each slot carries its name above its icon, so the ring leaves room for it: the top slot's name
   // clears the banner, the bottom slot's name fits between Yeray's boots and its icon, and the

@@ -42,7 +42,7 @@ export const ES: Content = {
       settings: 'AJUSTES',
     },
   },
-  // Banner titles: "game name — what it is" (BRIEF.md table), in Spanish.
+  // Banner titles: "game name — what it is" (CONTENT.md), in Spanish.
   sections: {
     projects: { title: 'Alquimia — Proyectos' },
     stack: { title: 'Equipo — Stack técnico' },

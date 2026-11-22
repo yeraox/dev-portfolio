@@ -7,7 +7,7 @@ import { UI_PALETTE, type UiColor } from '../styles/palette';
 // palette color name, or null for a transparent pixel".
 type PixelFn = (x: number, y: number) => UiColor | null;
 
-export type Texture = {
+type Texture = {
   width: number;
   height: number;
   colors: UiColor[]; // every color the texture uses (tests check them)

@@ -1,5 +1,5 @@
-// Which screen the site shows (BRIEF.md: TITLE → TRANSITION → INTRO → HUB). Pure functions →
-// tested in screens.test.ts.
+// Which screen the site shows: TITLE → TRANSITION → INTRO → CAMP, and back to the title. Pure
+// functions → tested in screens.test.ts.
 
 // TS concept — another discriminated union: only a TRANSITION has a `half` (fading out of one
 // screen, then fading into the next) and a `to` (what the fade reveals). It goes from the title to
@@ -17,7 +17,7 @@ export type ScreenAction =
   | { type: 'INTRO_END' } // the intro finished, or was skipped
   | { type: 'BACK_TO_TITLE' }; // SETTINGS' BACK TO TITLE, in the camp
 
-export type ScreenStart = {
+type ScreenStart = {
   hash: string; // the address's #part: a window link (/#equip) skips the title
   visited: boolean; // this browser has reached the camp before
 };

@@ -1,7 +1,6 @@
-// What the ring menu shows, in ring order (BRIEF.md). Five sections open a window; the CV slot
-// asks before downloading the PDF and the gear opens SETTINGS (language, animations). `status:
-// 'draft'` = no real content yet → hidden in production, shown in dev (none right now: ABOUT ME
-// got its content in phase 8, block U).
+// What the ring menu shows, in ring order (DESIGN.md, "Ring menu"). Five sections open a window;
+// the CV slot asks before downloading the PDF and the gear opens SETTINGS (language, animations).
+// `status: 'draft'` = no real content yet → hidden in production, shown in dev (none right now).
 // TS concept — a union of string literals: a SectionId can only be one of these five words.
 export type SectionId = 'projects' | 'stack' | 'profile' | 'contact' | 'about';
 
@@ -9,7 +8,7 @@ export type SectionId = 'projects' | 'stack' | 'profile' | 'contact' | 'about';
 // an id TypeScript can check, e.g. in the `Record<SlotId, string>` of the names under the icons.
 export type SlotId = SectionId | 'cv' | 'settings';
 
-export type Slot = {
+type Slot = {
   id: SlotId;
   status: 'ready' | 'draft';
 };

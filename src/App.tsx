@@ -17,7 +17,7 @@ export default function App() {
   );
 }
 
-/** Title → dithered transition → cave intro → camp (BRIEF.md), and back to the title from the
+/** Title → dithered transition → cave intro → camp, and back to the title from the
  *  camp's SETTINGS. */
 function Game() {
   const layout = useStageLayout();

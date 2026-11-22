@@ -1,5 +1,5 @@
-// Remembers that this browser has already reached the camp, so the next visit starts there
-// (BRIEF.md: "Returning visitors start at HUB"). Only a yes/no is stored, nothing personal.
+// Remembers that this browser has already reached the camp, so the next visit starts there. Only
+// a yes/no is stored, nothing personal.
 const VISITED_KEY = 'visited';
 
 // Storage can be missing or blocked (private mode, strict settings): then every visit is a first.

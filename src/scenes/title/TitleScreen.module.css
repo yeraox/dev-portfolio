@@ -30,7 +30,7 @@
   text-align: center;
 }
 
-/* Golden embossed lettering (DESIGN.md §4): hard gold bands for the fill and stacked zero-blur
+/* Golden embossed lettering (DESIGN.md, "Typography"): hard gold bands for the fill and stacked zero-blur
    shadows, 1 UI pixel apart, for the extrusion. Real text, so search engines read it. */
 .name {
   margin: 0 0 calc(4 * var(--u));
@@ -55,7 +55,7 @@
   color: var(--text);
 }
 
-/* PRESS START blinks in hard steps: 32 frames on, 16 off (DESIGN.md §8). Never a fade. */
+/* PRESS START blinks in hard steps: 32 frames on, 16 off (DESIGN.md, "Title screen"). Never a fade. */
 .press {
   margin-top: calc(10 * var(--u));
   padding: var(--u) calc(3 * var(--u));

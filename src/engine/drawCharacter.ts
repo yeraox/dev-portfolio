@@ -1,4 +1,4 @@
-// Draws the phase-2 character poses (PNG sheets + poses in characters.ts) on a scene canvas.
+// Draws the character poses (PNG sheets + poses in characters.ts) on a scene canvas.
 // The canvas works in screen pixels, so even Null sitting (drawn with half-size pixels) stays
 // crisp wherever the screen has enough pixels for it.
 import { CHARACTER_IMAGES, type CharacterImageName, type Pose } from '../assets/characters/characters';
@@ -37,7 +37,7 @@ export function poseBob(pose: Pose, elapsed: number, reducedMotion: boolean): nu
   return Math.floor(sinceStart(elapsed) / pose.ms) % 2;
 }
 
-export type Placement = {
+type Placement = {
   x: number; // scene px: horizontal centre of the image
   ground: number; // scene px: the line the feet stand on
   flip?: boolean;

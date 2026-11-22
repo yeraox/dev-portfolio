@@ -1,5 +1,5 @@
-/* Shared window content patterns (DESIGN.md §5b): label/value rows, gold headings, entry lists,
-   pixel bullets, badges and the "screen inside the screen". Born as the phase-1 STATS window. */
+/* Shared window content patterns (DESIGN.md, "Content windows"): label/value rows, gold headings, entry lists,
+   pixel bullets, badges and the "screen inside the screen". */
 
 .heading {
   margin: 0 0 calc(3 * var(--u));
@@ -101,7 +101,7 @@
   box-shadow: var(--u) var(--u) 0 var(--gold-0);
 }
 
-/* A screen inside the screen (DESIGN.md §10): real screenshots and video stay crisp (not
+/* A screen inside the screen (DESIGN.md, "Content windows"): real screenshots and video stay crisp (not
    pixelated) inside a 1u ink + 1u stone-3 frame. */
 .screen {
   display: block;

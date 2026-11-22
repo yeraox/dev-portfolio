@@ -7,7 +7,7 @@ import type { Point } from './ring';
 
 // TS concept — a discriminated union for the steps: `type` says which kind of step it is, and
 // TypeScript only lets you read `ms` on a 'wait' and `to`/`speed` on a 'walk'.
-export type ScriptStep =
+type ScriptStep =
   | { type: 'wait'; pose: Pose; ms: number; flip?: boolean } // stay put, in a still or moving pose
   | { type: 'walk'; pose: Pose; to: Point; speed: number; flip?: boolean }; // straight line, px per second
 

@@ -1,4 +1,4 @@
-// The camp's state machine (BRIEF.md: HUB ↔ WINDOW); the title, transition and intro have their
+// The camp's state machine (HUB ↔ WINDOW); the title, transition and intro have their
 // own (screens.ts). A pure function: (state, action) → next state, so every transition is testable.
 import { isSection, type SectionId, type SlotId } from '../content/sections';
 

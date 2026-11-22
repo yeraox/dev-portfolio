@@ -6,7 +6,7 @@
   pointer-events: none;
 }
 
-/* A small stone panel with the window bevel (DESIGN.md §5), no opening wipe: the portrait, and
+/* A small stone panel with the window bevel (DESIGN.md, "HUD"), no opening wipe: the portrait, and
    beside it the name and the bars. Null's is mirrored, so both portraits sit at the outer edges. */
 .panel {
   margin: 0;

@@ -14,7 +14,7 @@ function contrastRatio(a: string, b: string): number {
 
 // TS concept — `type` with a union: `min` can only be one of these two numbers.
 // 4.5 = WCAG AA for body text; 3 = large text and graphical parts (bars, icons, focus rings).
-export type ContrastPair = {
+type ContrastPair = {
   fg: UiColor;
   bg: UiColor;
   min: 4.5 | 3;

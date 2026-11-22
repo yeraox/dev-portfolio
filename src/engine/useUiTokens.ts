@@ -1,7 +1,7 @@
 import { useLayoutEffect } from 'react';
 import type { StageLayout } from '../game/stage';
 
-/** The interface follows the scene's zoom (DESIGN.md §2): UI pixel, type sizes and the stage's size
+/** The interface follows the scene's zoom (DESIGN.md, "Layout"): UI pixel, type sizes and the stage's size
  *  (windows cover it) are set on the page, before it paints, for every screen to use. */
 export function useUiTokens(layout: StageLayout): void {
   useLayoutEffect(() => {

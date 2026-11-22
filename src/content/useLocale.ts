@@ -1,7 +1,7 @@
 import { createContext, useContext } from 'react';
 import type { Content, Locale } from './types';
 
-export type LocaleValue = {
+type LocaleValue = {
   locale: Locale;
   setLocale: (locale: Locale) => void;
   t: Content; // the active dictionary: t.stats.bio, t.sections.equip.title…

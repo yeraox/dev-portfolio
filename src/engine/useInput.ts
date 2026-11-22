@@ -2,7 +2,7 @@
 // from. Clicks and taps on the ring's buttons stay normal button clicks (accessible by default).
 import { useEffect, useEffectEvent, type RefObject } from 'react';
 
-export type InputAction = 'LEFT' | 'RIGHT' | 'CONFIRM' | 'CANCEL';
+type InputAction = 'LEFT' | 'RIGHT' | 'CONFIRM' | 'CANCEL';
 
 /** Return true when the action was used: the browser's default for that key is then cancelled
  *  (e.g. arrows no longer scroll the page). */

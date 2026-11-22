@@ -42,7 +42,7 @@ export const EN: Content = {
       settings: 'SETTINGS',
     },
   },
-  // Banner titles from the BRIEF.md table.
+  // Banner titles: "game name — what it is" (CONTENT.md), in English.
   sections: {
     projects: { title: 'Alchemy — Projects' },
     stack: { title: 'Equipment — Tech Stack' },
