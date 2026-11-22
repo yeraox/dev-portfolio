@@ -1,6 +1,6 @@
 // Walkthrough of the camp, the way a visitor uses it: keyboard only on a laptop and touch only on a
 // phone; every ring slot's name always visible and on top of nothing (3 sizes × 2 languages); the
-// HUD's experience, the idle actions, the CV slot's question and the language slot. Prints ✓/✗ per
+// HUD's experience, the idle actions, the CV slot's question and SETTINGS. Prints ✓/✗ per
 // check and saves screenshots in .screenshots/ (git-ignored).
 // Usage: npm run check:camp -- [url]   (default http://localhost:5173/)
 import { mkdirSync } from 'node:fs';
@@ -111,15 +111,20 @@ const focusIsActiveItem = (page) =>
 }
 
 // ---------- the ring's names, always visible and on top of nothing ----------
-// Yeray and Null in scene px (CAMP in src/scenes/camp/campLayout.ts and their image sizes): the
-// box each one is drawn in. The names and icons must not cover them.
+// Yeray and Null in scene px (CAMP in src/scenes/camp/campLayout.ts and their image sizes). The
+// names and icons must not cover them. Null sits in a narrow shape — ears wide, body narrower,
+// paws narrower still — so he is three boxes that follow his real pixels (null-sit.png), not one
+// rectangle whose empty corners would count as Null.
 const CHARACTERS = [
   { who: 'Yeray', x0: 297, y0: 200, x1: 343, y1: 311 },
-  { who: 'Null', x0: 362, y0: 266, x1: 390, y1: 312 },
+  { who: 'Null', x0: 362, y0: 266, x1: 390, y1: 276 }, // ears
+  { who: 'Null', x0: 363, y0: 276, x1: 389, y1: 310.5 }, // body
+  { who: 'Null', x0: 367, y0: 310.5, x1: 384, y1: 312 }, // paws
 ];
 const overlap = (a, b) => a.x < b.x + b.width - 0.5 && b.x < a.x + a.width - 0.5 && a.y < b.y + b.height - 0.5 && b.y < a.y + a.height - 0.5;
 const inside = (a, b) => a.x >= b.x - 0.5 && a.y >= b.y - 0.5 && a.x + a.width <= b.x + b.width + 0.5 && a.y + a.height <= b.y + b.height + 0.5;
 mkdirSync('.screenshots/fase-8', { recursive: true });
+mkdirSync('.screenshots/fase-9', { recursive: true });
 
 for (const size of SIZES) {
   for (const locale of ['es', 'en']) {
@@ -128,45 +133,54 @@ for (const size of SIZES) {
     await page.getByRole('menu').waitFor();
     await page.evaluate(() => document.fonts.ready);
     await page.waitForTimeout(300);
-    const where = `${size.width}, ${locale}`;
-    const { stage, slots, hud } = await page.evaluate(() => {
-      const box = (element) => {
-        const r = element.getBoundingClientRect();
-        return { x: r.x, y: r.y, width: r.width, height: r.height };
-      };
-      return {
-        stage: box(document.querySelector('canvas').parentElement),
-        hud: [...document.querySelectorAll('figure')].map(box),
-        slots: [...document.querySelectorAll('[role="menuitem"]')].map((button) => {
-          const name = button.querySelector('span');
-          return { label: button.getAttribute('aria-label'), icon: box(button), name: name ? box(name) : null, text: name?.textContent ?? '' };
-        }),
-      };
-    });
-    // The scene → CSS px: portrait screens show the middle 360 scene px (stage.ts).
-    const tall = size.width < size.height;
-    const scale = stage.width / (tall ? 360 : 640);
-    const cameraX = tall ? 140 : 0;
-    const people = CHARACTERS.map((c) => ({ who: c.who, x: stage.x + (c.x0 - cameraX) * scale, y: stage.y + c.y0 * scale, width: (c.x1 - c.x0) * scale, height: (c.y1 - c.y0) * scale }));
-    const names = slots.map((slot) => slot.name);
-    // The dev server adds the ABOUT ME draft (7 slots); its place in the ring is still to be
-    // decided, so the layout is checked on the live ring of 6: run this against `npx vite preview`.
-    const draftRing = slots.length !== 6;
-    check(`${where}: every slot shows its name`, names.every((name) => name && name.width > 0) && slots.every((slot) => slot.label.startsWith(slot.text)), slots.map((slot) => slot.text).join(' · '));
-    const clashes = [];
-    slots.forEach((a, i) => {
-      if (!a.name) return;
-      slots.forEach((b, j) => {
-        if (j > i && b.name && overlap(a.name, b.name)) clashes.push(`${a.text}/${b.text}`);
-        if (overlap(a.name, b.icon)) clashes.push(`${a.text}/icon ${b.text}`);
+    // The ring can stop with any slot at the top, and each stop puts every name in another place:
+    // check them all, turning one slot at a time (with →, as a visitor would).
+    const stops = await page.getByRole('menuitem').count();
+    for (let stop = 0; stop < stops; stop++) {
+      if (stop > 0) {
+        await page.keyboard.press('ArrowRight');
+        await page.waitForTimeout(250); // 8 frames
+      }
+      const where = `${size.width}, ${locale}, stop ${stop + 1}/${stops}`;
+      const { stage, slots, hud } = await page.evaluate(() => {
+        const box = (element) => {
+          const r = element.getBoundingClientRect();
+          return { x: r.x, y: r.y, width: r.width, height: r.height };
+        };
+        return {
+          stage: box(document.querySelector('canvas').parentElement),
+          hud: [...document.querySelectorAll('figure')].map(box),
+          slots: [...document.querySelectorAll('[role="menuitem"]')].map((button) => {
+            const name = button.querySelector('span');
+            return { label: button.getAttribute('aria-label'), icon: box(button), name: name ? box(name) : null, text: name?.textContent ?? '' };
+          }),
+        };
       });
-      for (const person of people) if (overlap(a.name, person) || overlap(a.icon, person)) clashes.push(`${a.text}/${person.who}`);
-      for (const panel of hud) if (overlap(a.name, panel) || overlap(a.icon, panel)) clashes.push(`${a.text}/HUD`);
-      if (!inside(a.name, stage) || !inside(a.icon, stage)) clashes.push(`${a.text} outside the scene`);
-    });
-    if (draftRing) console.log(`– ${where}: ${slots.length} slots (ABOUT ME draft): layout not checked — run against the build (npx vite preview)${clashes.length ? `; touching: ${clashes.join(', ')}` : ''}`);
-    else check(`${where}: no name covers another name, an icon, Yeray, Null or the HUD, and all stay in the scene`, clashes.length === 0, clashes.join(', '));
-    await page.screenshot({ path: `.screenshots/fase-8/rueda-${locale}-${size.width}.png` });
+      // The scene → CSS px: portrait screens show the middle 360 scene px (stage.ts).
+      const tall = size.width < size.height;
+      const scale = stage.width / (tall ? 360 : 640);
+      const cameraX = tall ? 140 : 0;
+      const people = CHARACTERS.map((c) => ({ who: c.who, x: stage.x + (c.x0 - cameraX) * scale, y: stage.y + c.y0 * scale, width: (c.x1 - c.x0) * scale, height: (c.y1 - c.y0) * scale }));
+      const names = slots.map((slot) => slot.name);
+      // The dev server adds the ABOUT ME draft (7 slots); its place in the ring is still to be
+      // decided, so the layout is checked on the live ring of 6: run this against `npx vite preview`.
+      const draftRing = slots.length !== 6;
+      if (stop === 0) check(`${where}: every slot shows its name`, names.every((name) => name && name.width > 0) && slots.every((slot) => slot.label.startsWith(slot.text)), slots.map((slot) => slot.text).join(' · '));
+      const clashes = [];
+      slots.forEach((a, i) => {
+        if (!a.name) return;
+        slots.forEach((b, j) => {
+          if (j > i && b.name && overlap(a.name, b.name)) clashes.push(`${a.text}/${b.text}`);
+          if (overlap(a.name, b.icon)) clashes.push(`${a.text}/icon ${b.text}`);
+        });
+        for (const person of people) if (overlap(a.name, person) || overlap(a.icon, person)) clashes.push(`${a.text}/${person.who}`);
+        for (const panel of hud) if (overlap(a.name, panel) || overlap(a.icon, panel)) clashes.push(`${a.text}/HUD`);
+        if (!inside(a.name, stage) || !inside(a.icon, stage)) clashes.push(`${a.text} outside the scene`);
+      });
+      if (draftRing) console.log(`– ${where}: ${slots.length} slots (ABOUT ME draft): layout not checked — run against the build (npx vite preview)${clashes.length ? `; touching: ${clashes.join(', ')}` : ''}`);
+      else check(`${where}: no name covers another name, an icon, Yeray, Null or the HUD, and all stay in the scene`, clashes.length === 0, clashes.join(', '));
+      if (stop === 0) await page.screenshot({ path: `.screenshots/fase-8/rueda-${locale}-${size.width}.png` });
+    }
     await context.close();
   }
 }
@@ -276,7 +290,7 @@ for (const size of SIZES) {
   await context.close();
 }
 
-// ---------- the CV slot asks before downloading; the language slot switches ----------
+// ---------- the CV slot asks before downloading; the gear opens SETTINGS ----------
 {
   const context = await browser.newContext({ viewport: { width: 1440, height: 900 }, locale: 'es-ES' });
   const page = await context.newPage();
@@ -288,7 +302,7 @@ for (const size of SIZES) {
   const slot = (name) => page.getByRole('menuitem', { name: new RegExp(`^${name}:`) });
   const dialog = page.getByRole('dialog');
 
-  // From the first slot, ← twice reaches the CV (the CV and the language close the ring).
+  // From the first slot, ← twice reaches the CV (the CV and the gear close the ring).
   await page.keyboard.press('ArrowLeft');
   await page.waitForTimeout(200);
   await page.keyboard.press('ArrowLeft');
@@ -324,16 +338,35 @@ for (const size of SIZES) {
   check('SÍ downloads the Spanish PDF and closes the window', downloads.join() === 'yeray-caturla-cv-es.pdf' && (await dialog.count()) === 0, downloads.join());
   check('the address never shows #cv', !page.url().includes('#cv'));
 
-  // The language slot, right after the CV.
+  // SETTINGS, right after the CV: the gear opens the language and the animations.
   await page.keyboard.press('ArrowRight');
   await page.waitForTimeout(250);
-  const flag = () => slot('(IDIOMA|LANGUAGE)').locator('img').getAttribute('src');
-  check('language slot: the Spanish flag while in Spanish, and the banner says what it does', /\/es(-[\w-]+)?\.png/.test((await flag()) ?? '') && (await banner('Idioma — Cambiar a English')), (await flag()) ?? '');
-  check('language slot: no window to open', (await slot('IDIOMA').getAttribute('aria-haspopup')) === null);
+  const gear = () => slot('(AJUSTES|SETTINGS)').locator('img').getAttribute('src');
+  check('SETTINGS slot: the gear, and the banner says what it is', /\/settings(-[\w-]+)?\.png/.test((await gear()) ?? '') && (await banner('Engranaje — Ajustes')), (await gear()) ?? '');
+  check('SETTINGS slot: it opens a window', (await slot('AJUSTES').getAttribute('aria-haspopup')) === 'dialog');
   await page.keyboard.press('Enter');
+  await page.waitForTimeout(450);
+  const choice = (name) => dialog.getByRole('button', { name, exact: true });
+  const pressed = async (name) => (await choice(name).getAttribute('aria-pressed')) === 'true';
+  check('Enter opens SETTINGS, starting on the language in use', (await dialog.getByRole('heading', { name: 'Ajustes' }).isVisible()) && (await focused()) === 'Español' && (await pressed('Español')));
+  check('…with animations on', (await pressed('SÍ')) && (await page.evaluate(() => document.documentElement.dataset.motion)) === 'on');
+  const note = dialog.locator('[aria-live="polite"]');
+  const noteColour = await note.evaluate((element) => getComputedStyle(element).color);
+  check('a red note says what the animations do (red-2), and it is the row\'s description', (await note.innerText()).startsWith('Con animaciones:') && noteColour === 'rgb(255, 107, 91)' && (await dialog.getByRole('group', { name: 'Animaciones' }).getAttribute('aria-describedby')) === (await note.getAttribute('id')), noteColour);
+  check('SETTINGS in the camp offers VOLVER AL TÍTULO', await dialog.getByRole('button', { name: 'VOLVER AL TÍTULO' }).isVisible());
+  check('…and says what the site keeps: no cookies, no analytics', (await dialog.getByText(/no usa cookies ni analítica/).count()) === 1);
+  await page.screenshot({ path: '.screenshots/fase-9/ajustes-1440.png' });
+  await choice('English').click();
   await page.waitForTimeout(300);
-  check('Enter switches to English: no window, English names, UK flag', (await dialog.count()) === 0 && (await page.evaluate(() => document.documentElement.lang)) === 'en' && (await slot('PROJECTS').count()) === 1 && /\/en(-[\w-]+)?\.png/.test((await flag()) ?? ''));
-  check('…the banner and the focus stay on the language slot', (await banner('Language — Switch to Español')) && (await page.evaluate(() => document.activeElement?.getAttribute('aria-label')?.startsWith('LANGUAGE:') ?? false)));
+  check('English: the page, the window and the ring switch at once', (await page.evaluate(() => document.documentElement.lang)) === 'en' && (await dialog.getByRole('heading', { name: 'Settings' }).isVisible()) && (await slot('PROJECTS').count()) === 1 && (await pressed('English')));
+  await choice('OFF').click();
+  await page.waitForTimeout(200);
+  check('Animations OFF: everything that moves by itself stops (<html data-motion="off">)', (await pressed('OFF')) && (await page.evaluate(() => document.documentElement.dataset.motion)) === 'off');
+  check('…and the red note now says what stands still', (await note.innerText()).startsWith('Without animations:'));
+  await page.keyboard.press('Escape');
+  await page.waitForTimeout(450);
+  check('Esc closes SETTINGS (at once: no closing wipe without animations), focus back on the gear', (await dialog.count()) === 0 && (await page.evaluate(() => document.activeElement?.getAttribute('aria-label')?.startsWith('SETTINGS:') ?? false)));
+  check('the address never shows #settings', !page.url().includes('#settings'));
   await page.keyboard.press('ArrowLeft');
   await page.waitForTimeout(250);
   await page.keyboard.press('Enter');
@@ -341,16 +374,45 @@ for (const size of SIZES) {
   check('in English the CV asks in English and links the English PDF', (await dialog.getByRole('heading', { name: 'Download the CV as a PDF?' }).isVisible()) && (await dialog.getByRole('link', { name: 'YES' }).getAttribute('href')) === '/cv/yeray-caturla-cv-en.pdf');
   await page.keyboard.press('Escape');
   await page.waitForTimeout(450);
-  await page.keyboard.press('ArrowRight');
-  await page.waitForTimeout(250);
-  await page.keyboard.press('Enter');
-  await page.waitForTimeout(300);
-  check('Enter again switches back to Spanish', (await page.evaluate(() => document.documentElement.lang)) === 'es' && (await slot('PROYECTOS').count()) === 1);
-  await page.keyboard.press('Enter');
-  await page.waitForTimeout(300);
+  await page.waitForTimeout(7500);
+  check('with animations off, no idle actions', !(await page.locator('main canvas').getAttribute('data-idle')));
   await page.reload({ waitUntil: 'networkidle' });
   await page.getByRole('menu').waitFor();
-  check('the chosen language is remembered after reloading', (await page.evaluate(() => document.documentElement.lang)) === 'en' && (await slot('PROJECTS').count()) === 1);
+  check('language and animations are remembered after reloading', (await page.evaluate(() => [document.documentElement.lang, document.documentElement.dataset.motion].join())) === 'en,off' && (await slot('PROJECTS').count()) === 1);
+
+  // BACK TO TITLE: SETTINGS closes, the camp darkens into the title, and the title starts again.
+  await slot('SETTINGS').click();
+  await page.waitForTimeout(450);
+  await dialog.getByRole('button', { name: 'BACK TO TITLE' }).click();
+  await page.waitForTimeout(800);
+  const title = page.getByRole('button', { name: 'PRESS START' });
+  check('BACK TO TITLE shows the title screen, with no window left open', (await title.isVisible()) && (await dialog.count()) === 0 && (await page.getByRole('menu').count()) === 0);
+  check('…and the address has no #hash', new URL(page.url()).hash === '');
+  await page.getByRole('button', { name: /^SETTINGS/ }).click();
+  await page.waitForTimeout(300);
+  check("the title's SETTINGS has no BACK TO TITLE (it already is the title)", (await dialog.isVisible()) && (await dialog.getByRole('button', { name: 'BACK TO TITLE' }).count()) === 0);
+  await page.keyboard.press('Escape');
+  await page.waitForTimeout(300);
+  await title.click();
+  await page.getByRole('menu').waitFor({ timeout: 5000 });
+  check('PRESS START from there goes back to the camp (animations off: no intro)', (await page.getByRole('menu').isVisible()) && (await page.locator('[data-scene="hub"]').count()) === 1);
+  await context.close();
+}
+{
+  // A system that asks for less motion: SETTINGS says so and starts on NO; choosing YES wins.
+  const context = await browser.newContext({ viewport: { width: 1440, height: 900 }, locale: 'es-ES', reducedMotion: 'reduce' });
+  const page = await context.newPage();
+  await page.goto(url, { waitUntil: 'networkidle' });
+  await page.getByRole('menuitem', { name: /^AJUSTES:/ }).click();
+  await page.waitForTimeout(300);
+  const dialog = page.getByRole('dialog');
+  const pressed = async (name) => (await dialog.getByRole('button', { name, exact: true }).getAttribute('aria-pressed')) === 'true';
+  const motion = () => page.evaluate(() => document.documentElement.dataset.motion);
+  const note = () => dialog.locator('[aria-live="polite"]').innerText();
+  check('system asks for less motion: SETTINGS shows NO and says why', (await pressed('NO')) && (await motion()) === 'off' && (await note()).startsWith('Tu sistema pide menos movimiento. Sin animaciones:'));
+  await dialog.getByRole('button', { name: 'SÍ', exact: true }).click();
+  await page.waitForTimeout(200);
+  check('…choosing SÍ turns them on all the same (the visitor\'s choice wins)', (await pressed('SÍ')) && (await motion()) === 'on' && (await note()).startsWith('Con animaciones:'));
   await context.close();
 }
 {
@@ -359,9 +421,13 @@ for (const size of SIZES) {
   const page = await context.newPage();
   await page.goto(url, { waitUntil: 'networkidle' });
   await page.getByRole('menu').waitFor();
-  await page.getByRole('menuitem', { name: /^IDIOMA:/ }).tap();
+  await page.getByRole('menuitem', { name: /^AJUSTES:/ }).tap();
   await page.waitForTimeout(450);
-  check('phone: tapping the flag switches the language', (await page.evaluate(() => document.documentElement.lang)) === 'en' && (await page.getByRole('dialog').count()) === 0);
+  await page.getByRole('dialog').getByRole('button', { name: 'English', exact: true }).tap();
+  await page.waitForTimeout(300);
+  await page.getByRole('dialog').getByRole('button', { name: /^ESC EXIT/ }).tap();
+  await page.waitForTimeout(450);
+  check('phone: the gear opens SETTINGS, tapping English switches, ESC EXIT closes it', (await page.evaluate(() => document.documentElement.lang)) === 'en' && (await page.getByRole('dialog').count()) === 0);
   await page.getByRole('menuitem', { name: /^CV:/ }).tap();
   await page.waitForTimeout(450);
   const dialog = page.getByRole('dialog');

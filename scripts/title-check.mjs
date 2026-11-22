@@ -1,8 +1,8 @@
 // Check of the title screen: screenshots in both languages at the three sizes, and how it starts
-// (key, click, tap → the intro; SKIP INTRO → the camp), what must NOT start it (Tab, the language
-// buttons, the CV), the dithered transition, the camp preloading, links that skip the title and
-// reduced motion; the CV's parchment and its question, the page's head tags, icons and PDFs, and
-// what a browser without JavaScript shows.
+// (key, click, tap → the intro; SKIP INTRO → the camp), what must NOT start it (Tab, the SETTINGS
+// gear and its window, the CV), the dithered transition, the camp preloading, links that skip the
+// title and reduced motion; the CV's parchment and its question, the page's head tags, icons and
+// PDFs, and what a browser without JavaScript shows.
 // Usage: npm run check:title -- [url]   (default http://localhost:5173/)
 import { mkdirSync } from 'node:fs';
 import { DESKTOP, PHONE, SIZES, chromium, createChecks, newPage, siteUrl } from './lib/browser.mjs';
@@ -53,14 +53,25 @@ check('6 title screens rendered without console errors', shotErrors === 0, `${sh
   await page.keyboard.press('Tab');
   await page.waitForTimeout(300);
   check('the first Tab stop is the CV (the parchment), and it does not start', (await onTitle(page)) && (await page.evaluate(() => document.activeElement?.getAttribute('aria-label'))) === 'CV: Pergamino — Descargar CV');
+  const focusedLabel = () => page.evaluate(() => document.activeElement?.getAttribute('aria-label'));
   await page.keyboard.press('Tab');
   await page.waitForTimeout(300);
-  check('Tab moves to the language buttons without starting', (await onTitle(page)) && (await page.evaluate(() => document.activeElement?.textContent))?.startsWith('ES'));
-  await page.keyboard.press('Tab');
+  check('Tab moves to the SETTINGS gear (top right) without starting', (await onTitle(page)) && (await focusedLabel()) === 'AJUSTES');
   await page.keyboard.press('Enter');
+  await page.waitForTimeout(450);
+  const dialog = page.getByRole('dialog');
+  check('Enter on the gear opens SETTINGS (language and animations) and does not start', (await dialog.getByRole('heading', { name: 'Ajustes' }).isVisible()) && (await onTitle(page)));
+  check('…with no VOLVER AL TÍTULO (this already is the title), but with the privacy line', (await dialog.getByRole('button', { name: 'VOLVER AL TÍTULO' }).count()) === 0 && (await dialog.getByText(/no usa cookies/).count()) === 1);
+  await page.screenshot({ path: '.screenshots/fase-8/titulo-ajustes-1440.png', animations: 'disabled' });
+  await page.keyboard.press('a');
+  await dialog.getByRole('button', { name: 'English', exact: true }).click();
   await page.waitForTimeout(300);
-  check('Enter on EN switches the language and does not start', (await onTitle(page)) && (await page.evaluate(() => document.documentElement.lang)) === 'en');
+  check('keys and clicks in SETTINGS do not start; English switches the language', (await onTitle(page)) && (await dialog.count()) === 1 && (await page.evaluate(() => document.documentElement.lang)) === 'en');
+  await page.keyboard.press('Escape');
+  await page.waitForTimeout(450);
+  check('Esc closes SETTINGS, with the focus back on the gear', (await dialog.count()) === 0 && (await onTitle(page)) && (await focusedLabel()) === 'SETTINGS');
   check('…the credits are now in English', (await page.locator('main p').first().innerText()).startsWith('BACKEND DEVELOPER'));
+  check('the title no longer has its own ES / EN buttons', (await page.getByRole('button', { name: /^(ES|EN) / }).count()) === 0);
   // Watch the transition's darkness steps.
   await page.evaluate(() => {
     window.__steps = new Set();
@@ -140,10 +151,13 @@ for (const size of SIZES) {
   const { context, page } = await open('es', size);
   const scroll = page.getByRole('button', { name: /^CV:/ });
   const box = await scroll.boundingBox();
+  const gear = page.getByRole('button', { name: 'AJUSTES' });
+  const gearBox = await gear.boundingBox();
   const controls = await Promise.all(
-    [page.getByRole('button', { name: 'ES Español' }), page.getByRole('button', { name: 'EN English' }), press(page), page.getByRole('button', { name: 'SKIP INTRO' }), page.getByRole('heading', { level: 1 })].map((locator) => locator.boundingBox()),
+    [press(page), page.getByRole('button', { name: 'SKIP INTRO' }), page.getByRole('heading', { level: 1 })].map((locator) => locator.boundingBox()),
   );
-  check(`title (${size.width}): the CV parchment is visible, with its name, and covers nothing`, (await scroll.isVisible()) && (await scroll.innerText()) === 'CV' && controls.every((control) => !overlaps(box, control)));
+  check(`title (${size.width}): the CV parchment is visible, with its name, and covers nothing`, (await scroll.isVisible()) && (await scroll.innerText()) === 'CV' && [gearBox, ...controls].every((control) => !overlaps(box, control)));
+  check(`title (${size.width}): the SETTINGS gear too`, (await gear.isVisible()) && (await gear.innerText()) === 'AJUSTES' && controls.every((control) => !overlaps(gearBox, control)));
   await page.screenshot({ path: `.screenshots/fase-8/titulo-cv-${size.width}.png`, animations: 'disabled' });
   await context.close();
 }
@@ -187,6 +201,13 @@ for (const size of SIZES) {
   await dialog.getByRole('button', { name: 'NO' }).tap();
   await page.waitForTimeout(450);
   check('phone: NO closes it and the title is still there', (await dialog.count()) === 0 && (await onTitle(page)) && !(await inIntro(page)));
+  await page.getByRole('button', { name: 'SETTINGS' }).tap();
+  await page.waitForTimeout(450);
+  check('phone: tapping the gear opens SETTINGS and does not start', (await dialog.getByRole('heading', { name: 'Settings' }).isVisible()) && (await onTitle(page)));
+  await page.screenshot({ path: '.screenshots/fase-8/titulo-ajustes-390.png', animations: 'disabled' });
+  await dialog.getByRole('button', { name: /^ESC EXIT/ }).tap();
+  await page.waitForTimeout(450);
+  check('phone: ESC EXIT closes it, still on the title', (await dialog.count()) === 0 && (await onTitle(page)) && !(await inIntro(page)));
   await context.close();
 }
 
