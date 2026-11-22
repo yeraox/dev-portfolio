@@ -1428,6 +1428,84 @@ leer, una rueda que no tape la hoguera y este portfolio como proyecto.
 - Hecho en este orden, todo seguido y revisado al final (21/11/2026): **O**, **N**, **P**, **Q** y
   **R**.
 
+### S. El porqué de cada proyecto, y fuera Bosa de Proyectos
+
+> Añadido el 22/11/2026, a petición tuya: "no habla del porqué de cada proyecto". **Hecho el
+> 22/11/2026.** Informe: sección "Bloque S" al final de `docs/informes/fase-8-mejoras.md`.
+
+**Qué cambia**
+- **Una sección "Por qué" / "Why"** en cada proyecto:
+  - va **justo después del resumen**, antes de "Qué hice" (tu elección). Así la ficha se lee como una
+    historia: qué es → por qué → qué hice → datos, y el porqué se ve sin desplazar;
+  - va en primera persona, con 2–4 frases cortas.
+- **Bosa Digital sale de Proyectos** (tu decisión). Por el NDA no enseñaba nada, y ya está entera
+  en el Registro de misiones de Perfil, que no cambia. Proyectos queda con tres pestañas: Capyroad,
+  Pakito's Gambling y Portfolio.
+- **Pakito's Gambling: equipo de 4 personas**, no de 3 (corregido por ti). Cambia la línea de
+  contexto en los dos idiomas.
+
+**Los textos** (adaptados de lo que me contaste; pasan a `CONTENT.md` y de ahí a `es.ts` y `en.ts`)
+- **Capyroad:**
+  - "El capibara era la mascota de nuestro casino: un animal que nos hacía gracia a todo el equipo.
+    El backend avanzó rápido y sentía que al casino le faltaban juegos, así que aproveché el tiempo
+    que quedaba hasta la entrega para inventar uno propio. Acabó siendo el más popular entre el
+    jurado de la presentación."
+  - "The capybara was our casino's mascot: an animal the whole team found funny. The backend moved
+    fast and I felt the casino was short of games, so I used the time left before the deadline to
+    invent one of our own. It ended up being the jury's favourite at the presentation."
+- **Pakito's Gambling:**
+  - "Queríamos salir de lo típico: ni una tienda online ni una red social, sino algo grande, con
+    una lógica compleja detrás y mucha seguridad. Con moneda ficticia, sin dinero real, para evitar
+    problemas legales. Siendo cuatro, pudimos hacerlo a lo grande. Yo prefiero el backend, así que
+    me encargué de esa parte, aunque acabé tocando también el frontend."
+  - "We wanted to get away from the usual: not an online shop or a social network, but something
+    big, with complex logic behind it and strong security. With play money, no real money, to stay
+    clear of legal issues. Being four of us, we could go big. I prefer the backend, so I took that
+    part, though I ended up working on the frontend too."
+- **Este portfolio:**
+  - "Quería un portfolio que se recordara: en vez de otra web con secciones, un pequeño juego donde
+    cada parte de mi CV es un lugar del campamento. Está inspirado en Secret of Evermore, el primer
+    videojuego al que jugué, junto a mi padre, y le tengo un cariño muy especial."
+  - "I wanted a portfolio people would remember: instead of another website with sections, a small
+    game where each part of my CV is a place in the camp. It's inspired by Secret of Evermore, the
+    first video game I ever played, with my dad, and it's very special to me."
+- Nombrar *Secret of Evermore* como inspiración no choca con la regla de arte original: no se usa
+  nada del juego, solo cuentas de dónde viene la idea.
+
+**Cómo se hace**
+- **Tipos.** `Project` gana un campo obligatorio `why: string`: si un proyecto no lo tiene en algún
+  idioma, no compila.
+- **Fuera lo que solo usaba Bosa:**
+  - el tipo de imagen `'classified'` (proyecto sin capturas ni vídeo), con su caso en la ventana;
+  - la etiqueta CLASIFICADO / CLASSIFIED;
+  - Bosa en el `id` de los proyectos.
+
+  `BOSA_TASKS` se queda: lo usa el Registro de misiones.
+- **La ventana.** "Por qué" se pinta tras el resumen, con el mismo estilo de subtítulo que "Qué
+  hice".
+- **Documentos.** `CONTENT.md` (los porqués, Pakito's con 4 personas y Bosa solo en Perfil),
+  `DESIGN.md`, `BRIEF.md` y `PRODUCT.md` donde hablen de Bosa en Proyectos.
+
+**Cómo compruebo que funciona**
+- `check:windows`:
+  - Proyectos tiene tres pestañas;
+  - cada proyecto muestra "Por qué" justo después del resumen y antes de "Qué hice";
+  - Bosa ya no está en Proyectos, pero sí en Perfil;
+  - las flechas y Fin siguen llegando al último (Portfolio).
+- Pruebas, tipos y lint en verde; capturas a 390, 768 y 1440 en los dos idiomas.
+- El informe, añadido a `docs/informes/fase-8-mejoras.md`.
+
+**TypeScript que aprenderás**
+- **Quitar un caso de una unión.** Al borrar `'classified'` de `ProjectMedia`, el compilador señala
+  el código que lo trataba (`media.kind === 'classified'`), porque compararía con un valor que ya no
+  puede existir.
+- **Un campo obligatorio nuevo.** Con `why: string` en `Project`, el compilador avisa en cada
+  proyecto de `es.ts` y `en.ts` que no lo tenga.
+
+**Pendiente de ti**
+- Tu CV en PDF: si en Pakito's pone "3 personas", corrígelo tú, para que la web y el PDF digan lo
+  mismo (el PDF se copia tal cual).
+
 **💬 Tus comentarios:**
 
 ---

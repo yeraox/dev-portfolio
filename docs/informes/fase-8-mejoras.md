@@ -24,6 +24,7 @@ para hasta que lo revisas.
 | P | La rueda deja la hoguera a la vista | ✅ Hecho (21/11/2026), pendiente de tu revisión |
 | Q | Este portfolio como proyecto y TypeScript en el Stack | ✅ Hecho (21/11/2026), **el texto pendiente de tu revisión** |
 | R | Aviso legal y cookies: no hacen falta; una línea de privacidad en Ajustes | ✅ Hecho (21/11/2026), pendiente de tu revisión |
+| S | El porqué de cada proyecto, y fuera Bosa de Proyectos (añadido el 22/11) | ✅ Hecho (22/11/2026), pendiente de tu revisión |
 
 El plan de cada bloque está en `docs/plan-de-fases.md`, "Fase 8 — Mejoras del portfolio".
 
@@ -1771,3 +1772,130 @@ Con tu OK a esta ronda:
 1. lo que queda de la fase 9 (`code-review`/`simplify` y regenerar `DESIGN.md` y
    `.impeccable/design.json` con impeccable);
 2. la **fase 10, publicación**.
+
+---
+
+## Bloque S — El porqué de cada proyecto, y fuera Bosa de Proyectos
+
+> 22/11/2026. Añadido a petición tuya: "están los proyectos pero no está la decisión de por qué se
+> ha hecho". Plan: `docs/plan-de-fases.md`, bloque S.
+
+### Resumen
+- **Cada proyecto dice por qué existe:** una sección **"Por qué" / "Why"** justo después del
+  resumen, antes de "Qué hice", con tus razones en primera persona y en los dos idiomas:
+  - **Capyroad:** el capibara mascota del casino, y el tiempo que quedaba hasta la entrega;
+  - **Pakito's Gambling:** algo grande y seguro, sin dinero real, siendo cuatro;
+  - **Este portfolio:** que se recuerde, inspirado en *Secret of Evermore*, tu primer juego, con
+    tu padre.
+- **Bosa Digital ya no está en Proyectos.** Sigue entera en el Registro de misiones de Perfil.
+  Proyectos tiene tres pestañas: Capyroad, Pakito's Gambling y Portfolio.
+- **Pakito's Gambling: equipo de 4 personas** (antes ponía 3).
+
+Capturas en `.screenshots/fase-8-s/`:
+- `proyectos-es-{capyroad,pakitos,portfolio}-{390,768,1440}.png`;
+- `proyectos-en-{390,768,1440}.png`.
+
+### 1. Decisiones tomadas
+
+| Decisión | Por qué | Quién |
+|---|---|---|
+| Un "Por qué" por proyecto, con tus razones | Daba datos pero no la historia; es lo que dice cómo piensas | Tú |
+| **Después del resumen**, antes de "Qué hice" | Se lee qué es → por qué → qué hice → datos; al final quedaba bajo el stack y los enlaces | Tú (mi propuesta) |
+| Los textos adaptados a la ficha (cortos, primera persona), **sin añadir nada** | Regla de no inventar; son tus razones | Tú |
+| *Secret of Evermore* nombrado como inspiración | Es tu historia; no se usa nada del juego (arte original) | Tú |
+| Fuera Bosa Digital de Proyectos | Por el NDA no enseñaba nada y ya está en Perfil | Tú |
+| Pakito's: 4 personas | Corrección tuya | Tú |
+| `summary` pasa a obligatorio | Todos los proyectos lo tienen ya (solo Bosa no lo tenía), y el porqué va después | Yo |
+
+### 2. Qué se ha hecho, paso a paso
+1. **`CONTENT.md`:**
+   - una nota al principio de Proyectos (orden, "Por qué" y Bosa solo en Perfil);
+   - los tres porqués;
+   - Pakito's con 4 personas;
+   - fuera la ficha de Bosa.
+2. **Tipos (`types.ts`):** `Project` gana `why: string` y `summary` pasa a obligatorio. El `id` ya
+   no admite `'bosa'`, y `ProjectMedia` pierde el caso `'classified'` (proyecto sin imágenes, que
+   solo usaba Bosa). Las etiquetas ganan `why`: "Por qué" / "Why".
+3. **Textos (`es.ts`, `en.ts`):** los porqués, Pakito's con 4 y fuera el proyecto de Bosa.
+   `BOSA_TASKS` se queda: lo usa el Registro de misiones.
+4. **La ventana (`ProjectsWindow.tsx`):**
+   - "Por qué" va tras el resumen, con el mismo subtítulo que "Qué hice";
+   - fuera el caso sin imágenes: todos los proyectos tienen capturas o vídeo, así que el
+     `data-media` del CSS sobra.
+5. **Pruebas (`content.test.ts`):**
+   - la de Bosa pasa a "solo en el Registro de misiones, con sus tres frases, y no es un proyecto";
+   - una nueva: los tres proyectos, en orden, cada uno con su porqué.
+6. **`check:windows`:**
+   - tres pestañas en orden;
+   - "Por qué" justo después del resumen y antes de "Qué hice", en los tres;
+   - ← desde Portfolio vuelve a Pakito's;
+   - Bosa sigue en Perfil.
+7. **Documentos:**
+   - `DESIGN.md`: la ficha de proyecto;
+   - `PRODUCT.md`: los porqués como material disponible y la captura del portfolio;
+   - el plan.
+
+### 3. Cómo se ha comprobado
+
+| Comprobación | Resultado |
+|---|---|
+| `npm run typecheck`, `npm run lint` | ✓ |
+| `npm test` | ✓ 202 pruebas (200 antes) |
+| `npm run check:windows` (vite preview) | ✓ 38: lo de antes más las tres pestañas, el orden resumen → Por qué → Qué hice en los tres proyectos y Bosa en Perfil |
+| Capturas | Sin desplazamiento horizontal ni errores de consola en los tres tamaños |
+| JavaScript inicial | 91,8 KB comprimido (91,0 antes): los porqués en los dos idiomas, menos Bosa. Presupuesto ≤ 100 KB |
+
+No he vuelto a pasar `check:camp`, `check:title`, `check:intro` ni Lighthouse: este bloque solo
+toca los textos de Proyectos y su ventana, que solo se cargan al abrirla.
+
+### 4. TypeScript en este bloque
+- **Quitar un caso de una unión.** Al borrar `{ kind: 'classified' }` de `ProjectMedia`,
+  TypeScript marca `media.kind === 'classified'` en `ProjectsWindow`: compararía con un valor que
+  ya no puede existir. Y tras `if (media.kind === 'video') { … return }`, sabe que lo único que
+  queda es `'screenshots'`, así que `media.shots` se puede usar sin otro `if`.
+- **Un campo obligatorio nuevo.** Con `why: string` (sin `?`), cada proyecto de `es.ts` y `en.ts`
+  tiene que tenerlo; si falta en uno, no compila. Lo mismo con `summary`, que deja de ser opcional
+  y ya no necesita el `{project.summary && …}` en la ventana.
+- **Un `id` más estrecho.** `'capyroad' | 'pakitos' | 'portfolio'`: un proyecto con `id: 'bosa'`
+  ya no compila. Por eso la prueba de Bosa busca por nombre (`name.includes('Bosa')`), no por un
+  `id` que el tipo ya no permite.
+
+### 5. Problemas encontrados
+
+| Problema | Solución |
+|---|---|
+| La comprobación de las pestañas fallaba: su texto lleva la etiqueta pegada ("CapyroadDESTACADO") | Compara el principio de cada pestaña (`startsWith`) |
+
+### 6. Observaciones
+- **En Capyroad, a 1440**, el título "POR QUÉ" queda al borde de lo visible, porque su resumen es
+  largo; el texto se lee desplazando un poco. En Pakito's y el portfolio se ve entero.
+- **Tu CV en PDF:** si en Pakito's pone "3 personas", corrígelo, para que diga lo mismo que la web.
+
+### 7. Lo que necesito de ti
+- Revisar los tres porqués en la web, en los dos idiomas (el inglés también en `/dev/textos`).
+
+### 8. Archivos para tu commit
+
+| Archivo | Cambio |
+|---|---|
+| `src/content/types.ts`, `es.ts`, `en.ts`, `content.test.ts` | `why`, fuera Bosa de Proyectos, Pakito's con 4 |
+| `src/windows/ProjectsWindow.tsx`, `ProjectsWindow.module.css` | "Por qué" tras el resumen; fuera el caso sin imágenes |
+| `src/windows/WindowSections.tsx`, `src/windows/sheet.module.css` | Comentarios al día |
+| `scripts/windows-check.mjs` | Las comprobaciones nuevas |
+| `CONTENT.md`, `DESIGN.md`, `PRODUCT.md`, `docs/plan-de-fases.md`, `docs/informes/fase-8-mejoras.md` | Documentación |
+
+### Commits recomendados
+
+```bash
+# 1. Why each project exists, and Bosa Digital only in the profile
+git add src/content src/windows
+git commit -m "feat(projects): say why each project exists and keep Bosa Digital to the quest log" -m "A 'Why' section right after each summary, in Yeray's words; Pakito's Gambling was a team of four."
+
+# 2. Checks
+git add scripts/windows-check.mjs
+git commit -m "test: check the three projects and their 'Why' section"
+
+# 3. Docs
+git add CONTENT.md DESIGN.md PRODUCT.md docs/plan-de-fases.md docs/informes/fase-8-mejoras.md
+git commit -m "docs: add the projects' reasons and report block S"
+```

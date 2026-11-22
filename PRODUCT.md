@@ -74,7 +74,11 @@ to scan.
   `references/cv_en_yeray_caturla.pdf`. Downloadable as-is, each in its language.
 - All content: `CONTENT.md`.
 - Project media: `media-src/projects/` (Capyroad screenshot + 26 s raw video, roulette and
-  blackjack screenshots of Pakito's Gambling).
+  blackjack screenshots of Pakito's Gambling, and the camp of this portfolio).
+- Why each project exists, in Yeray's words (`CONTENT.md`, "Por qué"): Capyroad (the casino's
+  capybara mascot, a game of his own with the time left), Pakito's Gambling (something big and
+  secure, with play money, by a team of four), this portfolio (memorable, inspired by Secret of
+  Evermore, the first game he played, with his father).
 - Absences that must not be fabricated: no deployed demos, no metrics for the Bosa Digital
   internship (NDA — only the three CV sentences), no training numbers,
   no recipes, no testimonials.

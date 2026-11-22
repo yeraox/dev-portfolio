@@ -165,10 +165,21 @@ de vida del software, desde la API hasta su despliegue automatizado.
 
 ## Proyectos (ALCHEMY)
 
+Tres proyectos, en este orden en la ventana: Capyroad, Pakito's Gambling y este portfolio. Cada
+uno lleva **"Por qué" / "Why"** justo después del resumen (bloque S de la fase 8, 22/11/2026):
+el porqué del proyecto, con las razones de Yeray, en primera persona. Bosa Digital ya no es un
+proyecto: está solo en el Registro de misiones de Perfil (decisión de Yeray, 22/11/2026; por el NDA
+no enseñaba nada más).
+
 ### Pakito's Gambling
 - **Qué es:** plataforma web de recreación de juegos de azar con **moneda ficticia (sin dinero
   real)**.
-- **Contexto:** Proyecto Final de DAW, equipo de 3 personas · feb. 2026 – jun. 2026.
+- **Contexto:** Proyecto Final de DAW, equipo de 4 personas · feb. 2026 – jun. 2026 (eran 4:
+  corregido por Yeray el 22/11/2026).
+- **Por qué:** Queríamos salir de lo típico: ni una tienda online ni una red social, sino algo
+  grande, con una lógica compleja detrás y mucha seguridad. Con moneda ficticia, sin dinero real,
+  para evitar problemas legales. Siendo cuatro, pudimos hacerlo a lo grande. Yo prefiero el
+  backend, así que me encargué de esa parte, aunque acabé tocando también el frontend.
 - **Stack:** Node.js · Express · PostgreSQL · Git/GitHub.
 - **Qué hice:** backend de la plataforma (diseño de la API REST y del modelo de datos) y
   backend de varios juegos simulados:
@@ -185,23 +196,16 @@ de vida del software, desde la API hasta su despliegue automatizado.
   saltando de calle en calle. Cada calle sube el multiplicador del premio (1.25x → 1.48x →
   1.74x → …) y también el riesgo de atropello (visible en %). En cada turno el jugador elige
   **Cruzar** (seguir arriesgando) o **Cobrar** (retirarse con lo ganado).
+- **Por qué:** El capibara era la mascota de nuestro casino: un animal que nos hacía gracia a todo
+  el equipo. El backend avanzó rápido y sentía que al casino le faltaban juegos, así que aproveché
+  el tiempo que quedaba hasta la entrega para inventar uno propio. Acabó siendo el más popular
+  entre el jurado de la presentación.
 - **Qué hice:** todo el ciclo, del backend al frontend en React.
 - **Stack:** Node.js · Express · PostgreSQL · React.
 - **Persistencia:** cada transacción (apuesta/cobro) se guarda en PostgreSQL asociada al id
   del usuario.
 - **Repo:** https://github.com/yeraox/pakitos-gambling (dentro del proyecto).
 - **Captura + vídeo:** `media-src/projects/capyroad.png` · `capyroad-raw.mp4`.
-
-### Herramientas internas de automatización — Bosa Digital
-- **Contexto:** prácticas, mar. 2026 – jun. 2026.
-- **Stack:** Python · Django · APIs externas · Git.
-- **Qué hice:** herramientas para automatizar procesos internos de ventas e integración de APIs
-  externas y fuentes de datos.
-- **Confidencial:** acuerdo de confidencialidad firmado. Mostrar solo lo de arriba, sin cifras,
-  repo, demo ni capturas. En la ventana puede llevar una etiqueta tipo "[CLASIFICADO]" como guiño,
-  sin insinuar más de lo que dice el CV.
-- **Pestaña:** "Bosa Digital" en los dos idiomas (el nombre completo es largo para una pestaña;
-  sigue entero en el encabezado de la sección).
 
 ### Este portfolio — ESTÁS AQUÍ (ronda 2 de la fase 8)
 Decidido por Yeray el 21/11/2026: entra, con su papel y cómo se ha desarrollado. **Pendiente de su
@@ -212,6 +216,10 @@ revisión** (texto escrito por mí a partir del plan).
 - **Resumen:** Portfolio con forma de RPG de 16 bits: pantalla de título, intro saliendo de la
   cueva y un campamento con un menú en rueda que abre mi CV por secciones. Sin motor de juegos:
   React, TypeScript y Canvas.
+- **Por qué:** Quería un portfolio que se recordara: en vez de otra web con secciones, un pequeño
+  juego donde cada parte de mi CV es un lugar del campamento. Está inspirado en Secret of Evermore,
+  el primer videojuego al que jugué, junto a mi padre, y le tengo un cariño muy especial. (Nombrarlo
+  como inspiración no choca con la regla de arte original: no se usa nada del juego.)
 - **Qué hice:**
   - La idea y la dirección del proyecto: el mundo, cada pantalla y cada decisión de diseño.
   - Las referencias de arte: los personajes, los iconos y el fondo del campamento.

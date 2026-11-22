@@ -329,9 +329,11 @@ more below. Paragraphs, rows and list items wrap without a
 lonely last word.
 
 ### Content windows (`src/windows/`)
-- **Projects (ALCHEMY):** one section per project. Wide windows (≥ 820 px) put the pictures left and the text
-  right: name + tag, context, summary, "what I did", facts (stack, notes, repo, demo). Bosa
-  Digital: text only, tag CLASIFICADO / CLASSIFIED.
+- **Projects (ALCHEMY):** one section per project (Capyroad, Pakito's Gambling, this portfolio).
+  Wide windows (≥ 820 px) put the pictures left and the text right: name + tag, context, summary,
+  "why" (Yeray's reasons for the project, right after the summary: its story before its details),
+  "what I did", facts (stack, notes, repo, demo). Bosa Digital is no longer a project (phase 8,
+  block S): its NDA left nothing to show, and it lives in the profile's quest log.
 - **Stack (EQUIP):** one section per tier, rows of group → technologies, each with its 16×16
   icon before its name (phase 8, `npm run stack-icons`: Simple Icons logos without smoothing,
   generic pixel icons for SQL, REST APIs, Java, AWS, WSL and Oracle), in `text`, about as tall as
