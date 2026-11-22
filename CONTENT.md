@@ -14,7 +14,7 @@ archivos (o pídemelo).
 | Línea | Español | Inglés |
 |---|---|---|
 | Nombre | YERAY CATURLA | YERAY CATURLA |
-| Créditos | DESARROLLADOR BACKEND · NODE.JS · EXPRESS · JAVA · DOCKER · AWS | BACKEND DEVELOPER · NODE.JS · EXPRESS · JAVA · DOCKER · AWS |
+| Créditos | DESARROLLADOR BACKEND JUNIOR · DEVOPS | JUNIOR BACKEND DEVELOPER · DEVOPS |
 | Botones | PRESS START · SKIP INTRO | PRESS START · SKIP INTRO |
 
 **Esquinas** (desde la fase 8): arriba a la izquierda el pergamino del CV (nombre "CV") y, desde
@@ -22,7 +22,9 @@ la ronda 2 de la fase 8, arriba a la derecha el engranaje (nombre "AJUSTES" / "S
 abre la misma ventana de ajustes que la rueda, sin "Volver al título". Los botones ES/EN del
 título se quitaron: el idioma se elige en Ajustes.
 
-La línea de créditos se traduce según el idioma (el brief la daba solo en inglés). La línea del
+La línea de créditos se traduce según el idioma (el brief la daba solo en inglés). Desde el
+22/11/2026 (bloque T de la fase 8) dice solo el puesto y DevOps: quien busque eso entra y ve el
+stack dentro. Antes: "DESARROLLADOR BACKEND · NODE.JS · EXPRESS · JAVA · DOCKER · AWS". La línea del
 centro de estudios se quitó a petición tuya (12-11-2026): no es relevante en el título; PRESS START y
 SKIP INTRO son etiquetas de juego y se quedan en inglés en los dos idiomas.
 

@@ -25,6 +25,7 @@ para hasta que lo revisas.
 | Q | Este portfolio como proyecto y TypeScript en el Stack | ✅ Hecho (21/11/2026), **el texto pendiente de tu revisión** |
 | R | Aviso legal y cookies: no hacen falta; una línea de privacidad en Ajustes | ✅ Hecho (21/11/2026), pendiente de tu revisión |
 | S | El porqué de cada proyecto, y fuera Bosa de Proyectos (añadido el 22/11) | ✅ Hecho (22/11/2026), pendiente de tu revisión |
+| T | Tu vídeo: la ventana en blanco, el contorno azul y el título (añadido el 22/11) | ✅ Hecho (22/11/2026), pendiente de tu revisión |
 
 El plan de cada bloque está en `docs/plan-de-fases.md`, "Fase 8 — Mejoras del portfolio".
 
@@ -1899,3 +1900,163 @@ git commit -m "test: check the three projects and their 'Why' section"
 git add CONTENT.md DESIGN.md PRODUCT.md docs/plan-de-fases.md docs/informes/fase-8-mejoras.md
 git commit -m "docs: add the projects' reasons and report block S"
 ```
+
+---
+
+## Bloque T — Tu vídeo: la ventana en blanco, el contorno azul y el título
+
+> 22/11/2026. Salió de tu vídeo (Proyectos y Stack en tu navegador, a 1880×920) y de tus mensajes.
+> Plan: `docs/plan-de-fases.md`, bloque T.
+
+### Resumen
+- **La ventana ya no se queda en blanco.** Había dos barras de desplazamiento: la del texto y otra
+  del cuerpo de la ventana. Ahora solo se desplaza el texto.
+- **Sin contorno azul al entrar.** La ventana se abre con el foco en ella misma, que no se marca.
+  ↑ ↓, RePág/AvPág e Inicio/Fin mueven el texto desde cualquier sitio de la ventana, como ya hacían
+  ← →.
+- **Título:** "DESARROLLADOR BACKEND JUNIOR · DEVOPS" / "JUNIOR BACKEND DEVELOPER · DEVOPS". La
+  imagen para compartir (`og-image.png`) se ha regenerado con la línea nueva.
+
+Capturas en `.screenshots/fase-8-t/`:
+- `titulo-{es,en}-{390,768,1440}.png`;
+- `proyectos-abierto-con-teclado-1880.png`: tu tamaño, abierta desde la rueda con Enter, sin
+  contorno;
+- `proyectos-al-final-1880.png`: el texto bajado del todo, con las pestañas en su sitio.
+
+### 1. Decisiones tomadas
+
+| Decisión | Por qué | Quién |
+|---|---|---|
+| Arreglar la causa (el aviso que se escapaba), no esconder la barra de fuera | Esconderla dejaría el cuerpo desplazable con la rueda sobre las pestañas | Yo |
+| Al abrir, el foco va a la ventana, sin contorno | Lo pediste: el azul rompía la estética. La ventana no es un control | Tú |
+| Las teclas de lectura funcionan desde cualquier sitio y el texto deja de ser una parada de Tab | Así ↑ ↓ siguen funcionando sin que el texto tenga el foco ni su contorno | Yo |
+| Los controles (pestañas, ESC EXIT, enlaces) conservan su contorno con Tab | Quien usa solo el teclado tiene que ver dónde está (WCAG 2.4.7). Con el ratón no aparece | Yo |
+| Créditos del título: el puesto y DevOps | Quien busque eso entra y ve el stack dentro | Tú |
+
+### 2. Qué se ha hecho, paso a paso
+
+**La ventana en blanco**
+1. **El vídeo.** Lo miré fotograma a fotograma: en los segundos 7–10 el cuerpo de la ventana se
+   desplazaba (se iban las pestañas) y quedaba en blanco, con una barra fina en el borde derecho.
+2. **La medición.** A 1880×920, el cuerpo medía 649 px pero se podía desplazar hasta 1452.
+   Busqué qué lo estiraba: el aviso invisible "(se abre en otra pestaña)" que acompaña al enlace
+   del repositorio.
+3. **La causa.** Ese aviso es para lectores de pantalla y está posicionado "absoluto". Un
+   elemento así se coloca respecto al primer antepasado posicionado, y el recuadro del texto no
+   lo estaba. Por eso el aviso se salía de su scroll y estiraba el cuerpo de la ventana, unos
+   800 px por debajo. El fallo venía de la fase 4; en tu navegador se ve porque muestra las barras
+   siempre.
+4. **El arreglo.** `position: relative` en el recuadro del texto (`WindowSections.module.css`).
+   Medido otra vez: 649/649 a tu tamaño, y lo mismo a 390, 1440 y 1920.
+
+**El contorno azul**
+5. `SectionDialog`:
+   - la ventana (`<dialog>`) lleva `tabIndex={-1}`: se puede enfocar desde el código, pero no es
+     una parada de Tab;
+   - al abrirse, se enfoca ella misma;
+   - su CSS quita el contorno solo a ella;
+   - fuera el mecanismo `data-autofocus` del bloque O, que ya no hace falta.
+6. `WindowSections`:
+   - el texto ya no tiene `tabIndex`;
+   - el mismo listener de ← → mueve ahora el texto con ↑ ↓ (dos líneas), RePág/AvPág (85 % de lo
+     visible) e Inicio/Fin (fuera de las pestañas);
+   - si el foco está en un enlace del texto, deja que lo haga el navegador;
+   - en Contacto, que tiene una sola sección, ← → no hacen nada pero ↑ ↓ sí desplazan;
+   - fuera la regla CSS del contorno por dentro, que ya no se usa.
+
+**El título**
+7. Los créditos nuevos, en `es.ts`, `en.ts`, `CONTENT.md` y `BRIEF.md`.
+8. `npm run share` contra `vite preview`. Solo cambia `og-image.png`; el favicon, el icono de
+   iPhone y la captura del portfolio salen idénticos.
+
+**Comprobaciones y documentos**
+9. `check:windows`:
+   - nueva: en las 24 ventanas (4 × 2 idiomas × 3 tamaños), el cuerpo no se puede desplazar;
+   - el foco al abrir está en la ventana, sin contorno, y el texto no es parada de Tab;
+   - → mantiene el foco en la ventana;
+   - AvPág y ↓ desplazan sin cambiar de proyecto;
+   - Inicio vuelve arriba;
+   - ↓ en una pestaña desplaza.
+10. `check:title`: los créditos exactos en los dos idiomas.
+11. `DESIGN.md`, `BRIEF.md`, `CLAUDE.md` y el plan.
+
+### 3. Cómo se ha comprobado
+
+| Comprobación | Resultado |
+|---|---|
+| `npm run typecheck`, `npm run lint`, `npm test` | ✓ (202 pruebas) |
+| `npm run check:windows` (vite preview) | ✓ 41, la nueva del cuerpo incluida |
+| `npm run check:title` (vite preview) | ✓ 46 |
+| `npm run check:camp` (vite preview) | ✓ 109 (abre y cierra ventanas; el foco vuelve a la rueda) |
+| Medición a 1880×920, 1440×900, 1920×1080 y 390×844 | El cuerpo, igual a lo visible en todos (antes, +803 px a tu tamaño) |
+| A tu tamaño: abrir con Enter, bajar con AvPág y la rueda | Sin contorno, sin blanco, cuerpo en 0, foco en la ventana |
+| JavaScript inicial | 91,8 KB comprimido (igual) |
+
+### 4. TypeScript en este bloque
+- **`scrollBy` y su opción tipada.** `panel.scrollBy({ top: steps[key] })` recibe un
+  `ScrollToOptions`, un tipo del navegador. Si escribes `{ toop: 40 }`, el compilador lo marca:
+  esa opción no existe.
+- **`key in steps` antes de leer.** `steps` es un `Record<string, number>`, así que
+  `steps['Tab']` sería `undefined` aunque el tipo diga `number`. Comprobar `key in steps` primero
+  evita pasar `undefined` a `scrollBy`.
+- **`closest()` devuelve el tipo exacto.** `panel.closest('dialog')` es
+  `HTMLDialogElement | null`: TypeScript lo deduce del selector de etiqueta. El `?.` cubre el
+  `null` sin `as`.
+
+### 5. Problemas encontrados
+
+| Problema | Solución |
+|---|---|
+| El audio de tu vídeo no se puede escuchar desde aquí | Intenté transcribirlo en tu ordenador (Whisper con Transformers.js en una carpeta temporal, sin subir nada). Lo dejé cuando me lo escribiste |
+| La causa de la segunda barra no era el diseño de la ventana sino un elemento invisible | Medí qué estiraba el cuerpo y apareció el aviso posicionado fuera de su scroll |
+
+### 6. Observaciones
+- **Stack, en el vídeo:** no vi nada raro (Dominio y "He trabajado con" con sus iconos). Si querías
+  señalar algo ahí, dímelo.
+- **La carpeta temporal de la transcripción** (`stt-node`, en el scratchpad de la sesión) no está
+  en el proyecto.
+
+### 7. Lo que necesito de ti
+- Probarlo en tu navegador (Opera): bajar con la barra, la rueda y las teclas, y abrir ventanas con
+  Enter.
+- Ver si te gusta el título nuevo y su imagen para compartir.
+
+### 8. Archivos para tu commit
+
+| Archivo | Cambio |
+|---|---|
+| `src/windows/WindowSections.tsx`, `WindowSections.module.css` | El aviso dentro del texto; las teclas de lectura desde cualquier sitio; el texto sin foco |
+| `src/components/SectionDialog.tsx`, `SectionDialog.module.css` | La ventana toma el foco al abrir, sin contorno |
+| `src/content/es.ts`, `en.ts` | Créditos del título |
+| `public/og-image.png` | La imagen para compartir, con los créditos nuevos |
+| `scripts/windows-check.mjs`, `scripts/title-check.mjs` | Las comprobaciones nuevas |
+| `CONTENT.md`, `BRIEF.md`, `DESIGN.md`, `CLAUDE.md`, `docs/plan-de-fases.md`, `docs/informes/fase-8-mejoras.md` | Documentación |
+
+### Commits recomendados
+
+```bash
+# 1. The blank window: only the text scrolls
+git add src/windows/WindowSections.module.css
+git commit -m "fix(windows): keep hidden link notes inside the text so the window body never scrolls"
+
+# 2. No focus ring when a window opens; reading keys from anywhere in it
+git add src/windows/WindowSections.tsx src/components/SectionDialog.tsx src/components/SectionDialog.module.css
+git commit -m "feat(windows): focus the window itself on open and scroll the text with the keys from anywhere"
+
+# 3. The title: the role and DevOps
+git add src/content/es.ts src/content/en.ts public/og-image.png
+git commit -m "feat(title): show only the role and DevOps in the credits line"
+
+# 4. Checks
+git add scripts/windows-check.mjs scripts/title-check.mjs
+git commit -m "test: check that only the text scrolls, the window takes the focus and the new credits"
+
+# 5. Docs
+git add CONTENT.md BRIEF.md DESIGN.md CLAUDE.md docs/plan-de-fases.md docs/informes/fase-8-mejoras.md
+git commit -m "docs: report block T: the blank window, the focus ring and the title credits"
+```
+
+Si aún no has hecho los commits del bloque S, `src/content/es.ts` y `en.ts` llevan cambios de los
+dos bloques. Haz primero los del S: su `git add src/content src/windows` se lleva también los de
+este bloque en esos archivos. Después, de estos solo quedarían el `og-image.png`, las
+comprobaciones y los documentos.

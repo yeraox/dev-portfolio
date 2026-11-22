@@ -310,16 +310,20 @@ preference or Animations OFF) it simply appears and disappears.
 
 ### Section window (`SectionDialog`)
 A native modal `<dialog>` holding a Window (`showModal`: the rest of the page is inert, no focus
-trap of our own; scroll never chains to the page behind). Esc or the `[ESC] EXIT` button closes
+trap of our own; scroll never chains to the page behind). It opens with the focus on the dialog
+itself (`tabindex="-1"`, no focus ring: it is not a control); the CV's question and SETTINGS then
+focus their first answer. Esc or the `[ESC] EXIT` button closes
 it, then focus returns to the ring. No backdrop dimming. It only appears once its content
 has downloaded, so nothing shifts. On touch screens the close button's hit area reaches 44 px.
 
 ### Window sections (`WindowSections`)
 Content split into sections, one at a time, with ARIA tabs on top. ← → change section from
 anywhere in the window (on a tab the focus follows; Home and End too), a click or tap on a tab
-opens it, a sideways swipe on touch. The mouse wheel and ↑ ↓ only scroll the section's text, never
-change section (phase 8, round 2). The window opens with the focus on the text (its focus ring is
-drawn inside), so ↑ ↓ work at once. The selected
+opens it, a sideways swipe on touch. The mouse wheel, ↑ ↓, Page Up / Down and (off the tabs)
+Home / End only scroll the section's text, never change section (phase 8, round 2), and they work
+from anywhere in the window too, so the text is not a focus stop and never shows a focus ring
+(block T). Only the text scrolls: it is the containing block of anything positioned inside it
+(the hidden "(opens in a new tab)" notes), so nothing stretches the window's body. The selected
 tab sits on an `ink` plate in `gold-3` with the pixel bullet as cursor (an outline in Windows'
 high-contrast mode). The tabs stay on one row: the ones not chosen shrink and end in "…", the
 chosen one always shows its whole label (badges sit inside the label, so they are cut first).

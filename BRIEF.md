@@ -170,7 +170,8 @@ for all window text. Self-hosted via @fontsource.
   wins), with a red note on what it changes. In the camp, SETTINGS has BACK TO TITLE (to see the
   title and the intro again).
 - Inside a window, ← → change section from anywhere in it and a click or tap on a tab opens it;
-  the mouse wheel and ↑ ↓ only scroll the text (phase 8, round 2).
+  the mouse wheel, ↑ ↓, Page Up / Down and Home / End only scroll the text, also from anywhere in
+  it (phase 8, round 2 and block T). The window opens with the focus on itself, with no outline.
 - A recruiter reaches projects + contact in under 10 seconds: the CV PDF from the title's parchment
   (top left) and from the ring's CV slot, both asking before downloading (see "Downloadable CV").
   The plain-text CV view of phase 7 was removed in phase 8.
@@ -179,8 +180,9 @@ for all window text. Self-hosted via @fontsource.
 
 ## User journey
 A. TITLE — "YERAY CATURLA" in the golden embossed treatment. Credit lines:
-   "BACKEND DEVELOPER · NODE.JS · EXPRESS · JAVA · DOCKER · AWS" (the school line was dropped
-   at Yeray's request in phase 5: not relevant on the title).
+   "JUNIOR BACKEND DEVELOPER · DEVOPS" (phase 8, block T: the role and DevOps only, the stack is
+   inside; before: "BACKEND DEVELOPER · NODE.JS · EXPRESS · JAVA · DOCKER · AWS"; the school line
+   was dropped at Yeray's request in phase 5: not relevant on the title).
    Blinking "PRESS START" (blink in steps, not a fade); any key / click / tap starts.
    Built in phase 5: the credits line is translated per locale; the night landscape is drawn in
    code from the palette; the camp downloads while the title is shown; the transition is a

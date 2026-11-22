@@ -1506,6 +1506,61 @@ leer, una rueda que no tape la hoguera y este portfolio como proyecto.
 - Tu CV en PDF: si en Pakito's pone "3 personas", corrígelo tú, para que la web y el PDF digan lo
   mismo (el PDF se copia tal cual).
 
+### T. Lo que viste en tu vídeo: la ventana en blanco, el contorno azul y el título
+
+> Añadido el 22/11/2026, tras tu vídeo y tus mensajes. **Hecho el 22/11/2026.** Informe: sección
+> "Bloque T" al final de `docs/informes/fase-8-mejoras.md`.
+
+**1. La ventana que se queda en blanco (un fallo)**
+- **Lo que pasa:** en una ventana con secciones hay **dos barras de desplazamiento**: la del texto
+  y otra, la del cuerpo de la ventana, en el borde derecho. Si bajas con la de fuera, se va todo,
+  pestañas incluidas, y la ventana queda en blanco.
+- **La causa (encontrada):** junto al enlace del repositorio hay un aviso invisible para lectores
+  de pantalla, "(se abre en otra pestaña)". Está posicionado "absoluto" y se escapa del recuadro
+  del texto, así que estira el cuerpo de la ventana unos 800 px por debajo. Medido a tu tamaño de
+  navegador (1880×920): el cuerpo mide 649 px y se puede desplazar hasta 1452.
+- **Desde cuándo:** desde la fase 4, en cuanto hubo un enlace con ese aviso. En tu navegador se ve
+  porque muestra las barras siempre.
+- **La solución:**
+  - una línea de CSS: el recuadro del texto pasa a ser la referencia de esos avisos, así que se
+    quedan dentro y ya no estiran nada;
+  - una comprobación nueva en `check:windows`: en ninguna ventana, tamaño ni idioma puede
+    desplazarse el cuerpo; solo el texto.
+
+**2. El contorno azul al entrar en una ventana**
+- **Lo que pasa:** al abrir, el foco va al texto para que ↑ ↓ funcionen desde el principio, y el
+  navegador lo marca con el contorno azul de foco.
+- **Lo que propongo:**
+  - al abrir, el foco va a **la propia ventana**, que no se marca (no es un botón);
+  - **↑ ↓, RePág/AvPág e Inicio/Fin desplazan el texto** desde cualquier sitio de la ventana, como
+    ya hacen ← →;
+  - el texto deja de ser una parada de Tab. Ya no hace falta, porque las teclas funcionan desde
+    cualquier sitio, así que **el contorno no vuelve a aparecer sobre el texto**.
+- **Se quedan los contornos de foco de los controles** (pestañas, ESC EXIT, enlaces) cuando se
+  llega a ellos con Tab: quien usa teclado tiene que ver dónde está (WCAG 2.4.7). Al abrir con el
+  ratón no se ve ninguno.
+
+**3. El título: "Desarrollador Backend Junior · DevOps"**
+- La línea de créditos pasa de "DESARROLLADOR BACKEND · NODE.JS · EXPRESS · JAVA · DOCKER · AWS"
+  a **"DESARROLLADOR BACKEND JUNIOR · DEVOPS"** (en inglés, **"JUNIOR BACKEND DEVELOPER ·
+  DEVOPS"**). Quien busque eso entra y ve tu stack dentro.
+- **También cambia la imagen para compartir** (`og-image.png`), que es una captura del título: la
+  regenero con `npm run share`.
+
+**Cómo compruebo que funciona**
+- `check:windows`:
+  - ningún cuerpo de ventana se desplaza;
+  - al abrir, el foco está en la ventana y no en el texto;
+  - ↑ ↓ y AvPág desplazan el texto desde la ventana y desde una pestaña, sin cambiar de sección;
+  - ← → siguen funcionando.
+- `check:title`: los créditos nuevos en los dos idiomas.
+- Pruebas, tipos, lint, capturas a 390, 768 y 1440 y, para comparar, tu tamaño de 1880×920.
+- El informe, añadido a `docs/informes/fase-8-mejoras.md`.
+
+**TypeScript que aprenderás**
+- **`scrollBy` y el tipo de su opción:** `panel.scrollBy({ top: 40 })` recibe un `ScrollToOptions`
+  (tipo del navegador); TypeScript avisa si escribes una opción que no existe.
+
 **💬 Tus comentarios:**
 
 ---
