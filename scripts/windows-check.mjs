@@ -1,4 +1,4 @@
-// Phase-4 check of the content windows: every window in both languages at the three sizes (with
+// Check of the content windows: every window in both languages at the three sizes (with
 // screenshots), plus behaviour: contact links, the project tabs, ← → from anywhere in a window,
 // the wheel that only scrolls, the swipe, the video and what is (not) downloaded before a window
 // opens. Prints ✓/✗ per check.
@@ -7,7 +7,7 @@ import { mkdirSync } from 'node:fs';
 import { DESKTOP, PHONE, SIZES, chromium, createChecks, newPage, siteUrl } from './lib/browser.mjs';
 
 const url = siteUrl();
-const OUT = '.screenshots/fase-4';
+const OUT = '.screenshots/windows';
 const SECTIONS = ['projects', 'stack', 'profile', 'about', 'contact'];
 const PHONE_NUMBER = /\+?\d[\d .-]{8,}\d/; // anything that looks like a phone number
 const { check, done } = createChecks();

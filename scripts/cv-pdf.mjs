@@ -1,4 +1,4 @@
-// Publishes Yeray's CV PDFs as they are (BRIEF.md, "Downloadable CV"): copies the private originals
+// Publishes Yeray's CV PDFs as they are: copies the private originals
 // from references/ to public/cv/, where the site serves them at /cv/yeray-caturla-cv-es.pdf and
 // /cv/yeray-caturla-cv-en.pdf. The PDFs include his phone number: that is his decision, and only
 // the PDFs have it (never the web pages).

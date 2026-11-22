@@ -8,7 +8,7 @@ import { mkdirSync } from 'node:fs';
 import { DESKTOP, PHONE, SIZES, chromium, createChecks, newPage, siteUrl } from './lib/browser.mjs';
 
 const url = siteUrl();
-const OUT = '.screenshots/fase-5';
+const OUT = '.screenshots/title';
 const { check, done } = createChecks();
 
 mkdirSync(OUT, { recursive: true });
@@ -36,7 +36,7 @@ for (const lang of ['es', 'en']) {
       return button && getComputedStyle(button).visibility === 'visible';
     });
     // `animations: 'disabled'` freezes the blink at its first (lit) frame for the picture.
-    await page.screenshot({ path: `${OUT}/titulo-${lang}-${size.width}.png`, animations: 'disabled' });
+    await page.screenshot({ path: `${OUT}/title-${lang}-${size.width}.png`, animations: 'disabled' });
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth);
     if (overflow) check(`no horizontal overflow at ${size.width} (${lang})`, false);
     shotErrors += errors.length;
@@ -62,7 +62,7 @@ check('6 title screens rendered without console errors', shotErrors === 0, `${sh
   const dialog = page.getByRole('dialog');
   check('Enter on the gear opens SETTINGS (language and animations) and does not start', (await dialog.getByRole('heading', { name: 'Ajustes' }).isVisible()) && (await onTitle(page)));
   check('…with no VOLVER AL TÍTULO (this already is the title), but with the privacy line', (await dialog.getByRole('button', { name: 'VOLVER AL TÍTULO' }).count()) === 0 && (await dialog.getByText(/no usa cookies/).count()) === 1);
-  await page.screenshot({ path: '.screenshots/fase-8/titulo-ajustes-1440.png', animations: 'disabled' });
+  await page.screenshot({ path: `${OUT}/settings-1440.png`, animations: 'disabled' });
   await page.keyboard.press('a');
   await dialog.getByRole('button', { name: 'English', exact: true }).click();
   await page.waitForTimeout(300);
@@ -146,7 +146,6 @@ check('6 title screens rendered without console errors', shotErrors === 0, `${sh
 
 // ---------- the CV's parchment on the title ----------
 const overlaps = (a, b) => a && b && a.x < b.x + b.width && b.x < a.x + a.width && a.y < b.y + b.height && b.y < a.y + a.height;
-mkdirSync('.screenshots/fase-8', { recursive: true });
 for (const size of SIZES) {
   const { context, page } = await open('es', size);
   const scroll = page.getByRole('button', { name: /^CV:/ });
@@ -158,7 +157,7 @@ for (const size of SIZES) {
   );
   check(`title (${size.width}): the CV parchment is visible, with its name, and covers nothing`, (await scroll.isVisible()) && (await scroll.innerText()) === 'CV' && [gearBox, ...controls].every((control) => !overlaps(box, control)));
   check(`title (${size.width}): the SETTINGS gear too`, (await gear.isVisible()) && (await gear.innerText()) === 'AJUSTES' && controls.every((control) => !overlaps(gearBox, control)));
-  await page.screenshot({ path: `.screenshots/fase-8/titulo-cv-${size.width}.png`, animations: 'disabled' });
+  await page.screenshot({ path: `${OUT}/cv-${size.width}.png`, animations: 'disabled' });
   await context.close();
 }
 {
@@ -170,7 +169,7 @@ for (const size of SIZES) {
   await scroll.click();
   await page.waitForTimeout(450);
   check('clicking the parchment asks "¿Descargar el CV en PDF?" and does not start', (await dialog.getByRole('heading', { name: '¿Descargar el CV en PDF?' }).isVisible()) && (await onTitle(page)));
-  await page.screenshot({ path: '.screenshots/fase-8/titulo-cv-pregunta-1440.png', animations: 'disabled' });
+  await page.screenshot({ path: `${OUT}/cv-question-1440.png`, animations: 'disabled' });
   await page.keyboard.press('ArrowRight');
   await page.keyboard.press('ArrowLeft');
   await page.keyboard.press('a');
@@ -197,14 +196,14 @@ for (const size of SIZES) {
   await page.waitForTimeout(450);
   const dialog = page.getByRole('dialog');
   check('phone, English: tapping the parchment asks in English, for the English PDF', (await dialog.getByRole('heading', { name: 'Download the CV as a PDF?' }).isVisible()) && (await dialog.getByRole('link', { name: 'YES' }).getAttribute('href')) === '/cv/yeray-caturla-cv-en.pdf');
-  await page.screenshot({ path: '.screenshots/fase-8/titulo-cv-pregunta-390.png', animations: 'disabled' });
+  await page.screenshot({ path: `${OUT}/cv-question-390.png`, animations: 'disabled' });
   await dialog.getByRole('button', { name: 'NO' }).tap();
   await page.waitForTimeout(450);
   check('phone: NO closes it and the title is still there', (await dialog.count()) === 0 && (await onTitle(page)) && !(await inIntro(page)));
   await page.getByRole('button', { name: 'SETTINGS' }).tap();
   await page.waitForTimeout(450);
   check('phone: tapping the gear opens SETTINGS and does not start', (await dialog.getByRole('heading', { name: 'Settings' }).isVisible()) && (await onTitle(page)));
-  await page.screenshot({ path: '.screenshots/fase-8/titulo-ajustes-390.png', animations: 'disabled' });
+  await page.screenshot({ path: `${OUT}/settings-390.png`, animations: 'disabled' });
   await dialog.getByRole('button', { name: /^ESC EXIT/ }).tap();
   await page.waitForTimeout(450);
   check('phone: ESC EXIT closes it, still on the title', (await dialog.count()) === 0 && (await onTitle(page)) && !(await inIntro(page)));
@@ -235,7 +234,7 @@ for (const size of SIZES) {
   const links = await page.locator('noscript a, .noscript a').evaluateAll((as) => as.map((a) => a.getAttribute('href')));
   const text = await page.locator('body').innerText();
   check('without JavaScript: a note with both CV PDFs', text.includes('necesita JavaScript') && text.includes('needs JavaScript') && links.join(' ') === '/cv/yeray-caturla-cv-es.pdf /cv/yeray-caturla-cv-en.pdf', links.join(' '));
-  await page.screenshot({ path: '.screenshots/fase-8/sin-javascript-390.png' });
+  await page.screenshot({ path: `${OUT}/no-javascript-390.png` });
   await context.close();
 }
 

@@ -1,4 +1,4 @@
-// Frame-rate and response check (performance budget, docs/plan-de-fases.md): counts real screen
+// Frame-rate and response check (performance budget, CLAUDE.md): counts real screen
 // refreshes while the ring turns non-stop, at normal CPU speed and with the CPU slowed down 4× (a
 // modest phone), and times how long the page takes to answer keys and clicks (the INP idea).
 // Budget: 60 fps normally, ≥ 30 fps steady at 4×, answers in < 200 ms.

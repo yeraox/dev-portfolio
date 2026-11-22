@@ -1,6 +1,6 @@
 // Project media for the PROJECTS window: Yeray's screenshots, the Capyroad video and this
 // portfolio's own picture (made by `npm run share`), made light.
-// These are NOT pixel art: they are shown crisp, as "a screen inside the screen" (DESIGN.md §10).
+// These are NOT pixel art: they are shown crisp, as "a screen inside the screen" (DESIGN.md, "Content windows").
 //
 //   node scripts/media.mjs   → src/assets/projects/*.webp|mp4|webm + media.gen.ts
 //   Exits with an error when a video is over the 2 MB budget.

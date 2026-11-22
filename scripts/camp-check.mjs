@@ -1,7 +1,7 @@
 // Walkthrough of the camp, the way a visitor uses it: keyboard only on a laptop and touch only on a
 // phone; every ring slot's name always visible and on top of nothing (3 sizes × 2 languages); the
 // HUD's experience, the idle actions, the CV slot's question and SETTINGS. Prints ✓/✗ per
-// check and saves screenshots in .screenshots/ (git-ignored).
+// check and saves screenshots in .screenshots/camp/ (git-ignored).
 // Usage: npm run check:camp -- [url]   (default http://localhost:5173/)
 import { mkdirSync } from 'node:fs';
 import { SIZES, chromium, createChecks, newPage, siteUrl } from './lib/browser.mjs';
@@ -10,7 +10,8 @@ import { SIZES, chromium, createChecks, newPage, siteUrl } from './lib/browser.m
 const url = `${siteUrl()}#camp`;
 const { check, done } = createChecks();
 
-mkdirSync('.screenshots', { recursive: true });
+const OUT = '.screenshots/camp';
+mkdirSync(OUT, { recursive: true });
 const browser = await chromium.launch();
 const activeLabel = (page) => page.locator('[role="menuitem"][data-active="true"]').getAttribute('aria-label');
 const focusIsActiveItem = (page) =>
@@ -25,7 +26,7 @@ const focusIsActiveItem = (page) =>
   await page.goto(url, { waitUntil: 'networkidle' });
 
   const count = await page.getByRole('menuitem').count();
-  check('the ring shows its 7 slots (ABOUT ME included since phase 8, block U)', count === 7, `${count}`);
+  check('the ring shows its 7 slots', count === 7, `${count}`);
   check('the menu has an accessible name', (await page.getByRole('menu').getAttribute('aria-label')) !== null);
 
   const first = await activeLabel(page);
@@ -39,7 +40,7 @@ const focusIsActiveItem = (page) =>
   await page.keyboard.press('ArrowLeft');
   await page.waitForTimeout(250);
   check('← turns back', (await activeLabel(page)) === first);
-  await page.screenshot({ path: '.screenshots/camp-check-ring-1440.png' });
+  await page.screenshot({ path: `${OUT}/ring-keyboard-1440.png` });
 
   await page.keyboard.press('Enter');
   await page.waitForTimeout(400);
@@ -47,7 +48,7 @@ const focusIsActiveItem = (page) =>
   check('Enter opens the section window', await dialog.isVisible());
   const title = await dialog.getByRole('heading', { level: 2 }).textContent();
   check('the window is named after its section', first?.endsWith(title ?? '—') ?? false, title ?? '');
-  await page.screenshot({ path: '.screenshots/camp-check-window-1440.png' });
+  await page.screenshot({ path: `${OUT}/window-1440.png` });
 
   // The rest of the page is inert while the window is open: Tab goes through the window and, like
   // any native modal, may reach the browser's own toolbar (focus on <body>), never the page behind.
@@ -102,7 +103,7 @@ const focusIsActiveItem = (page) =>
   await page.waitForTimeout(450);
   const dialog = page.getByRole('dialog');
   check('tapping a section opens it', await dialog.isVisible(), tapped ?? '');
-  await page.screenshot({ path: '.screenshots/camp-check-window-390.png' });
+  await page.screenshot({ path: `${OUT}/window-390.png` });
   await dialog.getByRole('button').tap();
   await page.waitForTimeout(450);
   check('the close button closes it', (await dialog.count()) === 0);
@@ -123,8 +124,6 @@ const CHARACTERS = [
 ];
 const overlap = (a, b) => a.x < b.x + b.width - 0.5 && b.x < a.x + a.width - 0.5 && a.y < b.y + b.height - 0.5 && b.y < a.y + a.height - 0.5;
 const inside = (a, b) => a.x >= b.x - 0.5 && a.y >= b.y - 0.5 && a.x + a.width <= b.x + b.width + 0.5 && a.y + a.height <= b.y + b.height + 0.5;
-mkdirSync('.screenshots/fase-8', { recursive: true });
-mkdirSync('.screenshots/fase-9', { recursive: true });
 
 for (const size of SIZES) {
   for (const locale of ['es', 'en']) {
@@ -179,7 +178,7 @@ for (const size of SIZES) {
       });
       if (draftRing) console.log(`– ${where}: ${slots.length} slots (a draft?): layout not checked — run against the build (npx vite preview)${clashes.length ? `; touching: ${clashes.join(', ')}` : ''}`);
       else check(`${where}: no name covers another name, an icon, Yeray, Null or the HUD, and all stay in the scene`, clashes.length === 0, clashes.join(', '));
-      if (stop === 0) await page.screenshot({ path: `.screenshots/fase-8/rueda-${locale}-${size.width}.png` });
+      if (stop === 0) await page.screenshot({ path: `${OUT}/ring-${locale}-${size.width}.png` });
     }
     await context.close();
   }
@@ -213,11 +212,11 @@ for (const size of SIZES) {
   await page.reload({ waitUntil: 'networkidle' });
   await page.getByRole('menu').waitFor();
   check('the experience is remembered after reloading', (await xp()) === '40');
-  await page.screenshot({ path: '.screenshots/fase-8/hud-xp-1440.png' });
+  await page.screenshot({ path: `${OUT}/hud-xp-1440.png` });
   await context.close();
 }
 
-// ---------- idle actions (block K) ----------
+// ---------- idle actions ----------
 // Every 3–6 s one of the two plays an idle action, whatever the visitor is doing; in rounds where
 // each of the six plays once and the two take turns.
 {
@@ -312,7 +311,7 @@ for (const size of SIZES) {
   await page.keyboard.press('Enter');
   await page.waitForTimeout(450);
   check('Enter on the CV asks first: "¿Descargar el CV en PDF?"', (await dialog.getByRole('heading', { name: '¿Descargar el CV en PDF?' }).isVisible()) && (await dialog.getByText('PDF · español · 3,1 MB').isVisible()));
-  await page.screenshot({ path: '.screenshots/fase-8/cv-pregunta-1440.png' });
+  await page.screenshot({ path: `${OUT}/cv-question-1440.png` });
   const described = await page.evaluate(() => {
     const id = document.querySelector('dialog')?.getAttribute('aria-describedby');
     return id ? document.getElementById(id)?.textContent : null;
@@ -355,7 +354,7 @@ for (const size of SIZES) {
   check('a red note says what the animations do (red-2), and it is the row\'s description', (await note.innerText()).startsWith('Con animaciones:') && noteColour === 'rgb(255, 107, 91)' && (await dialog.getByRole('group', { name: 'Animaciones' }).getAttribute('aria-describedby')) === (await note.getAttribute('id')), noteColour);
   check('SETTINGS in the camp offers VOLVER AL TÍTULO', await dialog.getByRole('button', { name: 'VOLVER AL TÍTULO' }).isVisible());
   check('…and says what the site keeps: no cookies, no analytics', (await dialog.getByText(/no usa cookies ni analítica/).count()) === 1);
-  await page.screenshot({ path: '.screenshots/fase-9/ajustes-1440.png' });
+  await page.screenshot({ path: `${OUT}/settings-1440.png` });
   await choice('English').click();
   await page.waitForTimeout(300);
   check('English: the page, the window and the ring switch at once', (await page.evaluate(() => document.documentElement.lang)) === 'en' && (await dialog.getByRole('heading', { name: 'Settings' }).isVisible()) && (await slot('PROJECTS').count()) === 1 && (await pressed('English')));
@@ -432,7 +431,7 @@ for (const size of SIZES) {
   await page.waitForTimeout(450);
   const dialog = page.getByRole('dialog');
   check('phone: tapping the CV asks first', await dialog.getByRole('heading', { name: 'Download the CV as a PDF?' }).isVisible());
-  await page.screenshot({ path: '.screenshots/fase-8/cv-pregunta-390.png' });
+  await page.screenshot({ path: `${OUT}/cv-question-390.png` });
   await dialog.getByRole('button', { name: 'NO' }).tap();
   await page.waitForTimeout(450);
   check('phone: tapping NO closes it', (await dialog.count()) === 0);

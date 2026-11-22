@@ -2,7 +2,7 @@
 // grid (one pixel per pseudo-pixel the image was drawn with, original colours, JPEG noise and
 // background removed) and saved as a tiny transparent PNG, shown later scaled by a whole number
 // with `image-rendering: pixelated` — it looks exactly like the reference, at a few KB.
-// Walk cycles come from his walk sheets through the "sello" (walk.mjs, docs/animacion-caminar.md).
+// Walk cycles come from his walk sheets through the "sello" (walk.mjs, docs/sprites.md).
 //
 // Yeray's skin is re-toned lighter (skin.mjs): only the skin pixels of his images. His HUD
 // portrait is his in-game face itself (the front drawing, enlarged by the HUD), so it has no file.
@@ -163,7 +163,7 @@ for (const image of IMAGES) {
   });
 }
 
-// Walk images + quality checks (docs/animacion-caminar.md §4).
+// Walk images + quality checks (docs/sprites.md, "Walk cycles").
 for (const walk of WALKS) {
   const built = buildWalk(walk);
   const { ground, checks } = built;

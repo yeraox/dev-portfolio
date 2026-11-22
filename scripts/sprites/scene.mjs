@@ -5,7 +5,7 @@
 // Why not rebuild them on their native grid like the characters? The camp image has a clear 5.74 px
 // grid, but it also draws details at half a pixel (outlines, highlights, the tripod's legs, the
 // tent's rope). Snapped to its grid (239×133) those details turned into blobs and dotted lines;
-// the original keeps them (docs/informes/fase-3-campamento.md).
+// the original keeps them (docs/sprites.md, "Scenes").
 //
 //   node scripts/sprites/scene.mjs   → src/assets/scenes/*.webp + scenes.gen.ts
 import { execFileSync } from 'node:child_process';

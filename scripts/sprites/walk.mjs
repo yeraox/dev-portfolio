@@ -1,5 +1,5 @@
 // Walk cycles from a sheet of frames, with the "sello" (stamp) approved on 2026-11-11
-// (docs/animacion-caminar.md). Nothing is painted: every pixel comes from the reference sheet.
+// (docs/sprites.md). Nothing is painted: every pixel comes from the reference sheet.
 //   1. Every frame of the sheet is rebuilt on its native pixel grid (like cutout.mjs).
 //   2. All frames share ONE fixed canvas, aligned by the head (and by the ground in side views),
 //      symmetric around the head so mirroring or flipping never moves it.
@@ -154,7 +154,7 @@ export function buildWalk(walk) {
     const grid = removeIslands(body);
     images.push({ name, grid });
 
-    // Quality checks (docs/animacion-caminar.md §4).
+    // Quality checks (docs/sprites.md, "Walk cycles").
     let headDiff = 0;
     for (let cy = 0; cy < height; cy++) for (let cx = 0; cx < width; cx++) {
       if (inStamp(cx, cy, 0) && !same(refCanvas[cy][cx], grid[cy + s.bob]?.[cx] ?? null)) headDiff++;

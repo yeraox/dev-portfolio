@@ -7,7 +7,7 @@ import { mkdirSync } from 'node:fs';
 import { DESKTOP, PHONE, SIZES, chromium, createChecks, newPage, siteUrl } from './lib/browser.mjs';
 
 const url = siteUrl();
-const OUT = '.screenshots/fase-6';
+const OUT = '.screenshots/intro';
 const { check, done } = createChecks();
 
 mkdirSync(OUT, { recursive: true });
@@ -39,7 +39,7 @@ for (const size of SIZES) {
   const stageDuring = await box();
   await page.getByRole('menu').waitFor({ timeout: 8000 });
   await page.waitForTimeout(400);
-  await page.screenshot({ path: `${OUT}/campamento-tras-intro-${size.width}.png` });
+  await page.screenshot({ path: `${OUT}/camp-after-intro-${size.width}.png` });
   const stageAfter = await box();
   check(
     `nothing moves when the banner and HUD appear (${size.width})`,
