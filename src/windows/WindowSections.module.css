@@ -96,12 +96,10 @@
   scrollbar-width: thin;
   /* sections lay themselves out by the window's width, not the screen's */
   container-type: inline-size;
-}
-
-/* The text starts focused when a window opens from the keyboard: its focus ring is drawn inside,
-   since the window's body would clip one drawn around it. */
-.panel:focus-visible {
-  outline-offset: -2px;
+  /* Anything absolutely positioned inside (the hidden "(opens in a new tab)" notes for screen
+     readers) is placed against the text, so it scrolls and is clipped with it. Without this it
+     escaped to the window's body and stretched it: a second scrollbar that left the window blank. */
+  position: relative;
 }
 
 /* "More below": a gold pixel arrow in the bottom-right corner, blinking in hard steps. */
