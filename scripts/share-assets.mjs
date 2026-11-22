@@ -37,7 +37,7 @@ const camp = await browser.newPage({ viewport: { width: 1440, height: 900 }, dev
 await camp.goto(`${url}#camp`, { waitUntil: 'networkidle' });
 await camp.evaluate(() => document.fonts.ready);
 const slots = await camp.getByRole('menuitem').count();
-if (slots !== 6) throw new Error(`The ring has ${slots} slots: run this against the build (npx vite preview), not the dev server.`);
+if (slots !== 7) throw new Error(`The ring has ${slots} slots, not 7: run this against the build (npx vite preview).`);
 // The stage only (scene, ring, banner and HUD: 1280×720 at 1440), without the page around it.
 await camp.locator('main canvas').first().locator('..').screenshot({ path: 'media-src/projects/portfolio.png', animations: 'disabled' });
 await browser.close();

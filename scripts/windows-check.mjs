@@ -8,7 +8,7 @@ import { DESKTOP, PHONE, SIZES, chromium, createChecks, newPage, siteUrl } from 
 
 const url = siteUrl();
 const OUT = '.screenshots/fase-4';
-const SECTIONS = ['projects', 'stack', 'profile', 'contact'];
+const SECTIONS = ['projects', 'stack', 'profile', 'about', 'contact'];
 const PHONE_NUMBER = /\+?\d[\d .-]{8,}\d/; // anything that looks like a phone number
 const { check, done } = createChecks();
 
@@ -22,7 +22,7 @@ const open = async (lang, size, hash = '', extra = {}) => {
   return opened;
 };
 
-// ---------- Screenshots: 4 windows × 2 languages × 3 sizes ----------
+// ---------- Screenshots: 5 windows × 2 languages × 3 sizes ----------
 let screenshotErrors = 0;
 const wrapped = []; // windows whose tabs needed a second row
 const clipped = []; // windows still clipped once open (their 1u ink outline hidden)
@@ -56,7 +56,7 @@ for (const lang of ['es', 'en']) {
     }
   }
 }
-check('24 windows rendered without console errors', screenshotErrors === 0, `${screenshotErrors} errors`);
+check('30 windows rendered without console errors', screenshotErrors === 0, `${screenshotErrors} errors`);
 check('the tabs always fit on one row', wrapped.length === 0, wrapped.join(', '));
 check('open windows are not clipped: their ink outline shows', clipped.length === 0, clipped.join(', '));
 check('only the text scrolls: no window body has a scrollbar of its own (it left the window blank)', bodyScrolls.length === 0, bodyScrolls.join(', '));
@@ -81,8 +81,8 @@ check(`screenshots saved in ${OUT}/`, true);
 
 // ---------- Titles in both languages ----------
 for (const [lang, expected] of [
-  ['es', ['Alquimia — Proyectos', 'Equipo — Stack técnico', 'Estadísticas — Perfil', 'Configuración — Contacto']],
-  ['en', ['Alchemy — Projects', 'Equipment — Tech Stack', 'Stats — Profile', 'Config — Contact']],
+  ['es', ['Alquimia — Proyectos', 'Equipo — Stack técnico', 'Estadísticas — Perfil', 'Diario — Sobre mí', 'Configuración — Contacto']],
+  ['en', ['Alchemy — Projects', 'Equipment — Tech Stack', 'Stats — Profile', 'Journal — About Me', 'Config — Contact']],
 ]) {
   const titles = [];
   for (const section of SECTIONS) {
@@ -177,6 +177,22 @@ for (const [lang, expected] of [
   await page.waitForTimeout(800);
   const state = await page.locator('dialog video').evaluate((v) => ({ autoplay: v.autoplay, controls: v.controls, paused: v.paused }));
   check('with reduced motion the video waits, with controls', !state.autoplay && state.controls && state.paused, JSON.stringify(state));
+  await context.close();
+}
+
+// ---------- ABOUT ME: as a developer, and the personal side with its hobbies ----------
+{
+  const { context, page, errors } = await open('es', DESKTOP, '#about');
+  await page.waitForTimeout(800);
+  const tabs = await page.getByRole('tab').allInnerTexts();
+  check('ABOUT ME has two sections: Desarrollador and Personal', tabs.join() === 'Desarrollador,Personal', tabs.join(' · '));
+  check('…the developer one, five paragraphs', (await page.getByRole('tabpanel').locator('p:visible').count()) === 5);
+  await page.keyboard.press('ArrowRight');
+  const hobbies = await page.getByRole('tabpanel').locator('li:visible').evaluateAll((items) =>
+    items.map((item) => `${item.querySelector('h3')?.textContent}:${item.querySelector('[aria-hidden="true"]') ? 'icon' : 'no icon'}`),
+  );
+  check('the personal one: six hobbies, each with its icon', hobbies.join() === 'Anime:icon,Videojuegos:icon,Gym:icon,Basket:icon,Cocina:icon,Null:icon', hobbies.join(' · '));
+  check('no console errors in ABOUT ME', errors.length === 0, errors.join(' | '));
   await context.close();
 }
 

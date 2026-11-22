@@ -25,7 +25,7 @@ const focusIsActiveItem = (page) =>
   await page.goto(url, { waitUntil: 'networkidle' });
 
   const count = await page.getByRole('menuitem').count();
-  check('the ring shows 6 slots (7 while developing: ABOUT ME is a draft)', count === 6 || count === 7, `${count}`);
+  check('the ring shows its 7 slots (ABOUT ME included since phase 8, block U)', count === 7, `${count}`);
   check('the menu has an accessible name', (await page.getByRole('menu').getAttribute('aria-label')) !== null);
 
   const first = await activeLabel(page);
@@ -162,9 +162,9 @@ for (const size of SIZES) {
       const cameraX = tall ? 140 : 0;
       const people = CHARACTERS.map((c) => ({ who: c.who, x: stage.x + (c.x0 - cameraX) * scale, y: stage.y + c.y0 * scale, width: (c.x1 - c.x0) * scale, height: (c.y1 - c.y0) * scale }));
       const names = slots.map((slot) => slot.name);
-      // The dev server adds the ABOUT ME draft (7 slots); its place in the ring is still to be
-      // decided, so the layout is checked on the live ring of 6: run this against `npx vite preview`.
-      const draftRing = slots.length !== 6;
+      // Drafts (none today) would add slots while developing: the layout is checked on the live
+      // ring of 7. Run this against `npx vite preview` to be sure.
+      const draftRing = slots.length !== 7;
       if (stop === 0) check(`${where}: every slot shows its name`, names.every((name) => name && name.width > 0) && slots.every((slot) => slot.label.startsWith(slot.text)), slots.map((slot) => slot.text).join(' · '));
       const clashes = [];
       slots.forEach((a, i) => {
@@ -177,7 +177,7 @@ for (const size of SIZES) {
         for (const panel of hud) if (overlap(a.name, panel) || overlap(a.icon, panel)) clashes.push(`${a.text}/HUD`);
         if (!inside(a.name, stage) || !inside(a.icon, stage)) clashes.push(`${a.text} outside the scene`);
       });
-      if (draftRing) console.log(`– ${where}: ${slots.length} slots (ABOUT ME draft): layout not checked — run against the build (npx vite preview)${clashes.length ? `; touching: ${clashes.join(', ')}` : ''}`);
+      if (draftRing) console.log(`– ${where}: ${slots.length} slots (a draft?): layout not checked — run against the build (npx vite preview)${clashes.length ? `; touching: ${clashes.join(', ')}` : ''}`);
       else check(`${where}: no name covers another name, an icon, Yeray, Null or the HUD, and all stay in the scene`, clashes.length === 0, clashes.join(', '));
       if (stop === 0) await page.screenshot({ path: `.screenshots/fase-8/rueda-${locale}-${size.width}.png` });
     }
@@ -195,24 +195,24 @@ for (const size of SIZES) {
   const bars = await page.locator('figure').evaluateAll((figures) => figures.map((f) => f.textContent));
   check('HUD: each portrait has its name, HP and XP', bars.length === 2 && bars.every((text) => text.includes('HP') && text.includes('XP')), bars.join(' | '));
   check('a first visit starts with no experience', (await xp()) === '0');
-  check('a screen reader hears the experience in words', (await page.locator('[role="meter"]').getAttribute('aria-valuetext')) === 'Experiencia: 0 de 4 secciones exploradas');
-  for (const [step, expected] of [['ArrowRight', '25'], ['ArrowRight', '50']]) {
+  check('a screen reader hears the experience in words', (await page.locator('[role="meter"]').getAttribute('aria-valuetext')) === 'Experiencia: 0 de 5 secciones exploradas');
+  for (const [step, expected] of [['ArrowRight', '20'], ['ArrowRight', '40']]) {
     await page.keyboard.press(step);
     await page.waitForTimeout(250);
     await page.keyboard.press('Enter');
     await page.waitForTimeout(450);
     await page.keyboard.press('Escape');
     await page.waitForTimeout(450);
-    check(`opening a new section fills a quarter more (${expected} %)`, (await xp()) === expected, await xp());
+    check(`opening a new section fills a fifth more (${expected} %)`, (await xp()) === expected, await xp());
   }
   await page.keyboard.press('Enter'); // the same section again
   await page.waitForTimeout(450);
   await page.keyboard.press('Escape');
   await page.waitForTimeout(450);
-  check('the same section twice counts once', (await xp()) === '50');
+  check('the same section twice counts once', (await xp()) === '40');
   await page.reload({ waitUntil: 'networkidle' });
   await page.getByRole('menu').waitFor();
-  check('the experience is remembered after reloading', (await xp()) === '50');
+  check('the experience is remembered after reloading', (await xp()) === '40');
   await page.screenshot({ path: '.screenshots/fase-8/hud-xp-1440.png' });
   await context.close();
 }
