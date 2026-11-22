@@ -1,0 +1,41 @@
+/* ABOUT ME: short paragraphs one under the other, and the hobbies as a list, each with its icon on
+   the left and its name and text on the right. */
+.prose {
+  display: grid;
+  gap: calc(4 * var(--u));
+}
+
+.hobbies {
+  display: grid;
+  gap: calc(5 * var(--u));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Two columns from the window's width (container query), as the projects do. */
+@container (min-width: 820px) {
+  .hobbies {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: calc(5 * var(--u)) calc(8 * var(--u));
+  }
+}
+
+.hobby {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: calc(3 * var(--u));
+  align-items: start;
+}
+
+/* The hobby's name: a game label in gold, like the projects' subheadings. */
+.name {
+  margin: 0 0 var(--u);
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--text-size);
+  line-height: 1.2;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gold-3);
+}

@@ -72,6 +72,19 @@ export type TechId =
   | 'mongodb'
   | 'terraform';
 
+/** ABOUT ME's hobbies: each one has its icon (src/assets/about, made by `npm run hobby-icons`),
+ *  and a missing one is a compile error there. `dog` is Null. */
+export type HobbyId = 'anime' | 'games' | 'gym' | 'basket' | 'cooking' | 'dog';
+
+export type Hobby = { id: HobbyId; name: string; text: string };
+
+/** ABOUT ME: two sections. As a developer, a few short paragraphs (what the CV doesn't say); the
+ *  personal side, a line and the hobbies, each with its icon. */
+export type About = {
+  developer: { tab: string; paragraphs: string[] };
+  personal: { tab: string; intro: string; hobbies: Hobby[] };
+};
+
 /** A technology: which icon (`id`) and how it is written (`name`). */
 export type Tech = { id: TechId; name: string };
 
@@ -125,7 +138,7 @@ export type Content = {
   // The language switch: the flags in SETTINGS.
   language: { legend: string; es: string; en: string };
   settings: Settings;
-  window: { close: string; draft: string; newTab: string };
+  window: { close: string; newTab: string };
   // Help line at the bottom of a window: with a mouse/keyboard, and on touch screens.
   help: {
     back: string;
@@ -154,4 +167,5 @@ export type Content = {
   };
   stack: { tiers: Tier[] };
   contact: { rows: Row[] };
+  about: About;
 };

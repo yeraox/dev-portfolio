@@ -177,7 +177,7 @@ export function CampScene({ intro, leaving, onIntroEnd, onBackToTitle }: CampSce
   // Help line: windows with sections explain the arrows and the wheel (mouse) or the swipe (touch).
   const sectionHelp = shownSection === 'projects' ? t.help.projects : t.help.sections;
   const help =
-    shownSection === 'contact' || shownSection === 'about' ? (
+    shownSection === 'contact' ? (
       <HelpBar>{t.help.back}</HelpBar>
     ) : (
       <HelpBar>

@@ -80,7 +80,6 @@ export const EN: Content = {
   },
   window: {
     close: 'Close window',
-    draft: 'Section in preparation.',
     newTab: '(opens in a new tab)',
   },
   help: {
@@ -246,7 +245,7 @@ export const EN: Content = {
         notes: [{ label: 'Accessibility', value: 'Works with keyboard, mouse or touch, with a screen reader and without animations.' }],
         media: {
           kind: 'screenshots',
-          shots: [{ id: 'portfolio', alt: 'The camp: Yeray and Null by the campfire, with the ring menu and its six icons around Yeray.' }],
+          shots: [{ id: 'portfolio', alt: 'The camp: Yeray and Null by the campfire, with the ring menu and its seven icons around Yeray.' }],
         },
       },
     ],
@@ -287,5 +286,81 @@ export const EN: Content = {
       { label: 'Availability', value: 'Available · on-site, hybrid or remote' },
       { label: 'CV as PDF', value: 'Download', href: '/cv/yeray-caturla-cv-en.pdf' },
     ],
+  },
+  about: {
+    developer: {
+      tab: 'Developer',
+      paragraphs: [
+        "I've always been surrounded by technology: my uncle, my cousin and my closest friends all work " +
+          'in it, so in a way I felt this was meant to be. I got my first computer in secondary school ' +
+          "and that's where it all started. I came in through vocational training: from systems (SMR) to " +
+          'code (DAW), and now the cloud. That path gave me something I value a lot: understanding ' +
+          'software from the machine to the deployed service.',
+        "I love the challenges and the technical side of the backend, but I knew one layer wasn't " +
+          "enough to stand out: I wanted to cover the whole software lifecycle. That's why I'm now " +
+          'specialising in cloud and DevOps.',
+        "I'm persistent and I work hard. I also spend my free time researching development and AI, " +
+          'and right now what motivates me most is building with AI: in fact, I built this portfolio ' +
+          'with Claude Code.',
+        "In a team I adapt: I can lead and I can follow. There's usually a good atmosphere wherever I " +
+          "work, and if there isn't, I create it: I'm good at calming tense situations and mediating " +
+          'conflicts. On the court I was the point guard, the one who runs the play, and at work I do ' +
+          'something similar.',
+        "I'm looking for a junior role in backend, full stack, frontend or DevOps. Over the next year I " +
+          'want to specialise in DevOps.',
+      ],
+    },
+    personal: {
+      tab: 'Personal',
+      intro: "Away from code I'm competitive and very consistent. This is what drives me:",
+      hobbies: [
+        {
+          id: 'anime',
+          name: 'Anime',
+          text:
+            "I love sports anime: my favourites are Haikyuu!! and Hajime no Ippo. Their characters' " +
+            'obsession with getting what they want is what defines me. And My Hero Academia, which has ' +
+            'been with me since I started watching anime: a masterpiece, for me.',
+        },
+        {
+          id: 'games',
+          name: 'Video games',
+          text:
+            "It all started with Secret of Evermore, with my dad; that's where this portfolio comes from. " +
+            "I'm competitive and play a lot online, but I also love indies like Hades or Sea of Stars, " +
+            'and the Persona series.',
+        },
+        {
+          id: 'gym',
+          name: 'Gym',
+          text:
+            "My temple, my place of calm. I've been training since 2023, four days a week, and I love " +
+            "feeling fit. Look closely and you'll find my dumbbells at the camp.",
+        },
+        {
+          id: 'basket',
+          name: 'Basketball',
+          text:
+            'I played from 6 to 18, as starting point guard and captain, and moved up to help the older ' +
+            "teams: I was the one running the game. Injuries made me stop, and that's how I found my " +
+            'passion for the gym.',
+        },
+        {
+          id: 'cooking',
+          name: 'Cooking',
+          text:
+            "I cook a bit of everything and I'm self-taught. My signature dish: tenderloin with Roquefort " +
+            "sauce. And yes, the paella pan at the camp isn't there by chance.",
+        },
+        {
+          id: 'dog',
+          name: 'Null',
+          text:
+            "He isn't my real dog: like the boy in Secret of Evermore, I wanted a dog by my side too. He's " +
+            "a Brussels Griffon, a breed I love, and his colours are a nod to my partner's dog. He's " +
+            'called Null after the null value in programming.',
+        },
+      ],
+    },
   },
 };

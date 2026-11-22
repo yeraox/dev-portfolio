@@ -52,6 +52,12 @@ describe.each(LOCALES)('%s', (_locale, content) => {
     expect(content.projects.list.some((project) => project.name.includes('Bosa'))).toBe(false);
   });
 
+  it('ABOUT ME: five short paragraphs as a developer and six hobbies, each once', () => {
+    expect(content.about.developer.paragraphs).toHaveLength(5);
+    expect(content.about.personal.hobbies.map((hobby) => hobby.id)).toEqual(['anime', 'games', 'gym', 'basket', 'cooking', 'dog']);
+    for (const hobby of content.about.personal.hobbies) expect(hobby.text.length, hobby.id).toBeGreaterThan(60);
+  });
+
   it('every project says why it exists', () => {
     expect(content.projects.list.map((project) => project.id)).toEqual(['capyroad', 'pakitos', 'portfolio']);
     for (const project of content.projects.list) expect(project.why.length, project.id).toBeGreaterThan(80);

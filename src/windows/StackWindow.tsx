@@ -1,8 +1,8 @@
-import { STACK_ATLAS } from '../assets/stack/stack-icons.gen';
+import { STACK_ATLAS, STACK_ICONS } from '../assets/stack/stack-icons.gen';
 import { useLocale } from '../content/useLocale';
 import { useStageLayout } from '../engine/useScreen';
 import { devicePixelZoom } from '../game/stage';
-import { TechIcon } from './TechIcon';
+import { AtlasIcon } from './AtlasIcon';
 import { WindowSections } from './WindowSections';
 import sheet from './sheet.module.css';
 import styles from './StackWindow.module.css';
@@ -30,7 +30,7 @@ export default function StackWindow() {
                   <ul className={styles.techs}>
                     {group.items.map((tech) => (
                       <li key={tech.id} className={styles.tech}>
-                        <TechIcon id={tech.id} zoom={zoom} />
+                        <AtlasIcon atlas={STACK_ATLAS} index={STACK_ICONS[tech.id]} zoom={zoom} />
                         {tech.name}
                       </li>
                     ))}

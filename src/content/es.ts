@@ -80,7 +80,6 @@ export const ES: Content = {
   },
   window: {
     close: 'Cerrar ventana',
-    draft: 'Sección en preparación.',
     newTab: '(se abre en otra pestaña)',
   },
   help: {
@@ -249,7 +248,7 @@ export const ES: Content = {
         ],
         media: {
           kind: 'screenshots',
-          shots: [{ id: 'portfolio', alt: 'El campamento: Yeray y Null junto a la hoguera, con el menú en rueda y sus seis iconos alrededor de Yeray.' }],
+          shots: [{ id: 'portfolio', alt: 'El campamento: Yeray y Null junto a la hoguera, con el menú en rueda y sus siete iconos alrededor de Yeray.' }],
         },
       },
     ],
@@ -290,5 +289,80 @@ export const ES: Content = {
       { label: 'Disponibilidad', value: 'Disponible · presencial, híbrido o remoto' },
       { label: 'CV en PDF', value: 'Descargar', href: '/cv/yeray-caturla-cv-es.pdf' },
     ],
+  },
+  about: {
+    developer: {
+      tab: 'Desarrollador',
+      paragraphs: [
+        'Siempre he estado rodeado de tecnología: mi tío, mi primo y mis amigos más cercanos se dedican a ' +
+          'esto, así que en cierto modo sentía que estaba destinado a ello. En la ESO tuve mi primer ' +
+          'ordenador y ahí empezó todo. Llegué por la FP: de los sistemas (SMR) al código (DAW), y ahora ' +
+          'la nube. Ese camino me ha dado algo que valoro mucho: entender el software desde la máquina ' +
+          'hasta que está desplegado.',
+        'Me gustan los retos y la parte técnica del backend, pero sabía que para destacar no bastaba con ' +
+          'una capa: quería cubrir el ciclo completo del software. Por eso ahora me estoy especializando ' +
+          'en la nube y DevOps.',
+        'Soy perseverante y trabajo duro. Mi tiempo libre también lo dedico a investigar sobre desarrollo ' +
+          'e inteligencia artificial, y ahora mismo lo que más me motiva es desarrollar con IA: este ' +
+          'portfolio, de hecho, lo he hecho con Claude Code.',
+        'En equipo me adapto: sé liderar y sé seguir. Donde trabajo suele haber buen rollo, y si no lo ' +
+          'hay, lo creo: se me da bien desescalar tensiones y mediar en los conflictos. En la cancha era ' +
+          'el base, el que organiza el juego, y en un equipo de trabajo hago algo parecido.',
+        'Busco un puesto junior en backend, full stack, frontend o DevOps. El próximo año quiero ' +
+          'especializarme en DevOps.',
+      ],
+    },
+    personal: {
+      tab: 'Personal',
+      intro: 'Fuera del código soy competitivo y muy constante. Esto es lo que me mueve:',
+      hobbies: [
+        {
+          id: 'anime',
+          name: 'Anime',
+          text:
+            'Me encantan los de deporte: mis favoritos son Haikyuu!! y Hajime no Ippo. Esa obsesión de sus ' +
+            'personajes por conseguir lo que quieren es lo que me define. Y Boku no Hero Academia, que me ' +
+            'ha acompañado desde que empecé a ver anime: para mí, una obra maestra.',
+        },
+        {
+          id: 'games',
+          name: 'Videojuegos',
+          text:
+            'Todo empezó con Secret of Evermore, junto a mi padre; de ahí sale este portfolio. Tengo ' +
+            'espíritu competitivo y juego mucho online, pero también me encantan los indies como Hades o ' +
+            'Sea of Stars, y la saga Persona.',
+        },
+        {
+          id: 'gym',
+          name: 'Gym',
+          text:
+            'Mi templo, mi lugar de tranquilidad. Entreno desde 2023, cuatro días a la semana, y me encanta ' +
+            'sentirme en forma. Si te fijas, en el campamento están mis pesas.',
+        },
+        {
+          id: 'basket',
+          name: 'Basket',
+          text:
+            'Jugué de los 6 a los 18 años, de base titular y capitán, y subía de categoría para ayudar a ' +
+            'los mayores: era el que orquestaba el juego. Las lesiones me obligaron a dejarlo, y así ' +
+            'encontré mi pasión en el gym.',
+        },
+        {
+          id: 'cooking',
+          name: 'Cocina',
+          text:
+            'Cocino de todo y he aprendido solo. Mi plato estrella: solomillo al roquefort. Y sí, la ' +
+            'paellera del campamento no está ahí por casualidad.',
+        },
+        {
+          id: 'dog',
+          name: 'Null',
+          text:
+            'No es mi perro de verdad: como el chico de Secret of Evermore, yo también quería ir con perro. ' +
+            'Es un grifón de Bruselas, una raza que me encanta, y sus colores son un guiño al perro de mi ' +
+            'pareja. Se llama Null por el valor null de la programación.',
+        },
+      ],
+    },
   },
 };

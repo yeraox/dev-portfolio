@@ -6,14 +6,14 @@ const RING_ALL = visibleSlots(true);
 const RING_LIVE = visibleSlots(false);
 
 describe('ring slots', () => {
-  it('shows the four sections, then the CV and SETTINGS; ABOUT ME only while developing', () => {
+  it('shows the five sections (ABOUT ME after PROFILE), then the CV and SETTINGS; no drafts now', () => {
     expect(RING_ALL).toHaveLength(SLOTS.length);
-    expect(RING_ALL).toContain('about');
-    expect(RING_LIVE).toEqual(['projects', 'stack', 'profile', 'contact', 'cv', 'settings']);
+    expect(RING_LIVE).toEqual(['projects', 'stack', 'profile', 'about', 'contact', 'cv', 'settings']);
+    expect(RING_LIVE).toEqual(RING_ALL); // what you see while developing is what goes live
   });
 
   it('tells the sections apart from the two actions', () => {
-    expect(RING_ALL.filter(isSection)).toEqual(['projects', 'stack', 'profile', 'contact', 'about']);
+    expect(RING_ALL.filter(isSection)).toEqual(['projects', 'stack', 'profile', 'about', 'contact']);
   });
 });
 
@@ -40,7 +40,7 @@ describe('gameReducer', () => {
   });
 
   it('opens a clicked slot and ignores slots that do not exist', () => {
-    expect(gameReducer(hub, { type: 'PICK', index: 3 })).toMatchObject({ scene: 'WINDOW', section: 'contact' });
+    expect(gameReducer(hub, { type: 'PICK', index: 3 })).toMatchObject({ scene: 'WINDOW', section: 'about' });
     expect(gameReducer(hub, { type: 'PICK', index: RING_LIVE.length })).toBe(hub);
     expect(gameReducer(hub, { type: 'PICK', index: -1 })).toBe(hub);
   });
@@ -85,10 +85,13 @@ describe('gameReducer', () => {
   });
 
   it('opens the window of a section link (/#contact) when the ring shows it', () => {
-    expect(initialState(RING_LIVE, 'contact')).toEqual({ scene: 'WINDOW', ring: RING_LIVE, active: 3, section: 'contact' });
-    expect(initialState(RING_LIVE, 'about')).toEqual(hub); // a draft: not in the live ring
+    expect(initialState(RING_LIVE, 'contact')).toEqual({ scene: 'WINDOW', ring: RING_LIVE, active: 4, section: 'contact' });
+    expect(initialState(RING_LIVE, 'about')).toEqual({ scene: 'WINDOW', ring: RING_LIVE, active: 3, section: 'about' });
+    const withoutAbout = RING_LIVE.filter((slot) => slot !== 'about'); // a ring without it (as a draft)
+    expect(initialState(withoutAbout, 'about')).toEqual(initialState(withoutAbout));
     expect(sectionFromHash('#profile', RING_LIVE)).toBe('profile');
-    expect(sectionFromHash('#about', RING_LIVE)).toBeNull();
+    expect(sectionFromHash('#about', RING_LIVE)).toBe('about');
+    expect(sectionFromHash('#about', withoutAbout)).toBeNull();
     expect(sectionFromHash('#cv', RING_LIVE)).toBeNull(); // the two actions have no link
     expect(sectionFromHash('#language', RING_LIVE)).toBeNull();
     expect(sectionFromHash('', RING_LIVE)).toBeNull();

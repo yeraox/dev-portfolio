@@ -11,7 +11,7 @@ const LOADERS: Record<SectionId, () => Promise<{ default: ComponentType }>> = {
   stack: () => import('./StackWindow'),
   profile: () => import('./ProfileWindow'),
   contact: () => import('./ContactWindow'),
-  about: () => import('./DraftWindow'),
+  about: () => import('./AboutWindow'),
 };
 
 export const WINDOWS: Record<SectionId, LazyExoticComponent<ComponentType>> = {
