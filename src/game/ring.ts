@@ -9,7 +9,11 @@ export const RING = {
   // (left) and the dumbbells (right) in view; down by Null the lower ones keep their distance.
   rxTop: 56, // half-width the ring would have at its very top…
   rxBottom: 156, // …and at its very bottom (in between it changes evenly with the height)
-  ry: 88, // vertical radius: the top and bottom slots sit this far above and below the centre
+  // It also reaches lower than it rises: with seven slots, the lower right one stops right under
+  // Null, so the lower half is a bit deeper and its names sit below his paws (the icons still end
+  // inside the scene, 360 px).
+  ryTop: 88, // how far above the centre the top slot sits (the active one, over Yeray's head)
+  ryBottom: 101, // how far below the centre the bottom of the ring reaches
   icon: 28, // the longest side of an icon (npm run icons), 1 icon pixel = 1 scene pixel
 } as const;
 // TS concept — `as const`: the values become read-only and keep their exact numbers.
@@ -29,7 +33,8 @@ export function slotOffset(index: number, turn: number, count: number): Point {
   const radians = (slotAngle(index, turn, count) * Math.PI) / 180;
   const height = Math.sin(radians); // -1 at the top … 1 at the bottom
   const halfWidth = RING.rxTop + ((RING.rxBottom - RING.rxTop) * (height + 1)) / 2;
-  return { x: halfWidth * Math.cos(radians), y: RING.ry * height };
+  const depth = height < 0 ? RING.ryTop : RING.ryBottom;
+  return { x: halfWidth * Math.cos(radians), y: depth * height };
 }
 
 /** Fewest slots to turn from `from` to `to`: positive = towards the next slot. */

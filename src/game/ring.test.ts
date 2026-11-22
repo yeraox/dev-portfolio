@@ -11,23 +11,25 @@ describe('ring geometry', () => {
   it('keeps the top and bottom slots above and below Yeray', () => {
     const top = slotOffset(0, 0, 4);
     expect(top.x).toBeCloseTo(0);
-    expect(top.y).toBeCloseTo(-RING.ry);
+    expect(top.y).toBeCloseTo(-RING.ryTop);
     const bottom = slotOffset(2, 0, 4);
     expect(bottom.x).toBeCloseTo(0);
-    expect(bottom.y).toBeCloseTo(RING.ry);
+    expect(bottom.y).toBeCloseTo(RING.ryBottom);
     const right = slotOffset(1, 0, 4);
     expect(right.x).toBeCloseTo((RING.rxTop + RING.rxBottom) / 2); // halfway down: the middle width
     expect(right.y).toBeCloseTo(0);
   });
 
-  it('brings the upper side slots closer to Yeray than the lower ones (6 slots)', () => {
-    const upperRight = slotOffset(1, 0, 6);
-    const lowerRight = slotOffset(2, 0, 6);
-    const upperLeft = slotOffset(5, 0, 6);
-    expect(upperRight.x).toBeCloseTo(70, 0); // the campfire (left) and the dumbbells (right) in view
-    expect(lowerRight.x).toBeCloseTo(113, 0); // the lower ones keep clear of Null
-    expect(upperLeft.x).toBeCloseTo(-upperRight.x); // and the ring stays symmetric
-    expect(upperRight.y).toBeCloseTo(-RING.ry / 2);
+  it('with its 7 slots: the upper sides close to Yeray, the lower right one below Null', () => {
+    const upperRight = slotOffset(1, 0, 7);
+    const right = slotOffset(2, 0, 7);
+    const lowerRight = slotOffset(3, 0, 7);
+    const upperLeft = slotOffset(6, 0, 7);
+    expect(upperRight.x).toBeCloseTo(58.5, 1); // beside his head: the campfire and dumbbells in view
+    expect(right.x).toBeCloseTo(114, 0); // the right one passes beside Null
+    expect(lowerRight.y).toBeCloseTo(91, 0); // 255 + 91 = 346: its name sits below Null's paws (312)
+    expect(255 + lowerRight.y + RING.icon / 2).toBeLessThanOrEqual(360); // and its icon ends in the scene
+    expect(upperLeft.x).toBeCloseTo(-upperRight.x); // the ring stays symmetric
   });
 
   it.each([4, 5, 6, 7])('keeps %i slots from overlapping', (count) => {
