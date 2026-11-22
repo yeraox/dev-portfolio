@@ -46,13 +46,15 @@ describe.each(LOCALES)('%s', (_locale, content) => {
     for (const href of hrefs) if (href) expect(href).toMatch(/^(https:\/\/|mailto:|\/cv\/)/);
   });
 
-  it('Bosa Digital (NDA) only shows its three CV sentences, with no media', () => {
-    const bosa = content.projects.list.find((project) => project.id === 'bosa');
-    expect(bosa?.did).toHaveLength(3);
-    expect(bosa?.did).toEqual(content.profile.quests[0].tasks);
-    expect(bosa?.media.kind).toBe('classified');
-    expect(bosa?.repo).toBeUndefined();
-    expect(bosa?.summary).toBeUndefined();
+  it('Bosa Digital (NDA) is only in the quest log, with its three CV sentences — not a project', () => {
+    expect(content.profile.quests[0].company).toContain('Bosa Digital');
+    expect(content.profile.quests[0].tasks).toHaveLength(3);
+    expect(content.projects.list.some((project) => project.name.includes('Bosa'))).toBe(false);
+  });
+
+  it('every project says why it exists', () => {
+    expect(content.projects.list.map((project) => project.id)).toEqual(['capyroad', 'pakitos', 'portfolio']);
+    for (const project of content.projects.list) expect(project.why.length, project.id).toBeGreaterThan(80);
   });
 
   it('STACK has no levels or percentages', () => {

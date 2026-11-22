@@ -119,7 +119,7 @@
   height: auto;
 }
 
-/* A small game-label badge: FEATURED, CLASSIFIED… */
+/* A small game-label badge: FEATURED, YOU ARE HERE… */
 .tag {
   display: inline-block;
   padding: var(--u) calc(2 * var(--u)) 0;

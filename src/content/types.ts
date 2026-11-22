@@ -27,16 +27,16 @@ export type Quest = {
 // of media, and `kind` tells TypeScript which fields exist.
 export type ProjectMedia =
   | { kind: 'video'; videoLabel: string; screenshot: { id: 'capyroad'; alt: string } }
-  | { kind: 'screenshots'; shots: { id: 'pakitosRuleta' | 'pakitosBlackjack' | 'portfolio'; alt: string }[] }
-  | { kind: 'classified' }; // NDA: no media at all
+  | { kind: 'screenshots'; shots: { id: 'pakitosRuleta' | 'pakitosBlackjack' | 'portfolio'; alt: string }[] };
 
 export type Project = {
-  id: 'capyroad' | 'pakitos' | 'bosa' | 'portfolio';
+  id: 'capyroad' | 'pakitos' | 'portfolio';
   name: string;
   tab?: string; // a shorter name for its tab, when `name` is long (the section's heading has it whole)
-  tag?: string; // a small badge: FEATURED, CLASSIFIED…
+  tag?: string; // a small badge: FEATURED, YOU ARE HERE…
   context: string;
-  summary?: string;
+  summary: string;
+  why: string; // why the project exists, in Yeray's words: shown right after the summary
   did: string[];
   stack: string[];
   notes: Row[]; // extra facts (persistence, confidentiality…)
@@ -149,7 +149,7 @@ export type Content = {
   };
   projects: {
     listLabel: string;
-    labels: { did: string; stack: string; repo: string; demo: string };
+    labels: { why: string; did: string; stack: string; repo: string; demo: string };
     list: Project[];
   };
   stack: { tiers: Tier[] };

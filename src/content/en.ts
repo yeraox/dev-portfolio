@@ -162,7 +162,7 @@ export const EN: Content = {
 
   projects: {
     listLabel: 'Projects',
-    labels: { did: 'What I did', stack: 'Stack', repo: 'Repository', demo: 'Demo' },
+    labels: { why: 'Why', did: 'What I did', stack: 'Stack', repo: 'Repository', demo: 'Demo' },
     list: [
       {
         id: 'capyroad',
@@ -174,6 +174,10 @@ export const EN: Content = {
           'lane. Each lane raises the prize multiplier (1.25x → 1.48x → 1.74x → …) and also the risk ' +
           'of being run over (shown in %). Every turn the player chooses Cross (keep risking) or Cash ' +
           'out (leave with the winnings).',
+        why:
+          "The capybara was our casino's mascot: an animal the whole team found funny. The backend moved " +
+          'fast and I felt the casino was short of games, so I used the time left before the deadline to ' +
+          "invent one of our own. It ended up being the jury's favourite at the presentation.",
         did: ['The whole cycle, from the backend to the React frontend.'],
         stack: ['Node.js', 'Express', 'PostgreSQL', 'React'],
         notes: [
@@ -192,8 +196,13 @@ export const EN: Content = {
       {
         id: 'pakitos',
         name: "Pakito's Gambling",
-        context: 'Final DAW project · team of 3 · Feb 2026 – Jun 2026',
+        context: 'Final DAW project · team of 4 · Feb 2026 – Jun 2026',
         summary: 'A web platform recreating casino games with play money (no real money).',
+        why:
+          'We wanted to get away from the usual: not an online shop or a social network, but something big, ' +
+          'with complex logic behind it and strong security. With play money, no real money, to stay clear ' +
+          'of legal issues. Being four of us, we could go big. I prefer the backend, so I took that part, ' +
+          'though I ended up working on the frontend too.',
         did: [
           'Platform backend: REST API and data model design.',
           'Backend for European and American roulette.',
@@ -214,17 +223,6 @@ export const EN: Content = {
         },
       },
       {
-        id: 'bosa',
-        name: 'Internal tools · Bosa Digital',
-        tab: 'Bosa Digital',
-        tag: 'CLASSIFIED',
-        context: 'Internship · Mar 2026 – Jun 2026',
-        did: BOSA_TASKS,
-        stack: ['Python', 'Django', 'External APIs', 'Git'],
-        notes: [{ label: 'Confidential', value: 'Non-disclosure agreement: no screenshots, figures, code or demo.' }],
-        media: { kind: 'classified' },
-      },
-      {
         id: 'portfolio',
         name: 'This portfolio',
         tab: 'Portfolio',
@@ -234,6 +232,10 @@ export const EN: Content = {
           'A portfolio shaped as a 16-bit RPG: a title screen, an intro out of the cave and a camp with ' +
           'a ring menu that opens my CV section by section. No game engine: React, TypeScript and ' +
           'Canvas.',
+        why:
+          'I wanted a portfolio people would remember: instead of another website with sections, a small ' +
+          "game where each part of my CV is a place in the camp. It's inspired by Secret of Evermore, the " +
+          "first video game I ever played, with my dad, and it's very special to me.",
         did: [
           'The idea and the direction: the world, every screen and every design decision.',
           'The art references: the characters, the icons and the camp background.',

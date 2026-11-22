@@ -30,11 +30,10 @@ export default function ProjectsWindow() {
 function ProjectDetail({ project, reducedMotion, shown }: { project: Project; reducedMotion: boolean; shown: boolean }) {
   const { t } = useLocale();
   const labels = t.projects.labels;
-  const hasMedia = project.media.kind !== 'classified';
   return (
     // Wide windows: pictures on the left, text on the right (see .project in the CSS).
-    <article className={styles.project} data-media={hasMedia}>
-      {hasMedia && shown && (
+    <article className={styles.project}>
+      {shown && (
         <div className={styles.media}>
           <ProjectMediaView media={project.media} reducedMotion={reducedMotion} />
         </div>
@@ -44,7 +43,11 @@ function ProjectDetail({ project, reducedMotion, shown }: { project: Project; re
           {project.name} {project.tag && <span className={sheet.tag}>{project.tag}</span>}
         </h3>
         <p className={`${sheet.meta} ${styles.context}`}>{project.context}</p>
-        {project.summary && <p className={sheet.paragraph}>{project.summary}</p>}
+        <p className={sheet.paragraph}>{project.summary}</p>
+
+        {/* Why it exists, right after what it is: the project's story before its details. */}
+        <h4 className={styles.subheading}>{labels.why}</h4>
+        <p className={sheet.paragraph}>{project.why}</p>
 
         <h4 className={styles.subheading}>{labels.did}</h4>
         <ul className={sheet.bullets}>
@@ -88,10 +91,8 @@ function ProjectDetail({ project, reducedMotion, shown }: { project: Project; re
 }
 
 function ProjectMediaView({ media, reducedMotion }: { media: ProjectMedia; reducedMotion: boolean }) {
-  // TS concept — narrowing a discriminated union: inside each `if`, TypeScript knows which
-  // fields `media` has (only 'video' has `videoLabel`, only 'screenshots' has `shots`).
-  if (media.kind === 'classified') return null;
-
+  // TS concept — narrowing a discriminated union: inside the `if`, TypeScript knows which fields
+  // `media` has (only 'video' has `videoLabel`); after it, only 'screenshots' is left, with `shots`.
   if (media.kind === 'video') {
     const video = CAPYROAD_VIDEO;
     return (

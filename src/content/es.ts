@@ -162,7 +162,7 @@ export const ES: Content = {
 
   projects: {
     listLabel: 'Proyectos',
-    labels: { did: 'Qué hice', stack: 'Stack', repo: 'Repositorio', demo: 'Demo' },
+    labels: { why: 'Por qué', did: 'Qué hice', stack: 'Stack', repo: 'Repositorio', demo: 'Demo' },
     list: [
       {
         id: 'capyroad',
@@ -174,6 +174,11 @@ export const ES: Content = {
           'calle en calle. Cada calle sube el multiplicador del premio (1.25x → 1.48x → 1.74x → …) y ' +
           'también el riesgo de atropello (visible en %). En cada turno el jugador elige Cruzar ' +
           '(seguir arriesgando) o Cobrar (retirarse con lo ganado).',
+        why:
+          'El capibara era la mascota de nuestro casino: un animal que nos hacía gracia a todo el equipo. ' +
+          'El backend avanzó rápido y sentía que al casino le faltaban juegos, así que aproveché el tiempo ' +
+          'que quedaba hasta la entrega para inventar uno propio. Acabó siendo el más popular entre el ' +
+          'jurado de la presentación.',
         did: ['Todo el ciclo, del backend al frontend en React.'],
         stack: ['Node.js', 'Express', 'PostgreSQL', 'React'],
         notes: [
@@ -192,8 +197,13 @@ export const ES: Content = {
       {
         id: 'pakitos',
         name: "Pakito's Gambling",
-        context: 'Proyecto Final de DAW · equipo de 3 personas · feb. 2026 – jun. 2026',
+        context: 'Proyecto Final de DAW · equipo de 4 personas · feb. 2026 – jun. 2026',
         summary: 'Plataforma web de recreación de juegos de azar con moneda ficticia (sin dinero real).',
+        why:
+          'Queríamos salir de lo típico: ni una tienda online ni una red social, sino algo grande, con una ' +
+          'lógica compleja detrás y mucha seguridad. Con moneda ficticia, sin dinero real, para evitar ' +
+          'problemas legales. Siendo cuatro, pudimos hacerlo a lo grande. Yo prefiero el backend, así que ' +
+          'me encargué de esa parte, aunque acabé tocando también el frontend.',
         did: [
           'Backend de la plataforma: diseño de la API REST y del modelo de datos.',
           'Backend de la ruleta europea y americana.',
@@ -214,17 +224,6 @@ export const ES: Content = {
         },
       },
       {
-        id: 'bosa',
-        name: 'Herramientas internas · Bosa Digital',
-        tab: 'Bosa Digital',
-        tag: 'CLASIFICADO',
-        context: 'Prácticas · mar. 2026 – jun. 2026',
-        did: BOSA_TASKS,
-        stack: ['Python', 'Django', 'APIs externas', 'Git'],
-        notes: [{ label: 'Confidencial', value: 'Acuerdo de confidencialidad: sin capturas, cifras, código ni demo.' }],
-        media: { kind: 'classified' },
-      },
-      {
         id: 'portfolio',
         name: 'Este portfolio',
         tab: 'Portfolio',
@@ -234,6 +233,10 @@ export const ES: Content = {
           'Portfolio con forma de RPG de 16 bits: pantalla de título, intro saliendo de la cueva y un ' +
           'campamento con un menú en rueda que abre mi CV por secciones. Sin motor de juegos: React, ' +
           'TypeScript y Canvas.',
+        why:
+          'Quería un portfolio que se recordara: en vez de otra web con secciones, un pequeño juego donde ' +
+          'cada parte de mi CV es un lugar del campamento. Está inspirado en Secret of Evermore, el primer ' +
+          'videojuego al que jugué, junto a mi padre, y le tengo un cariño muy especial.',
         did: [
           'La idea y la dirección del proyecto: el mundo, cada pantalla y cada decisión de diseño.',
           'Las referencias de arte: los personajes, los iconos y el fondo del campamento.',

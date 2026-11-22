@@ -7,7 +7,7 @@
 }
 
 @container (min-width: 820px) {
-  .project[data-media='true'] {
+  .project {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     align-items: start;
   }

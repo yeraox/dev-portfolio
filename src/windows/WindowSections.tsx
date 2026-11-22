@@ -4,7 +4,7 @@ import styles from './WindowSections.module.css';
 export type WindowSection = {
   id: string;
   label: string;
-  tag?: string; // small badge next to the label (FEATURED, CLASSIFIED…)
+  tag?: string; // small badge next to the label (FEATURED, YOU ARE HERE…)
   // What the section shows. As a function it learns whether it is the one on screen (`shown`), so
   // it can leave out heavy parts while hidden (a video): its text is still there for find-in-page.
   // TS concept — a union with a function type: `typeof content === 'function'` tells them apart.
