@@ -6,6 +6,7 @@ import profile from './profile.png';
 import contact from './contact.png';
 import about from './about.png';
 import cv from './cv.png';
+import settings from './settings.png';
 import es from './es.png';
 import en from './en.png';
 
@@ -18,6 +19,7 @@ export const ICON_IMAGES = {
   contact: { src: contact, width: 19, height: 28 },
   about: { src: about, width: 28, height: 24 },
   cv: { src: cv, width: 28, height: 25 },
+  settings: { src: settings, width: 28, height: 28 },
   es: { src: es, width: 28, height: 20 },
   en: { src: en, width: 28, height: 20 },
 } satisfies Record<string, IconImage>;

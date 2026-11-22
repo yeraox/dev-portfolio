@@ -17,7 +17,8 @@ const OUT_DIR = join(ROOT, 'src/assets/icons');
 const SIZE = 28;
 
 // name in the code → reference. EQUIP's vest is the stack (Yeray's gear) and ALCHEMY's flask the
-// projects. The two flags are the language slot: Spain for Spanish, the UK for English.
+// projects. The gear is the SETTINGS slot; the two flags are the languages inside it (Spain for
+// Spanish, the UK for English).
 const ICONS = [
   { name: 'projects', file: 'icons/alchemy_icon.jpg' },
   { name: 'stack', file: 'icons/equip_icon.jpg' },
@@ -25,6 +26,7 @@ const ICONS = [
   { name: 'contact', file: 'icons/contact_icon.jpg' },
   { name: 'about', file: 'icons/aboutme_icon.jpg' },
   { name: 'cv', file: 'icons/cv_icon.jpg' },
+  { name: 'settings', file: 'icons/engranaje.jpg' },
   { name: 'es', file: 'icons/spain_icon.jpg' },
   { name: 'en', file: 'icons/uk_icon.jpg' },
 ];
