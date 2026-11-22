@@ -1,7 +1,7 @@
 import { CAPYROAD_VIDEO, SCREENSHOTS } from '../assets/projects/media.gen';
 import { useLocale } from '../content/useLocale';
 import type { Project, ProjectMedia } from '../content/types';
-import { useReducedMotion } from '../engine/useScreen';
+import { useReducedMotion } from '../engine/motion';
 import { WindowSections } from './WindowSections';
 import sheet from './sheet.module.css';
 import styles from './ProjectsWindow.module.css';
@@ -9,7 +9,7 @@ import styles from './ProjectsWindow.module.css';
 // Screenshots fill the media column: half the window on a laptop, the whole width on a phone.
 const SHOT_SIZES = '(min-width: 1040px) 50vw, 92vw';
 
-/** ALCHEMY (projects) — projects, one section each: the wheel, ← →, the tabs or a swipe go from one to the next. */
+/** ALCHEMY (projects) — projects, one section each: ← →, the tabs or a swipe go from one to the next. */
 export default function ProjectsWindow() {
   const { t } = useLocale();
   const reducedMotion = useReducedMotion();
@@ -18,22 +18,23 @@ export default function ProjectsWindow() {
       label={t.projects.listLabel}
       sections={t.projects.list.map((project) => ({
         id: project.id,
-        label: project.name,
+        label: project.tab ?? project.name,
         tag: project.tag,
-        content: <ProjectDetail project={project} reducedMotion={reducedMotion} />,
+        // While hidden (only there for find-in-page) a project leaves out its pictures and video.
+        content: (shown: boolean) => <ProjectDetail project={project} reducedMotion={reducedMotion} shown={shown} />,
       }))}
     />
   );
 }
 
-function ProjectDetail({ project, reducedMotion }: { project: Project; reducedMotion: boolean }) {
+function ProjectDetail({ project, reducedMotion, shown }: { project: Project; reducedMotion: boolean; shown: boolean }) {
   const { t } = useLocale();
   const labels = t.projects.labels;
   const hasMedia = project.media.kind !== 'classified';
   return (
     // Wide windows: pictures on the left, text on the right (see .project in the CSS).
     <article className={styles.project} data-media={hasMedia}>
-      {hasMedia && (
+      {hasMedia && shown && (
         <div className={styles.media}>
           <ProjectMediaView media={project.media} reducedMotion={reducedMotion} />
         </div>

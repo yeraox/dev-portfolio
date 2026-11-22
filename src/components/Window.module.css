@@ -7,16 +7,26 @@
   font-family: var(--font-text);
   font-size: var(--text-size);
   line-height: var(--line);
+  /* Flat, with no stone texture: the text reads on one even colour. */
   background-color: var(--stone-0);
-  background-size: calc(32 * var(--u)) calc(32 * var(--u));
-  image-rendering: pixelated;
   /* Bevel: light top-left, dark bottom-right, then a 1u ink outline. */
   box-shadow:
     inset var(--u) var(--u) 0 var(--stone-3),
     inset calc(-1 * var(--u)) calc(-1 * var(--u)) 0 var(--ink),
     0 0 0 var(--u) var(--ink);
-  /* 18 frames (0.3 s) in 9 visible steps of 2 frames each: noticeable but still stepped. */
-  animation: open calc(18 * var(--frame)) steps(9) both;
+}
+
+/* Opening: 18 frames (0.3 s) in 9 visible steps of 2 frames each, noticeable but still stepped.
+   Only with animations on (<html data-motion="on">: src/engine/motion.ts). `backwards`: once
+   open, nothing stays clipped, so the 1u ink outline around the window shows. */
+:root[data-motion='on'] .window {
+  animation: open calc(18 * var(--frame)) steps(9) backwards;
+}
+
+/* Closing: the same wipe backwards, a bit faster (10 frames in 5 steps). `both`: it stays hidden
+   until the dialog really closes. */
+:root[data-motion='on'] .closing {
+  animation: close calc(10 * var(--frame)) steps(5) both;
 }
 
 /* Engraved inner groove (dark line over light line), 3u inside the edge. */
@@ -37,11 +47,6 @@
   to {
     clip-path: inset(0);
   }
-}
-
-/* Closing: the same wipe backwards, a bit faster (10 frames in 5 steps). */
-.closing {
-  animation: close calc(10 * var(--frame)) steps(5) both;
 }
 
 @keyframes close {

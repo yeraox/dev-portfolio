@@ -10,7 +10,6 @@
 .tabs {
   flex: none;
   display: flex;
-  flex-wrap: wrap;
   gap: var(--u) calc(2 * var(--u));
   padding-bottom: calc(3 * var(--u));
   /* engraved line under the tabs */
@@ -19,9 +18,12 @@
 }
 
 /* A tab: text on stone; the chosen one sits on an ink plate in gold, with the pixel bullet in
-   front like a menu cursor. */
+   front like a menu cursor. The tabs stay on one row: when they don't fit, the ones not chosen
+   shrink and end in "…" (the chosen one always shows its whole label). */
 .tab {
   display: inline-flex;
+  flex: 0 1 auto;
+  min-inline-size: calc(16 * var(--u));
   align-items: center;
   gap: calc(2 * var(--u));
   padding: calc(2 * var(--u)) calc(4 * var(--u));
@@ -31,6 +33,17 @@
   background: none;
   border: 0;
   cursor: pointer;
+}
+
+.tab[aria-selected='true'] {
+  min-inline-size: max-content;
+}
+
+.label {
+  min-inline-size: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .tab:hover,
@@ -58,6 +71,7 @@
 }
 
 .tag {
+  margin-inline-start: calc(2 * var(--u));
   font-family: var(--font-display);
   font-size: var(--text-small);
   line-height: 1;
@@ -84,6 +98,12 @@
   container-type: inline-size;
 }
 
+/* The text starts focused when a window opens from the keyboard: its focus ring is drawn inside,
+   since the window's body would clip one drawn around it. */
+.panel:focus-visible {
+  outline-offset: -2px;
+}
+
 /* "More below": a gold pixel arrow in the bottom-right corner, blinking in hard steps. */
 .more {
   position: absolute;
@@ -96,11 +116,9 @@
   pointer-events: none;
 }
 
-/* It blinks only for visitors who haven't asked for less motion; otherwise it stays still. */
-@media (prefers-reduced-motion: no-preference) {
-  .more {
-    animation: blink calc(48 * var(--frame)) steps(1) infinite;
-  }
+/* It blinks only with animations on; otherwise it stays still. */
+:root[data-motion='on'] .more {
+  animation: blink calc(48 * var(--frame)) steps(1) infinite;
 }
 
 @keyframes blink {

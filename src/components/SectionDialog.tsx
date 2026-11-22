@@ -1,4 +1,5 @@
 import { useEffect, useEffectEvent, useId, useRef, type ReactNode } from 'react';
+import { useReducedMotion } from '../engine/motion';
 import { Window } from './Window';
 import styles from './SectionDialog.module.css';
 
@@ -6,10 +7,13 @@ type SectionDialogProps = {
   title: string;
   open: boolean; // false → plays the closing wipe, then calls onClosed
   tall: boolean; // portrait screens: the window becomes a full-width sheet
-  // A small window in the middle, as big as its content (a question), instead of one covering
-  // the scene. It has no ESC EXIT button: its own answers close it (Esc still does too).
+  // A small window in the middle, as big as its content (a question, SETTINGS), instead of one
+  // covering the scene.
   compact?: boolean;
-  closeLabel?: string; // said after the visible "ESC EXIT" by screen readers (not in compact)
+  // The ESC EXIT button. By default only full windows have it: a question's own answers close it
+  // (Esc still does too). SETTINGS is compact but has nothing that closes it, so it asks for one.
+  closable?: boolean;
+  closeLabel?: string; // said after the visible "ESC EXIT" by screen readers
   descriptionId?: string; // id of a text inside that screen readers read with the title
   help?: ReactNode; // bottom help line, usually <HelpBar />
   onRequestClose: () => void; // Esc, the close button or a click outside
@@ -25,7 +29,7 @@ const CLOSE_FALLBACK_MS = 400; // in case the closing animation never reports it
  * event. No focus trap of our own: like any native modal, Tab may still reach the browser's own
  * toolbar (modern-web-guidance: dialog).
  */
-export function SectionDialog({ title, open, tall, compact = false, closeLabel, descriptionId, help, onRequestClose, onClosed, children }: SectionDialogProps) {
+export function SectionDialog({ title, open, tall, compact = false, closable = !compact, closeLabel, descriptionId, help, onRequestClose, onClosed, children }: SectionDialogProps) {
   const ref = useRef<HTMLDialogElement>(null);
   const titleId = useId();
   // Really close the <dialog> first: while it is open the rest of the page is inert and the
@@ -34,20 +38,31 @@ export function SectionDialog({ title, open, tall, compact = false, closeLabel, 
     ref.current?.close();
     onClosed();
   };
-  // The same, for the fallback timer (an effect needs an "effect event" to call the latest one).
-  const closeFromTimer = useEffectEvent(closeNow);
+  // The same, from an effect (an effect needs an "effect event" to call the latest one).
+  const closeFromEffect = useEffectEvent(closeNow);
+  // With less motion there is no closing wipe to wait for.
+  const reducedMotion = useReducedMotion();
 
+  // Open it. The browser focuses the window's first control (ESC EXIT); content that should start
+  // focused marks itself `data-autofocus` (a section's text, so ↑ ↓ scroll it at once). React does
+  // not write the real `autofocus` attribute, so the dialog would not find it by itself.
   useEffect(() => {
     const dialog = ref.current;
-    if (dialog && !dialog.open) dialog.showModal();
+    if (!dialog || dialog.open) return;
+    dialog.showModal();
+    dialog.querySelector<HTMLElement>('[data-autofocus]')?.focus({ preventScroll: true });
   }, []);
 
-  // Closing: wait for the wipe, then really close.
+  // Closing: wait for the wipe (or not, with less motion), then really close.
   useEffect(() => {
     if (open) return;
-    const timer = window.setTimeout(() => closeFromTimer(), CLOSE_FALLBACK_MS);
+    if (reducedMotion) {
+      closeFromEffect();
+      return;
+    }
+    const timer = window.setTimeout(() => closeFromEffect(), CLOSE_FALLBACK_MS);
     return () => window.clearTimeout(timer);
-  }, [open]);
+  }, [open, reducedMotion]);
 
   return (
     <dialog
@@ -75,7 +90,7 @@ export function SectionDialog({ title, open, tall, compact = false, closeLabel, 
         className={styles.window}
         help={help}
         hint={
-          compact ? undefined : (
+          !closable ? undefined : (
             // The accessible name starts with what is visible (WCAG 2.5.3 "label in name").
             <button type="button" className={styles.close} onClick={onRequestClose}>
               <kbd className={styles.key}>ESC</kbd> EXIT<span className={styles.srOnly}> · {closeLabel}</span>

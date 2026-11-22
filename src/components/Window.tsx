@@ -1,5 +1,4 @@
 import { useId, type ReactNode } from 'react';
-import { STONE_TILE } from '../assets/textures';
 import styles from './Window.module.css';
 
 // TS concept — optional props: `title?` means the parent may leave it out
@@ -14,8 +13,8 @@ type WindowProps = {
   className?: string;
 };
 
-/** Stone panel with a bevelled frame and an engraved inner groove. Opens with an 18-frame stepped
- *  wipe and closes with a 10-frame one. */
+/** A flat dark-stone panel (one even colour behind the text, easy to read) with a bevelled frame
+ *  and an engraved inner groove. Opens with an 18-frame stepped wipe and closes with a 10-frame one. */
 export function Window({ title, titleId: givenTitleId, hint, help, closing = false, children, className }: WindowProps) {
   const ownTitleId = useId();
   const titleId = givenTitleId ?? ownTitleId;
@@ -24,7 +23,6 @@ export function Window({ title, titleId: givenTitleId, hint, help, closing = fal
   return (
     <section
       className={classes}
-      style={{ backgroundImage: STONE_TILE.url }}
       // A dialog that points at the title already names the window: no second landmark with the same name.
       aria-labelledby={title && !givenTitleId ? titleId : undefined}
     >

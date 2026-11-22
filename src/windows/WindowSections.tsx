@@ -1,11 +1,14 @@
-import { useEffect, useId, useLayoutEffect, useRef, useState, type KeyboardEvent, type ReactNode, type TouchEvent, type WheelEvent } from 'react';
+import { useEffect, useEffectEvent, useId, useLayoutEffect, useRef, useState, type ReactNode, type TouchEvent } from 'react';
 import styles from './WindowSections.module.css';
 
 export type WindowSection = {
   id: string;
   label: string;
   tag?: string; // small badge next to the label (FEATURED, CLASSIFIED…)
-  content: ReactNode;
+  // What the section shows. As a function it learns whether it is the one on screen (`shown`), so
+  // it can leave out heavy parts while hidden (a video): its text is still there for find-in-page.
+  // TS concept — a union with a function type: `typeof content === 'function'` tells them apart.
+  content: ReactNode | ((shown: boolean) => ReactNode);
 };
 
 type WindowSectionsProps = {
@@ -13,24 +16,28 @@ type WindowSectionsProps = {
   sections: WindowSection[];
 };
 
-const BURST_GAP_MS = 200; // wheel events closer than this belong to the same flick or spin
-const WHEEL_STEP = 30; // a trackpad must travel this far (in a quiet burst) to change section
 const SWIPE_MIN = 60; // CSS px a finger travels sideways to change section
+// Elements that use the arrow keys themselves (a video's controls, form fields): left alone.
+const OWN_ARROWS = 'video, audio, input, select, textarea, [contenteditable="true"]';
 
 /**
  * A window's content split into sections, one on screen at a time, with tabs on top (ARIA
- * "tabs"). The mouse wheel goes from section to section: a long section is read to its end first,
- * and one flick or spin changes one section only. Fingers swipe sideways. A blinking arrow tells
- * when there is more to read below.
+ * "tabs"). ← → change section from anywhere in the window (on a tab, Home and End too); a click or
+ * tap on a tab goes to it; fingers can also swipe sideways. The mouse wheel and ↑ ↓ only scroll
+ * the section's text, never change section. The text starts focused, so ↑ ↓ work at once. A
+ * blinking arrow tells when there is more to read below. The other sections are there too,
+ * hidden "until found": the browser's find-in-page (Ctrl+F) searches them and, on a match, its
+ * section opens by itself.
  */
 export function WindowSections({ label, sections }: WindowSectionsProps) {
   const [selected, setSelected] = useState(0);
   const [more, setMore] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null); // the section on screen
+  const parts = useRef<(HTMLDivElement | null)[]>([]); // every section, in order
+  // A section that find-in-page just opened, and where it was before the old one closed.
+  const found = useRef<{ index: number; top: number } | null>(null);
   const tabs = useRef<(HTMLButtonElement | null)[]>([]);
-  const enterAtBottom = useRef(false); // going back with the wheel lands at the end of the section
-  const wheel = useRef({ last: 0, used: false, travel: 0 });
   const touch = useRef<{ x: number; y: number } | null>(null);
   const id = useId();
   const count = sections.length;
@@ -40,11 +47,36 @@ export function WindowSections({ label, sections }: WindowSectionsProps) {
     if (panel) setMore(panel.scrollTop + panel.clientHeight < panel.scrollHeight - 2);
   };
 
-  // A new section starts at its top (or its end, when we came back to it with the wheel).
+  // Every section but the one on screen is hidden "until found" (set here: React does not know
+  // that value of `hidden` yet). When find-in-page matches text in one, the browser shows it and
+  // fires `beforematch`: that section becomes the selected one.
+  useLayoutEffect(() => {
+    const stops = parts.current.map((part, index) => {
+      if (!part) return () => {};
+      if (index === selected) part.removeAttribute('hidden');
+      else part.setAttribute('hidden', 'until-found');
+      const onFound = () => {
+        found.current = { index, top: part.offsetTop };
+        setSelected(index);
+      };
+      part.addEventListener('beforematch', onFound);
+      return () => part.removeEventListener('beforematch', onFound);
+    });
+    return () => stops.forEach((stop) => stop());
+  }, [selected, count]);
+
+  // A new section starts at its top. One opened by find-in-page keeps the browser's scroll to the
+  // match instead: the section that just closed may have been above it, so it moves back up by as
+  // much as it moved.
   useLayoutEffect(() => {
     const panel = panelRef.current;
-    if (panel) panel.scrollTop = enterAtBottom.current ? panel.scrollHeight : 0;
-    enterAtBottom.current = false;
+    const reveal = found.current;
+    found.current = null;
+    if (panel && reveal?.index === selected && contentRef.current) {
+      panel.scrollTop -= reveal.top - contentRef.current.offsetTop;
+    } else if (panel) {
+      panel.scrollTop = 0;
+    }
   }, [selected]);
 
   // Watch the section's size (images loading, window resized) to show or hide the arrow.
@@ -58,51 +90,38 @@ export function WindowSections({ label, sections }: WindowSectionsProps) {
     return () => observer.disconnect();
   }, [selected]);
 
-  function select(index: number, focusTab = false) {
+  function select(index: number) {
     if (index < 0 || index >= count) return;
     setSelected(index);
-    if (focusTab) tabs.current[index]?.focus();
   }
 
-  function onTabKey(event: KeyboardEvent<HTMLDivElement>) {
+  // ← → from anywhere in the window (the window is modal, so every key press comes from inside
+  // it). On a tab, the focus follows to the new tab, and Home / End go to the first and last one
+  // (the ARIA tabs pattern). Elsewhere the focus goes to the text, so it is never left behind on a
+  // link of the section that just closed.
+  const onKeyDown = useEffectEvent((event: KeyboardEvent) => {
+    if (count < 2 || event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+    const target = event.target instanceof Element ? event.target : null;
+    if (target?.closest(OWN_ARROWS)) return;
+    const onTab = target?.getAttribute('role') === 'tab';
     const last = count - 1;
-    const keys: Record<string, number> = {
-      ArrowRight: selected === last ? 0 : selected + 1,
-      ArrowDown: selected === last ? 0 : selected + 1,
-      ArrowLeft: selected === 0 ? last : selected - 1,
-      ArrowUp: selected === 0 ? last : selected - 1,
-      Home: 0,
-      End: last,
-    };
-    if (!(event.key in keys)) return;
+    let next: number;
+    if (event.key === 'ArrowRight') next = selected === last ? 0 : selected + 1;
+    else if (event.key === 'ArrowLeft') next = selected === 0 ? last : selected - 1;
+    else if (onTab && event.key === 'Home') next = 0;
+    else if (onTab && event.key === 'End') next = last;
+    else return;
     event.preventDefault();
-    select(keys[event.key], true);
-  }
-
-  function onWheel(event: WheelEvent<HTMLDivElement>) {
-    if (count < 2 || event.deltaY === 0 || event.ctrlKey) return; // ctrl + wheel is the browser's zoom
-    const panel = event.currentTarget;
-    const down = event.deltaY > 0;
-    const w = wheel.current;
-    if (event.timeStamp - w.last > BURST_GAP_MS) {
-      w.used = false; // a new flick or spin
-      w.travel = 0;
-    }
-    w.last = event.timeStamp;
-    const canScroll = down ? panel.scrollTop + panel.clientHeight < panel.scrollHeight - 1 : panel.scrollTop > 0;
-    if (canScroll) {
-      w.used = true; // the browser scrolls the section; this burst won't also change section
-      return;
-    }
-    if (w.used) return;
-    w.travel += Math.abs(event.deltaY);
-    if (w.travel < WHEEL_STEP) return;
-    w.used = true;
-    const next = selected + (down ? 1 : -1);
-    if (next < 0 || next >= count) return;
-    enterAtBottom.current = !down;
     select(next);
-  }
+    if (onTab) tabs.current[next]?.focus();
+    else panelRef.current?.focus({ preventScroll: true });
+  });
+
+  useEffect(() => {
+    const listener = (event: KeyboardEvent) => onKeyDown(event);
+    window.addEventListener('keydown', listener);
+    return () => window.removeEventListener('keydown', listener);
+  }, []);
 
   function onTouchStart(event: TouchEvent<HTMLDivElement>) {
     const t = event.touches[0];
@@ -120,11 +139,10 @@ export function WindowSections({ label, sections }: WindowSectionsProps) {
     select(selected + (dx < 0 ? 1 : -1));
   }
 
-  const section = sections[selected];
   return (
     <div className={styles.sections}>
       {count > 1 && (
-        <div role="tablist" aria-label={label} className={styles.tabs} onKeyDown={onTabKey}>
+        <div role="tablist" aria-label={label} className={styles.tabs}>
           {sections.map((item, index) => (
             <button
               key={item.id}
@@ -139,8 +157,11 @@ export function WindowSections({ label, sections }: WindowSectionsProps) {
               className={styles.tab}
               onClick={() => select(index)}
             >
-              <span>{item.label}</span>
-              {item.tag && <span className={styles.tag}>{item.tag}</span>}
+              {/* The badge goes inside the label, after it: when the tab shrinks, it is cut first. */}
+              <span className={styles.label}>
+                {item.label}
+                {item.tag && <span className={styles.tag}>{item.tag}</span>}
+              </span>
             </button>
           ))}
         </div>
@@ -152,15 +173,23 @@ export function WindowSections({ label, sections }: WindowSectionsProps) {
           id={`${id}-panel`}
           aria-labelledby={count > 1 ? `${id}-tab-${selected}` : undefined}
           tabIndex={0}
+          data-autofocus // the window opens with the focus here: ↑ ↓ scroll the text at once
           className={styles.panel}
           onScroll={measure}
-          onWheel={onWheel}
           onTouchStart={onTouchStart}
           onTouchEnd={onTouchEnd}
         >
-          <div ref={contentRef} key={section.id}>
-            {section.content}
-          </div>
+          {sections.map((item, index) => (
+            <div
+              key={item.id}
+              ref={(element) => {
+                parts.current[index] = element;
+                if (index === selected) contentRef.current = element;
+              }}
+            >
+              {typeof item.content === 'function' ? item.content(index === selected) : item.content}
+            </div>
+          ))}
         </div>
         {more && <span className={styles.more} aria-hidden="true" />}
       </div>
