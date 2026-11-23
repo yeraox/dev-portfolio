@@ -353,7 +353,7 @@ for (const size of SIZES) {
   const noteColour = await note.evaluate((element) => getComputedStyle(element).color);
   check('a red note says what the animations do (red-2), and it is the row\'s description', (await note.innerText()).startsWith('Con animaciones:') && noteColour === 'rgb(255, 107, 91)' && (await dialog.getByRole('group', { name: 'Animaciones' }).getAttribute('aria-describedby')) === (await note.getAttribute('id')), noteColour);
   check('SETTINGS in the camp offers VOLVER AL TÍTULO', await dialog.getByRole('button', { name: 'VOLVER AL TÍTULO' }).isVisible());
-  check('…and says what the site keeps: no cookies, no analytics', (await dialog.getByText(/no usa cookies ni analítica/).count()) === 1);
+  check('…and says what the site keeps: no cookies, anonymous visits with Cloudflare Web Analytics', (await dialog.getByText(/no usa cookies\. Cuenta las visitas de forma anónima con Cloudflare Web Analytics/).count()) === 1);
   await page.screenshot({ path: `${OUT}/settings-1440.png` });
   await choice('English').click();
   await page.waitForTimeout(300);

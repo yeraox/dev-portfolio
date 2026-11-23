@@ -76,7 +76,9 @@ export const ES: Content = {
       system: 'Tu sistema pide menos movimiento.',
     },
     backToTitle: 'VOLVER AL TÍTULO',
-    privacy: 'Esta web no usa cookies ni analítica. Solo guarda en tu navegador tu idioma, tus ajustes y tu progreso.',
+    privacy:
+      'Esta web no usa cookies. Cuenta las visitas de forma anónima con Cloudflare Web Analytics, y en tu ' +
+      'navegador solo guarda tu idioma, tus ajustes y tu progreso.',
   },
   window: {
     close: 'Cerrar ventana',
@@ -246,6 +248,7 @@ export const ES: Content = {
         notes: [
           { label: 'Accesibilidad', value: 'Se maneja con teclado, ratón o pantalla táctil, con lector de pantalla y sin animaciones.' },
         ],
+        repo: 'https://github.com/yeraox/dev-portfolio',
         media: {
           kind: 'screenshots',
           shots: [{ id: 'portfolio', alt: 'El campamento: Yeray y Null junto a la hoguera, con el menú en rueda y sus siete iconos alrededor de Yeray.' }],

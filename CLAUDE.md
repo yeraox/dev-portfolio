@@ -85,6 +85,18 @@ A personal portfolio presented as an original 16-bit action-RPG world: title scr
   `useReducedMotion()` is false (JS): the visitor's choice in SETTINGS, else the system's
   `prefers-reduced-motion` (`src/engine/motion.ts`). Never a global reset.
 
+## Publishing
+- Cloudflare Pages, project `CF_PAGES_PROJECT` (GitHub variable), at `<project>.pages.dev`.
+  `.github/workflows/deploy.yml` runs lint, unit tests and the build on every pull request and
+  push, and publishes `dist/` only from `main` and only when everything passes (Wrangler, with
+  the secrets `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`). `SITE_URL` comes from the
+  workflow.
+- `public/_headers`: security headers and the Content-Security-Policy. Any new third-party
+  resource (a script, a font, an image host) needs its origin added there, or the browser blocks
+  it. Never add `no-transform` to `Cache-Control`: Cloudflare could no longer inject the Web
+  Analytics beacon (turned on in the Pages dashboard; the privacy line in SETTINGS says so).
+- After a deploy, run the `check:*` scripts and Lighthouse against the live address too.
+
 ## TypeScript (Yeray is learning it with this project)
 - Beginner-readable: `type`/`interface`, unions, optional fields, typed props and hooks,
   `Record`, `satisfies`, simple generics only where React needs them.

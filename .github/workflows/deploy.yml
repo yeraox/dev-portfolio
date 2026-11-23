@@ -1,0 +1,63 @@
+# Checks every change and publishes the site to Cloudflare Pages.
+#
+# - On a pull request: types, lint, unit tests and the build. Nothing is published.
+# - On a push to main (or run by hand): the same checks, then the build in dist/ goes live.
+#   If any check fails, nothing is published.
+#
+# Set once in the GitHub repository (Settings → Secrets and variables → Actions):
+#   secrets   CLOUDFLARE_API_TOKEN   an API token with the "Cloudflare Pages: Edit" permission
+#             CLOUDFLARE_ACCOUNT_ID  the Cloudflare account's id
+#   variables CF_PAGES_PROJECT       the Pages project's name (the site is <name>.pages.dev)
+#             SITE_URL               optional: the site's address when it has its own domain
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+# Only one deploy at a time; a newer push cancels an older one still running.
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  check-and-deploy:
+    runs-on: ubuntu-latest
+    env:
+      # The site's final address: canonical link, share image and sitemap (vite.config.ts).
+      SITE_URL: ${{ vars.SITE_URL || format('https://{0}.pages.dev', vars.CF_PAGES_PROJECT) }}
+    steps:
+      - name: Get the code
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Build (types included)
+        run: npm run build
+
+      - name: Publish to Cloudflare Pages
+        if: github.event_name != 'pull_request'
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: 4.166.0
+          command: pages deploy dist --project-name=${{ vars.CF_PAGES_PROJECT }} --branch=main

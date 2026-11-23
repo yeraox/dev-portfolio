@@ -1,11 +1,13 @@
 # Yeray Caturla — a 16-bit portfolio
 
+[![Deploy](https://github.com/yeraox/dev-portfolio/actions/workflows/deploy.yml/badge.svg)](https://github.com/yeraox/dev-portfolio/actions/workflows/deploy.yml)
+
 The portfolio of Yeray Caturla, junior backend developer, built as a small original 16-bit
 action-RPG: a title screen, an intro out of a cave, and a camp where a ring menu opens his CV,
 section by section. The CV is one step away from the first screen, for anyone who would rather
 not play.
 
-**Live:** coming soon.
+**Live:** [yeraycaturla.pages.dev](https://yeraycaturla.pages.dev)
 
 ![The title screen: YERAY CATURLA in gold lettering over a 16-bit night sky](public/og-image.png)
 
@@ -23,6 +25,8 @@ not play.
 - **For every visitor:** keyboard only, mouse or touch; screen-reader semantics on the ring and
   the windows; "animations off" in Settings (or from the system's reduced-motion preference); the
   browser's find-in-page reaches every section.
+- **Privacy:** no cookies. Visits are counted anonymously with Cloudflare Web Analytics; the
+  browser only keeps the visitor's language, settings and progress.
 
 ## Highlights
 
@@ -33,6 +37,7 @@ not play.
 | Accessible | WCAG 2.2 AA contrast, tested for every text colour; native modal dialogs; ARIA menu and tabs |
 | Fast | 94 KB of JavaScript (gzip); Lighthouse mobile 99 · 100 · 100 · 100; 60 fps even with a 4× slower CPU |
 | Tested | 204 unit tests (Vitest) and four browser walkthroughs (Playwright) that play the site with keyboard only and touch only |
+| Shipped by CI | Every push to `main` runs lint, unit tests and the typed build on GitHub Actions; only a green build is published |
 
 ## Tech stack
 
@@ -42,6 +47,7 @@ not play.
 - **Canvas 2D** for the scenes and the characters.
 - **Vitest** for the logic, **Playwright** for screenshots and walkthroughs, **oxlint**.
 - **Node scripts + ffmpeg** for the asset pipelines (characters, icons, media, share image).
+- **GitHub Actions + Cloudflare Pages** (Wrangler) to test and publish every change.
 
 ## How it works
 
@@ -107,6 +113,20 @@ The asset generators (`npm run characters`, `icons`, `scenes`, `cv`) read Yeray'
 `references/` folder, which is not in the repository. Their output is committed, so the site
 builds and runs without it.
 
+## Deploying
+
+[`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) runs on every pull request (lint,
+unit tests, build) and, on every push to `main`, publishes `dist/` to Cloudflare Pages when all of
+them pass. It needs, in the repository's Actions settings, the secrets `CLOUDFLARE_API_TOKEN`
+(permission "Cloudflare Pages: Edit") and `CLOUDFLARE_ACCOUNT_ID`, and the variable
+`CF_PAGES_PROJECT`. The build's `SITE_URL` (canonical link, share image, sitemap) is
+`https://<CF_PAGES_PROJECT>.pages.dev`, or the variable `SITE_URL` when the site has its own
+domain.
+
+[`public/_headers`](public/_headers) sets the security headers (a Content-Security-Policy that
+allows only the site's own files and Cloudflare Web Analytics) and a long cache for the hashed
+build files. Web Analytics is turned on in the Pages project's dashboard.
+
 ## Project structure
 
 ```
@@ -121,6 +141,7 @@ src/
   site/        the page's head and no-JavaScript note, made at build time
   assets/      generated sprites, icons, scenes and media
 scripts/       asset generators and browser checks
+.github/       the deploy workflow
 docs/          how it was built; how the art is made
 ```
 

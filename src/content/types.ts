@@ -106,7 +106,7 @@ export type Settings = {
     system: string; // put before the note when the system asked for less motion
   };
   backToTitle: string;
-  privacy: string; // no cookies, no analytics: what the site keeps in the browser
+  privacy: string; // no cookies; anonymous visit counts; what the site keeps in the browser
 };
 
 /** The CV slot of the ring: it asks before downloading the PDF of the current language. */

@@ -86,17 +86,18 @@ El peso tiene que coincidir con el PDF real: una prueba lo comprueba.
 | Aviso (NO), en rojo | Sin animaciones: sin intro ni transiciones; la rueda cambia al instante; la hoguera, Yeray y Null se quedan quietos; el vídeo no arranca solo. | Without animations: no intro or transitions; the ring changes at once; the campfire, Yeray and Null stand still; the video does not start by itself. |
 | Antes del aviso, si lo pide el sistema | Tu sistema pide menos movimiento. | Your system asks for less motion. |
 | Botón (solo en el campamento) | VOLVER AL TÍTULO | BACK TO TITLE |
-| Privacidad (al final) | Esta web no usa cookies ni analítica. Solo guarda en tu navegador tu idioma, tus ajustes y tu progreso. | This site uses no cookies or analytics. It only keeps your language, settings and progress in your browser. |
+| Privacidad (al final) | Esta web no usa cookies. Cuenta las visitas de forma anónima con Cloudflare Web Analytics, y en tu navegador solo guarda tu idioma, tus ajustes y tu progreso. | This site uses no cookies. It counts visits anonymously with Cloudflare Web Analytics, and only keeps your language, settings and progress in your browser. |
 
 Cada idioma lleva su bandera (España o Reino Unido) y la opción en uso se ve en dorado. Con
 "Animaciones: NO" se para todo lo que se mueve solo. Si el visitante no ha elegido, manda su
 sistema (si pide menos movimiento, empieza en NO y el aviso lo dice); si elige, manda su elección.
 Las dos elecciones se recuerdan en la próxima visita.
 
-**Lo legal:** sin aviso legal ni banner de cookies. La web no tiene actividad económica, no usa
-cookies ni analítica y solo guarda en el navegador preferencias y el estado del juego
-(`localStorage`: idioma, animaciones, `visited`, `explored`). Si algún día se añade analítica,
-hay que revisarlo.
+**Lo legal:** sin aviso legal ni banner de cookies. La web no tiene actividad económica y no usa
+cookies. Cuenta las visitas con Cloudflare Web Analytics, que no guarda nada en el navegador del
+visitante ni le sigue de una web a otra. En el navegador solo quedan preferencias y el estado del
+juego (`localStorage`: idioma, animaciones, `visited`, `explored`). Si algún día se cambia de
+herramienta de métricas, hay que revisarlo.
 
 **Línea de ayuda de las ventanas** (abajo; con ratón y teclado / en pantallas táctiles):
 
@@ -216,7 +217,7 @@ de Yeray, en primera persona.
 - **Stack:** React · TypeScript · Vite · Canvas · Vitest · Playwright.
 - **Accesibilidad:** se maneja con teclado, ratón o pantalla táctil, con lector de pantalla y sin
   animaciones.
-- **Repo:** cuando sea público. **Demo:** es esta misma web, así que no lleva enlace.
+- **Repo:** https://github.com/yeraox/dev-portfolio. **Demo:** es esta misma web, así que no lleva enlace.
 - **Captura:** `media-src/projects/portfolio.png`, el campamento.
 
 ---

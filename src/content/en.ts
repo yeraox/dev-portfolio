@@ -76,7 +76,9 @@ export const EN: Content = {
       system: 'Your system asks for less motion.',
     },
     backToTitle: 'BACK TO TITLE',
-    privacy: 'This site uses no cookies or analytics. It only keeps your language, settings and progress in your browser.',
+    privacy:
+      'This site uses no cookies. It counts visits anonymously with Cloudflare Web Analytics, and only ' +
+      'keeps your language, settings and progress in your browser.',
   },
   window: {
     close: 'Close window',
@@ -243,6 +245,7 @@ export const EN: Content = {
         ],
         stack: ['React', 'TypeScript', 'Vite', 'Canvas', 'Vitest', 'Playwright'],
         notes: [{ label: 'Accessibility', value: 'Works with keyboard, mouse or touch, with a screen reader and without animations.' }],
+        repo: 'https://github.com/yeraox/dev-portfolio',
         media: {
           kind: 'screenshots',
           shots: [{ id: 'portfolio', alt: 'The camp: Yeray and Null by the campfire, with the ring menu and its seven icons around Yeray.' }],
